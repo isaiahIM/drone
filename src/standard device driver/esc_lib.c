@@ -1,4 +1,4 @@
-#include "esc_driver.h"
+#include "esc_lib.h"
 
 ret ESC_Init(ESC_initStruct esc)
 {
@@ -52,6 +52,7 @@ ret ESC_AddControlInfo(const ESC_ctrlStruct esc)
 	ctrl_cur->next=NULL;
 
 	ESC_CountIncrement();
+	
 	
 	return ESC_SUCCESS;
 }

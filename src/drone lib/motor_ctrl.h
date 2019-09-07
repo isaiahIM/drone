@@ -3,20 +3,22 @@
 
 
 /**include header*/
-#include "esc_driver.h"
+#include "esc_lib.h"
 #include "drone_types.h"
 
 
 /**user define*/
-#define MOTOR_CNT 4
-#define MOTOR_STOP 0
-#define MOTOR_SPEED_MAX 100
-#define MOTOR_SPEED_MIN 1
 #define MOTOR1 0X01
 #define MOTOR2 0X02
 #define MOTOR3 0X04
 #define MOTOR4 0X08
 #define MOTOR_ALL 0x0f
+
+#define MOTOR_CNT 4
+
+#define MOTOR_STOP 0
+#define MOTOR_SPEED_MAX 100
+#define MOTOR_SPEED_MIN 1
 
 #define MOTOR_OK 0
 

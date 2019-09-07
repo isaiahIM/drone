@@ -62,7 +62,7 @@ ret Motor_Start(uint32_t motor_num)
 
 	esc.num=motor_num;
 	esc.speed=MOTOR_SPEED_MIN;
-	esc.rotate_dir=ESC_DIR_CW;
+	esc.rotate_dir=ESC_GetRotateDirection(motor_num);
 	
 	ret_val=ESC_Rotate(esc);
 	
@@ -77,7 +77,7 @@ ret Motor_Stop(uint32_t motor_num)
 	
 	esc.num=motor_num;
 	esc.speed=MOTOR_STOP;
-	esc.rotate_dir=ESC_DIR_CW;
+	esc.rotate_dir=ESC_GetRotateDirection(motor_num);;
 	
 	ret_val=ESC_Rotate(esc);
 	
