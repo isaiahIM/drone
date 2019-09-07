@@ -4,7 +4,6 @@
 #include <stdint.h>
 
 typedef uint32_t ret;
-typedef BOOL uint8_t;
 
 
 #endif

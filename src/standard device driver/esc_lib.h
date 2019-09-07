@@ -13,10 +13,11 @@
 #define ESC_SUCCESS 0
 #define ESC_MEMALLOC_FAIL 0X01
 #define ESC_UNKNOWN_NUM 0X02
+#define ESC_FIRST_CONTROL 0X04
 
 typedef struct ESC_initalize_structure
 {
-	uint32_t num;///< esc number
+	uint8_t num;///< esc number
 	uint16_t speed_max;///< esc maximum speed
 	uint16_t speed_min;///< esc munumum speed
 	struct ESC_initalize_structure *next;///< list link
@@ -25,7 +26,7 @@ typedef struct ESC_initalize_structure
 
 typedef struct ESC_control_structure
 {
-	uint32_t num;///< esc number
+	uint8_t num;///< esc number
 	uint16_t speed;///< esc current speed
 	uint8_t rotate_dir;///< esc current direction
 	struct ESC_control_structure *next;///< list link
@@ -50,12 +51,15 @@ static ESC_ctrlStruct *ctrl_prev=NULL;
 
 ret ESC_Init(ESC_initStruct esc);
 ret ESC_Rotate(ESC_ctrlStruct esc);
-uint8_t ESC_GetRotateDirection(uint32_t motor_num);
+ret ESC_GetRotateDirection(uint8_t esc_num, uint8_t *motor_dir);
 
 ret ESC_AddControlInfo(const ESC_ctrlStruct esc);
-ret ESC_GetControlInfo(uint32_t esc_num, ESC_ctrlStruct *esc);
+ret ESC_DeleteControlInfo(uint8_t esc_num);
+ret ESC_GetControlInfo(uint8_t esc_num, ESC_ctrlStruct *esc);
+
 ret ESC_AddInitalizeInfo(const ESC_initStruct esc);
-ret ESC_GetInitalizeInfo(uint32_t esc_num, ESC_initStruct *esc);
+ret ESC_DeleteInitalizeInfo(uint8_t esc_num);
+ret ESC_GetInitalizeInfo(uint8_t esc_num, ESC_initStruct *esc);
 
 void ESC_CountIncrement(void);
 void Ese_CountDecrement(void);
