@@ -8,6 +8,7 @@ ret ESC_Init(ESC_initStruct esc)
 	ret_val=ESC_SUCCESS;
 	
 	ret_val|=ESC_AddInitalizeInfo( (const ESC_initStruct)esc);///< add initalize info
+	ESC_ResetInitListPosition();
 												printf("exit ESC_Init();\n");
 	return ret_val;
 }
@@ -93,13 +94,12 @@ ret ESC_AddControlInfo(const ESC_ctrlStruct esc)
 
 	/**node allocate*/
 	buf=(ESC_ctrlStruct*)malloc(sizeof(ESC_ctrlStruct) );
-
 	if(buf==NULL)
 	{
 													printf("malloc fail\n");
 		return ESC_MEMALLOC_FAIL;
 	}
-		
+
 	/**struct copy*/
 	buf->num=esc.num;
 	buf->speed=esc.speed;
@@ -114,13 +114,11 @@ ret ESC_AddControlInfo(const ESC_ctrlStruct esc)
 		ctrl_head=(ESC_ctrlStruct*)malloc(sizeof(ESC_ctrlStruct) );
 		ctrl_cur=ctrl_head;
 	}
-	/**insert new node*/
 
-	// TODO:
-	// THIS SECTION IS DUMP!!!!!!!!!!!!!!!!!!!!!!!!!!
-	// SOLVE DUMP ERROR!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+
+	/**insert new node*/
 	ctrl_prev=ctrl_cur;
-	ctrl_cur->next=buf;// THIS IS DUMP ERROR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	ctrl_cur->next=buf;
 	ctrl_cur=buf;
 	buf->next=NULL;
 													printf("ESC_AddControlInfo:\n");
@@ -168,16 +166,15 @@ ret ESC_GetControlInfo(uint8_t esc_num, ESC_ctrlStruct *esc)
 	}
 
 	/**reset position*/
-	ctrl_cur=ctrl_head->next;
-	ctrl_prev=ctrl_head;
+	ESC_ResetCtrlListPosition();
 
 	/**search esc number*/
 	while(ctrl_cur!=NULL)
 	{
 		if(ctrl_cur->num==esc_num)
 		{
-			esc=ctrl_cur;	
-			return ESC_SUCCESS;
+			esc=ctrl_cur;
+			break;
 		}
 		else
 		{
@@ -186,7 +183,17 @@ ret ESC_GetControlInfo(uint8_t esc_num, ESC_ctrlStruct *esc)
 		}
 	}
 														printf("exit ESC_GetControlInfo();\n");
-	return ESC_FIRST_CONTROL;///< return ESC_FIRST_CONTROL
+	if(ctrl_cur==NULL)
+	{
+		ESC_ResetCtrlListPosition();
+		return ESC_FIRST_CONTROL;///< return ESC_FIRST_CONTROL
+	}
+	else
+	{
+		ESC_ResetCtrlListPosition();
+		return ESC_SUCCESS;
+	}
+	
 }
 
 
@@ -258,7 +265,7 @@ ret ESC_DeleteInitalizeInfo(uint8_t esc_num)
 
 		free(esc);///< node de-allocate
 
-		Ese_CountDecrement();///< decrement esc count
+		ESC_CountDecrement();///< decrement esc count
 	}
 																	printf("exit ESC_DeleteInitalizeInfo();\n");
 	return ESC_SUCCESS;
@@ -268,17 +275,15 @@ ret ESC_GetInitalizeInfo(uint8_t esc_num, ESC_initStruct *esc)
 {
 																		printf("call ESC_GetInitalizeInfo();\n");
 	/**reset position*/
-	init_cur=init_head->next;
-	init_prev=init_head;
+	ESC_ResetInitListPosition();
 																		printf("num: %d\n", esc_num);
 	/**search esc number*/
 	while(init_cur!=NULL)
 	{
-																		printf("cur_num: %d\n", init_cur->num);
 		if(init_cur->num==esc_num)
 		{
 			esc=init_cur;
-			return ESC_SUCCESS;
+			break;
 		}
 		else
 		{
@@ -287,7 +292,16 @@ ret ESC_GetInitalizeInfo(uint8_t esc_num, ESC_initStruct *esc)
 		}
 	}
 																		printf("exit ESC_GetInitalizeInfo();\n");
-	return ESC_UNKNOWN_NUM;
+	if(init_cur==NULL)
+	{
+		ESC_ResetInitListPosition();
+		return ESC_UNKNOWN_NUM;
+	}
+	else
+	{
+		ESC_ResetInitListPosition();
+		return ESC_SUCCESS;
+	}
 }
 
 void ESC_CountIncrement(void)
@@ -297,9 +311,23 @@ void ESC_CountIncrement(void)
 													printf("exit ESC_CountIncrement();\n");
 }
 
-void Ese_CountDecrement(void)
+void ESC_CountDecrement(void)
 {
-													printf("call Ese_CountDecrement();\n");
+													printf("call ESC_CountDecrement();\n");
 	esc_count-=1;
-													printf("exit Ese_CountDecrement();\n");
+													printf("exit ESC_CountDecrement();\n");
+}
+
+void ESC_ResetCtrlListPosition(void)
+{
+	/**reset position*/
+	ctrl_cur=ctrl_head->next;
+	ctrl_prev=ctrl_head;
+}
+
+void ESC_ResetInitListPosition(void)
+{
+	/**reset position*/
+	init_cur=init_head->next;
+	init_prev=init_head;
 }

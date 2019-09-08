@@ -27,7 +27,7 @@ ret Motor_Init(uint32_t motor_num, uint16_t max_speed, uint16_t min_speed)
 		mask<<=1;
 		mask_number++;
 	}
-	
+											printf("\t\texit Motor_Init();\n");
 	return ret_val;
 }
 
@@ -59,7 +59,7 @@ ret Motor_CCW_Rotate(uint32_t motor_num, uint16_t speed)
 		mask<<=1;
 		mask_number++;
 	}
-	
+													printf("\t\texit Motor_CCW_Rotate();\n");
 	return ret_val;
 }
 
@@ -90,7 +90,7 @@ ret Motor_CW_Rotate(uint32_t motor_num, uint16_t speed)
 		mask<<=1;
 		mask_number++;
 	}
-	
+													printf("\t\texitMotor_CW_Rotate\n");
 	return ret_val;
 }
 
@@ -121,7 +121,7 @@ ret Motor_Start(uint32_t motor_num)
 		mask<<=1;
 		mask_number++;
 	}
-	
+															printf("\t\texit Motor_Start\n");
 	return ret_val;
 }
 
@@ -151,7 +151,7 @@ ret Motor_Stop(uint32_t motor_num)
 		mask<<=1;
 		mask_number++;
 	}
-	
+															printf("\t\texit Motor_Stop\n");
 	return ret_val;
 }
 

@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+// TODO:
+// fix esc rotate direction issue
+// fix esc2 unklnown issue
 
 /**user include header*/
 #include "motor_ctrl.h"

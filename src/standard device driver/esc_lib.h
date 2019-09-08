@@ -62,6 +62,8 @@ ret ESC_DeleteInitalizeInfo(uint8_t esc_num);
 ret ESC_GetInitalizeInfo(uint8_t esc_num, ESC_initStruct *esc);
 
 void ESC_CountIncrement(void);
-void Ese_CountDecrement(void);
+void ESC_CountDecrement(void);
 
+void ESC_ResetCtrlListPosition(void);
+void ESC_ResetInitListPosition(void);
 #endif
