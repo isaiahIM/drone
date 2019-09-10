@@ -9,11 +9,13 @@
 
 #define ESC_DIR_CW 0
 #define ESC_DIR_CCW 1
+#define ESC_DIR_UNKNOWN 2
 
 #define ESC_SUCCESS 0
 #define ESC_MEMALLOC_FAIL 0X01
 #define ESC_UNKNOWN_NUM 0X02
 #define ESC_FIRST_CONTROL 0X04
+#define ESC_UNKNOWN_DIR 0x08
 
 typedef struct ESC_initalize_structure
 {
@@ -52,10 +54,13 @@ static ESC_ctrlStruct *ctrl_prev=NULL;
 ret ESC_Init(ESC_initStruct esc);
 ret ESC_Rotate(ESC_ctrlStruct esc);
 ret ESC_GetRotateDirection(uint8_t esc_num, uint8_t *motor_dir);
+uint8_t ESC_GetNumber(const ESC_ctrlStruct esc);
+uint16_t ESC_GetSpeed(const ESC_ctrlStruct esc);
 
 ret ESC_AddControlInfo(const ESC_ctrlStruct esc);
 ret ESC_DeleteControlInfo(uint8_t esc_num);
 ret ESC_GetControlInfo(uint8_t esc_num, ESC_ctrlStruct *esc);
+ret ESC_ConfigControlInfo(const ESC_ctrlStruct esc);
 
 ret ESC_AddInitalizeInfo(const ESC_initStruct esc);
 ret ESC_DeleteInitalizeInfo(uint8_t esc_num);

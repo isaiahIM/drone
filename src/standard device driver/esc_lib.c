@@ -7,8 +7,8 @@ ret ESC_Init(ESC_initStruct esc)
 	ret ret_val;
 	ret_val=ESC_SUCCESS;
 	
-	ret_val|=ESC_AddInitalizeInfo( (const ESC_initStruct)esc);///< add initalize info
-	ESC_ResetInitListPosition();
+	ret_val|=ESC_AddInitalizeInfo( (const ESC_initStruct)esc);/// add initalize info
+	
 												printf("exit ESC_Init();\n");
 	return ret_val;
 }
@@ -44,7 +44,7 @@ ret ESC_Rotate(ESC_ctrlStruct esc)
 	if(buf == ESC_FIRST_CONTROL)
 	{
 												printf("ESC_Rotate: first control!\n");
-		ret_val|=ESC_AddControlInfo(esc);///< insert node
+		ret_val|=ESC_AddControlInfo(esc);/// insert node
 	}
 	else if(buf == ESC_UNKNOWN_NUM)
 	{
@@ -52,16 +52,22 @@ ret ESC_Rotate(ESC_ctrlStruct esc)
 		return ESC_UNKNOWN_NUM;
 	}
 	
-	ret_val|=ESC_GetRotateDirection(esc.num, &dir);///< get control info
+	ret_val|=ESC_GetRotateDirection(esc.num, &dir);/// get control info 						error!! rotation check error!!
+	
 
 	/**rotation dirction check*/
 	if(dir==ESC_DIR_CW)
 	{
 		BSP_ESC_RotateCW(esc.num, esc.speed);
 	}
-	else
+	else if (dir==ESC_DIR_CCW)
 	{
 		BSP_ESC_RotateCCW(esc.num, esc.speed);
+	}
+	else if(dir==ESC_DIR_UNKNOWN)
+	{
+												printf("ESC unknown direction!\n");
+		return ESC_UNKNOWN_DIR;
 	}
 	
 												printf("exit ESC_Rotate();\n");
@@ -77,14 +83,32 @@ ret ESC_GetRotateDirection(uint8_t esc_num, uint8_t *motor_dir)
 
 	ret_val=ESC_SUCCESS;
 
-	ret_val|=ESC_GetControlInfo(esc_num, &esc);///< get control info
+	ret_val|=ESC_GetControlInfo(esc_num, &esc);/// get control info
+	if(ESC_SUCCESS)
+	{
+		*motor_dir=esc.rotate_dir;/// get rotation info
+	}
+	else
+	{
+		*motor_dir= ESC_DIR_UNKNOWN;
+	}
 	
-	*motor_dir=esc.rotate_dir;///< get rotation info
 
 													printf("ESC_GetRotateDirection: esc rotate dir1: %d\n", *motor_dir);
 													printf("exit ESC_GetRotateDirection();\n");
 	return ret_val;
 }
+
+uint8_t ESC_GetNumber(const ESC_ctrlStruct esc)
+{
+	return  esc.num;
+}
+
+uint16_t ESC_GetSpeed(const ESC_ctrlStruct esc)
+{
+	return esc.speed;
+}
+
 
 ret ESC_AddControlInfo(const ESC_ctrlStruct esc)
 {
@@ -113,17 +137,22 @@ ret ESC_AddControlInfo(const ESC_ctrlStruct esc)
 		ctrl_prev=ctrl_head;
 		ctrl_head=(ESC_ctrlStruct*)malloc(sizeof(ESC_ctrlStruct) );
 		ctrl_cur=ctrl_head;
+		ctrl_head->next=NULL;
 	}
-
+	else
+	{
+		ESC_ResetCtrlListPosition();
+	}
 
 	/**insert new node*/
 	ctrl_prev=ctrl_cur;
+	buf->next=ctrl_cur->next;
 	ctrl_cur->next=buf;
 	ctrl_cur=buf;
-	buf->next=NULL;
 													printf("ESC_AddControlInfo:\n");
 													printf("num: %d, speed: %d, dir: %d\n", ctrl_cur->num, ctrl_cur->speed, ctrl_cur->rotate_dir);
 													printf("exit ESC_AddControlInfo();\n");
+	ESC_ResetCtrlListPosition();
 	return ESC_SUCCESS;
 }
 
@@ -143,7 +172,7 @@ ret ESC_DeleteControlInfo(uint8_t esc_num)
 	ctrl_prev=ctrl_cur;
 													printf("ESC_DeleteControlInfo:\n");
 													printf("num: %d, speed: %d, dir: %d\n", ctrl_cur->num, ctrl_cur->speed, ctrl_cur->rotate_dir);
-	free(esc);///< node de-allocate
+	free(esc);/// node de-allocate
 													printf("exit ESC_DeleteControlInfo();\n");
 	return ret_val;
 }
@@ -156,13 +185,13 @@ ret ESC_GetControlInfo(uint8_t esc_num, ESC_ctrlStruct *esc)
 	/**if unknown esc*/
 	if(ESC_GetInitalizeInfo(esc_num, buf)==ESC_UNKNOWN_NUM)
 	{
-		return ESC_UNKNOWN_NUM;///< return ESC_UNKNOWN_NUM
+		return ESC_UNKNOWN_NUM;/// return ESC_UNKNOWN_NUM
 	}
 
 	/**if first control*/
 	if(ctrl_cur==NULL)
 	{
-		return ESC_FIRST_CONTROL;///< return ESC_FIRST_CONTROL
+		return ESC_FIRST_CONTROL;/// return ESC_FIRST_CONTROL
 	}
 
 	/**reset position*/
@@ -183,19 +212,36 @@ ret ESC_GetControlInfo(uint8_t esc_num, ESC_ctrlStruct *esc)
 		}
 	}
 														printf("exit ESC_GetControlInfo();\n");
+
+	ESC_ResetCtrlListPosition();
+
 	if(ctrl_cur==NULL)
 	{
-		ESC_ResetCtrlListPosition();
-		return ESC_FIRST_CONTROL;///< return ESC_FIRST_CONTROL
+		return ESC_FIRST_CONTROL;
 	}
 	else
 	{
-		ESC_ResetCtrlListPosition();
 		return ESC_SUCCESS;
 	}
 	
 }
 
+ret ESC_ConfigControlInfo(const ESC_ctrlStruct esc)
+{
+	ret ret_val;
+	ESC_ctrlStruct *p;
+
+	ret_val=ESC_GetControlInfo(esc.num, p);
+	p->speed=esc.speed;
+	p->rotate_dir=esc.rotate_dir;
+
+	if(ret_val==ESC_UNKNOWN_NUM || ESC_FIRST_CONTROL)
+	{
+		ret_val=ESC_UNKNOWN_NUM;
+	}
+
+	return ret_val;
+}
 
 ret ESC_AddInitalizeInfo(const ESC_initStruct esc)
 {
@@ -222,19 +268,26 @@ ret ESC_AddInitalizeInfo(const ESC_initStruct esc)
 		init_prev=init_head;
 		init_head=(ESC_initStruct*)malloc(sizeof(ESC_initStruct) );
 		init_cur=init_head;
+		init_head->next=NULL;
+	}
+	else
+	{
+		ESC_ResetInitListPosition();
 	}
 
+	
+	
 	/**insert new node*/
 	init_prev=init_cur;
+	buf->next=init_cur->next;
 	init_cur->next=buf;
 	init_cur=buf;
-	buf->next=NULL;
 
-	BSP_ESC_Initalize(init_cur->num, init_cur->speed_min, init_cur->speed_max);///< ESC initalize(bsp)
+	BSP_ESC_Initalize(init_cur->num, init_cur->speed_min, init_cur->speed_max);/// ESC initalize(bsp)
 
-	ESC_CountIncrement();///< increment esc count
+	ESC_CountIncrement();/// increment esc count
 																	printf("exit ESC_AddInitalizeInfo();\n");
-
+	ESC_ResetInitListPosition();
 	return ESC_SUCCESS;
 }
 
@@ -250,9 +303,9 @@ ret ESC_DeleteInitalizeInfo(uint8_t esc_num)
 	/**get esc initalize info*/
 	ret_val|=ESC_GetInitalizeInfo(esc_num, esc);
 
-	if(ret_val!=ESC_SUCCESS)///< if can't get initalize info
+	if(ret_val!=ESC_SUCCESS)/// if can't get initalize info
 	{
-		return ESC_UNKNOWN_NUM;///< return ESC_UNKNOWN_NUM
+		return ESC_UNKNOWN_NUM;/// return ESC_UNKNOWN_NUM
 	}
 	else
 	{
@@ -261,11 +314,11 @@ ret ESC_DeleteInitalizeInfo(uint8_t esc_num)
 		init_cur=init_cur->next;
 		esc->next=NULL;
 
-		BSP_ESC_Deinitalize(esc->num);///< esc de-initalize(bsp)
+		BSP_ESC_Deinitalize(esc->num);/// esc de-initalize(bsp)
 
-		free(esc);///< node de-allocate
+		free(esc);/// node de-allocate
 
-		ESC_CountDecrement();///< decrement esc count
+		ESC_CountDecrement();/// decrement esc count
 	}
 																	printf("exit ESC_DeleteInitalizeInfo();\n");
 	return ESC_SUCCESS;
@@ -292,14 +345,14 @@ ret ESC_GetInitalizeInfo(uint8_t esc_num, ESC_initStruct *esc)
 		}
 	}
 																		printf("exit ESC_GetInitalizeInfo();\n");
+	ESC_ResetInitListPosition();
+
 	if(init_cur==NULL)
 	{
-		ESC_ResetInitListPosition();
 		return ESC_UNKNOWN_NUM;
 	}
 	else
 	{
-		ESC_ResetInitListPosition();
 		return ESC_SUCCESS;
 	}
 }
