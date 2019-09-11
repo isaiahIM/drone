@@ -22,6 +22,10 @@
 
 #define MOTOR_OK 0
 
+#define MOTOR_DIR_CW ESC_DIR_CW
+#define MOTOR_DIR_CCW ESC_DIR_CCW
+
+ret Motor_HW_Init(void);
 ret Motor_Init(uint32_t motor_num, uint16_t max_speed, uint16_t min_speed);
 ret Motor_CCW_Rotate(uint32_t motor_num, uint16_t speed);
 ret Motor_CW_Rotate(uint32_t motor_num, uint16_t speed);

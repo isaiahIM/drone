@@ -1,5 +1,24 @@
 #include "esc_lib.h"
 
+ret ESC_SystemInit(void)
+{
+	ret ret_val=ESC_SUCCESS;
+
+	/**make dummy node*/
+	init_prev=init_head;
+	init_head=(ESC_initStruct*)malloc(sizeof(ESC_initStruct) );
+	init_cur=init_head;
+	init_head->next=NULL;
+
+	ctrl_prev=ctrl_head;
+	ctrl_head=(ESC_ctrlStruct*)malloc(sizeof(ESC_ctrlStruct) );
+	ctrl_cur=ctrl_head;
+	ctrl_head->next=NULL;
+
+	return ret_val;
+}
+
+
 ret ESC_Init(ESC_initStruct esc)
 {
 												printf("call ESC_Init();\n");
@@ -27,18 +46,23 @@ ret ESC_DeInit(ESC_initStruct esc)
 	return ret_val;
 }
 
+
 ret ESC_Rotate(ESC_ctrlStruct esc)
 {
 											printf("call ESC_Rotate();\n");
 	/**declare and initalize value*/
 	ret ret_val;
 	ret buf;
-	uint8_t dir;
+	uint8_t dir, num;
+	uint16_t speed;
 	ESC_ctrlStruct *esc_buf;
 
 	ret_val=ESC_SUCCESS;
 
-	buf=ESC_GetControlInfo(esc.num, esc_buf);
+	num=ESC_GetNumber(esc);
+	speed=ESC_GetSpeed(esc);
+
+	buf=ESC_GetControlInfo(num, esc_buf);
 
 	/**if first rotate*/
 	if(buf == ESC_FIRST_CONTROL)
@@ -52,17 +76,17 @@ ret ESC_Rotate(ESC_ctrlStruct esc)
 		return ESC_UNKNOWN_NUM;
 	}
 	
-	ret_val|=ESC_GetRotateDirection(esc.num, &dir);/// get control info 						error!! rotation check error!!
+	ret_val|=ESC_GetRotateDir(num, &dir);/// get control info 						error!! rotation check error!!
 	
 
 	/**rotation dirction check*/
 	if(dir==ESC_DIR_CW)
 	{
-		BSP_ESC_RotateCW(esc.num, esc.speed);
+		BSP_ESC_RotateCW(num, speed);
 	}
 	else if (dir==ESC_DIR_CCW)
 	{
-		BSP_ESC_RotateCCW(esc.num, esc.speed);
+		BSP_ESC_RotateCCW(num, speed);
 	}
 	else if(dir==ESC_DIR_UNKNOWN)
 	{
@@ -74,17 +98,17 @@ ret ESC_Rotate(ESC_ctrlStruct esc)
 	return ret_val;
 }
 
-ret ESC_GetRotateDirection(uint8_t esc_num, uint8_t *motor_dir)
+ret ESC_GetRotateDir(uint8_t esc_num, uint8_t *motor_dir)
 {
 												printf("call ESC_GetRotateDirection();\n");
 	/**declare and initalize value*/
 	ret ret_val;
 	ESC_ctrlStruct esc;
-
+	
 	ret_val=ESC_SUCCESS;
 
 	ret_val|=ESC_GetControlInfo(esc_num, &esc);/// get control info
-	if(ESC_SUCCESS)
+	if(ret_val==ESC_SUCCESS)
 	{
 		*motor_dir=esc.rotate_dir;/// get rotation info
 	}
@@ -92,8 +116,6 @@ ret ESC_GetRotateDirection(uint8_t esc_num, uint8_t *motor_dir)
 	{
 		*motor_dir= ESC_DIR_UNKNOWN;
 	}
-	
-
 													printf("ESC_GetRotateDirection: esc rotate dir1: %d\n", *motor_dir);
 													printf("exit ESC_GetRotateDirection();\n");
 	return ret_val;
@@ -107,6 +129,62 @@ uint8_t ESC_GetNumber(const ESC_ctrlStruct esc)
 uint16_t ESC_GetSpeed(const ESC_ctrlStruct esc)
 {
 	return esc.speed;
+}
+
+
+ret ESC_SetInitNum(ESC_initStruct *esc, uint8_t num)
+{
+	ret ret_val=ESC_SUCCESS;
+
+	esc->num=num;
+
+	return ret_val;
+}
+
+ret ESC_SetMaxSpeed(ESC_initStruct *esc, uint16_t speed)
+{
+	ret ret_val=ESC_SUCCESS;
+
+	esc->speed_max=speed;
+
+	return ret_val;
+}
+
+ret ESC_SetMinSpeed(ESC_initStruct *esc, uint16_t speed)
+{
+	ret ret_val=ESC_SUCCESS;
+
+	esc->speed_min=speed;
+
+	return ret_val;
+}
+
+
+ret ESC_SetCurrentSpeed(ESC_ctrlStruct *esc, uint16_t speed)
+{
+	ret ret_val=ESC_SUCCESS;
+
+	esc->speed=speed;
+
+	return ret_val;
+}
+
+ret ESC_SetRotateDir(ESC_ctrlStruct *esc, uint8_t dir)
+{
+	ret ret_val=ESC_SUCCESS;
+
+	esc->rotate_dir=dir;
+
+	return ret_val;
+}
+
+ret ESC_SetCurrentNum(ESC_ctrlStruct *esc, uint8_t num)
+{
+	ret ret_val=ESC_SUCCESS;
+
+	esc->num=num;
+
+	return ret_val;
 }
 
 
@@ -128,21 +206,6 @@ ret ESC_AddControlInfo(const ESC_ctrlStruct esc)
 	buf->num=esc.num;
 	buf->speed=esc.speed;
 	buf->rotate_dir=esc.rotate_dir;
-
-	/**if first insert*/
-	if(ctrl_head==NULL)
-	{
-													printf("ESC_AddControlInfo: first insert\n");
-		/**make dummy node*/
-		ctrl_prev=ctrl_head;
-		ctrl_head=(ESC_ctrlStruct*)malloc(sizeof(ESC_ctrlStruct) );
-		ctrl_cur=ctrl_head;
-		ctrl_head->next=NULL;
-	}
-	else
-	{
-		ESC_ResetCtrlListPosition();
-	}
 
 	/**insert new node*/
 	ctrl_prev=ctrl_cur;
@@ -226,23 +289,6 @@ ret ESC_GetControlInfo(uint8_t esc_num, ESC_ctrlStruct *esc)
 	
 }
 
-ret ESC_ConfigControlInfo(const ESC_ctrlStruct esc)
-{
-	ret ret_val;
-	ESC_ctrlStruct *p;
-
-	ret_val=ESC_GetControlInfo(esc.num, p);
-	p->speed=esc.speed;
-	p->rotate_dir=esc.rotate_dir;
-
-	if(ret_val==ESC_UNKNOWN_NUM || ESC_FIRST_CONTROL)
-	{
-		ret_val=ESC_UNKNOWN_NUM;
-	}
-
-	return ret_val;
-}
-
 ret ESC_AddInitalizeInfo(const ESC_initStruct esc)
 {
 																printf("call ESC_AddInitalizeInfo();\n");
@@ -257,26 +303,11 @@ ret ESC_AddInitalizeInfo(const ESC_initStruct esc)
 		return ESC_MEMALLOC_FAIL;
 	}
 
+	/**copy data */
 	buf->num=esc.num;
 	buf->speed_max=esc.speed_max;
 	buf->speed_min=esc.speed_min;
 
-	/**if first insert*/
-	if(init_head==NULL)
-	{
-		/**make dummy node*/
-		init_prev=init_head;
-		init_head=(ESC_initStruct*)malloc(sizeof(ESC_initStruct) );
-		init_cur=init_head;
-		init_head->next=NULL;
-	}
-	else
-	{
-		ESC_ResetInitListPosition();
-	}
-
-	
-	
 	/**insert new node*/
 	init_prev=init_cur;
 	buf->next=init_cur->next;
@@ -345,7 +376,6 @@ ret ESC_GetInitalizeInfo(uint8_t esc_num, ESC_initStruct *esc)
 		}
 	}
 																		printf("exit ESC_GetInitalizeInfo();\n");
-	ESC_ResetInitListPosition();
 
 	if(init_cur==NULL)
 	{

@@ -51,16 +51,26 @@ static ESC_ctrlStruct *ctrl_prev=NULL;
 
 /**user functions*/
 
+ret ESC_SystemInit(void);
+
 ret ESC_Init(ESC_initStruct esc);
 ret ESC_Rotate(ESC_ctrlStruct esc);
-ret ESC_GetRotateDirection(uint8_t esc_num, uint8_t *motor_dir);
+
+ret ESC_GetRotateDir(uint8_t esc_num, uint8_t *motor_dir);
 uint8_t ESC_GetNumber(const ESC_ctrlStruct esc);
 uint16_t ESC_GetSpeed(const ESC_ctrlStruct esc);
+
+ret ESC_SetInitNum(ESC_initStruct *esc, uint8_t num);
+ret ESC_SetMaxSpeed(ESC_initStruct *esc, uint16_t speed);
+ret ESC_SetMinSpeed(ESC_initStruct *esc, uint16_t speed);
+
+ret ESC_SetCurrentSpeed(ESC_ctrlStruct *esc, uint16_t speed);
+ret ESC_SetRotateDir(ESC_ctrlStruct *esc, uint8_t dir);
+ret ESC_SetCurrentNum(ESC_ctrlStruct *esc, uint8_t num);
 
 ret ESC_AddControlInfo(const ESC_ctrlStruct esc);
 ret ESC_DeleteControlInfo(uint8_t esc_num);
 ret ESC_GetControlInfo(uint8_t esc_num, ESC_ctrlStruct *esc);
-ret ESC_ConfigControlInfo(const ESC_ctrlStruct esc);
 
 ret ESC_AddInitalizeInfo(const ESC_initStruct esc);
 ret ESC_DeleteInitalizeInfo(uint8_t esc_num);

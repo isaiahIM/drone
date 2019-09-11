@@ -1,5 +1,14 @@
 #include "motor_ctrl.h"
 
+ret Motor_HW_Init(void)
+{
+	ret ret_val=MOTOR_OK;
+
+	ret_val|=ESC_SystemInit();
+
+	return ret_val;
+}
+
 ret Motor_Init(uint32_t motor_num, uint16_t max_speed, uint16_t min_speed)
 {
 												printf("\t\tcall Motor_Init();\n");
@@ -12,8 +21,9 @@ ret Motor_Init(uint32_t motor_num, uint16_t max_speed, uint16_t min_speed)
 	ret_val=MOTOR_OK;
 	mask=0x01;
 	mask_number=1;
-	esc.speed_max=max_speed;
-	esc.speed_min=min_speed;
+
+	ESC_SetMaxSpeed(&esc, max_speed);
+	ESC_SetMinSpeed(&esc, min_speed);
 
 	/**esc initalize*/
 	while(mask!=0x00)
@@ -21,7 +31,7 @@ ret Motor_Init(uint32_t motor_num, uint16_t max_speed, uint16_t min_speed)
 		if( (mask&motor_num)!=0 )
 		{
 											printf("motor num: %d\n", mask_number);
-			esc.num=mask_number;
+			ESC_SetInitNum(&esc, mask_number);
 			ret_val|=ESC_Init(esc);
 		}
 		mask<<=1;
@@ -50,9 +60,9 @@ ret Motor_CCW_Rotate(uint32_t motor_num, uint16_t speed)
 		if( (mask&motor_num)!=0 )
 		{
 													printf("motor num: %d, speed: %d\n", mask_number, speed);
-			esc.num=mask_number;
-			esc.speed=speed;
-			esc.rotate_dir=ESC_DIR_CCW;
+			ESC_SetCurrentNum(&esc, mask_number);
+			ESC_SetRotateDir(&esc, ESC_DIR_CCW);
+			ESC_SetCurrentSpeed(&esc, speed);
 
 			ret_val|=ESC_Rotate(esc);
 		}
@@ -81,9 +91,9 @@ ret Motor_CW_Rotate(uint32_t motor_num, uint16_t speed)
 		if( (mask&motor_num)!=0 )
 		{
 												printf("motor num: %d, speed: %d\n", mask_number, speed);
-			esc.num=mask_number;
-			esc.speed=speed;
-			esc.rotate_dir=ESC_DIR_CW;
+			ESC_SetCurrentNum(&esc, mask_number);
+			ESC_SetRotateDir(&esc, ESC_DIR_CW);
+			ESC_SetCurrentSpeed(&esc, speed);
 
 			ret_val|=ESC_Rotate(esc);
 		}
@@ -109,11 +119,11 @@ ret Motor_Start(uint32_t motor_num)
 	{
 		if( (mask&motor_num)!=0 )
 		{
-			ret_val|=ESC_GetRotateDirection(mask_number, &motor_dir);
+			ret_val|=ESC_GetRotateDir(mask_number, &motor_dir);
 
-			esc.num=mask_number;
-			esc.speed=MOTOR_SPEED_MIN;
-			esc.rotate_dir=motor_dir;
+			ESC_SetCurrentNum(&esc, mask_number);
+			ESC_SetRotateDir(&esc, ESC_DIR_CW);
+			ESC_SetCurrentSpeed(&esc, MOTOR_SPEED_MIN);
 
 			ret_val|=ESC_Rotate(esc);
 															printf("motor num: %d, speed: %d\n", mask_number, MOTOR_SPEED_MIN);
@@ -139,11 +149,11 @@ ret Motor_Stop(uint32_t motor_num)
 	{
 		if( (mask&motor_num)!=0 )
 		{
-			ret_val|=ESC_GetRotateDirection(mask_number, &motor_dir);
+			ret_val|=ESC_GetRotateDir(mask_number, &motor_dir);
 
-			esc.num=mask_number;
-			esc.speed=MOTOR_STOP;
-			esc.rotate_dir=motor_dir;
+			ESC_SetCurrentNum(&esc, mask_number);
+			ESC_SetRotateDir(&esc, ESC_DIR_CW);
+			ESC_SetCurrentSpeed(&esc, MOTOR_STOP);
 
 			ret_val|=ESC_Rotate(esc);
 															printf("motor num: %d, speed: %d\n", mask_number, MOTOR_STOP);
