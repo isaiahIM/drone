@@ -1,3 +1,14 @@
+/**
+ * @file esc_lib.c
+ * @author isaiah IM ||isaiahim0214@gmail.com
+ * @brief esc HAL Library source file
+ * @version 0.1
+ * @date 2019-09-13
+ * 
+ * @copyright Copyright (c) 2019
+ * 
+ */
+
 #include "esc_lib.h"
 
 ret ESC_SystemInit(void)
@@ -5,7 +16,6 @@ ret ESC_SystemInit(void)
 	ret ret_val=ESC_SUCCESS;
 
 	/**initalize esc initalizing data list*/
-
 	init_prev=init_head;
 	init_head=(ESC_initStruct*)malloc(sizeof(ESC_initStruct) );
 	if(init_head==NULL)
