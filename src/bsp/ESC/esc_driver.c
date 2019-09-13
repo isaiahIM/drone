@@ -1,5 +1,17 @@
 #include "esc_driver.h"
 
+uint8_t BSP_ESC_HW_Initalize(void)
+{
+    uint8_t ret_val=BSP_ESC_SUCCESS;
+
+    printf("----------------------------------------------START----------------------------------------------------\n");
+    printf("esc hw initalize..\n");
+    printf("success!!\n");
+    printf("------------------------------------------------END----------------------------------------------------\n");
+
+    return ret_val;
+}
+
 void BSP_ESC_Initalize(uint8_t esc_num, uint16_t min_speed, uint16_t max_speed)
 {
     printf("----------------------------------------------START----------------------------------------------------\n");
