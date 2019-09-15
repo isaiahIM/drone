@@ -28,7 +28,7 @@
 ret Propeller_HW_Init(void);
 ret Propeller_SW_Init(void);
 
-ret Propeller_Init(uint32_t propeller_num, uint16_t max_speed, uint16_t min_speed);
+ret Propeller_Init(uint32_t propeller_num, uint16_t max_speed, uint16_t min_speed, uint8_t propeller_dir);
 ret Propeller_DeInit(uint32_t propeller_num);
 ret Propeller_CCW_Rotate(uint32_t propeller_num, uint16_t speed);
 ret Propeller_CW_Rotate(uint32_t propeller_num, uint16_t speed);

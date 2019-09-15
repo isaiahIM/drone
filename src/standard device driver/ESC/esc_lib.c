@@ -90,8 +90,6 @@ ret ESC_Rotate(ESC_ctrlStruct esc)
 	ret_val|=ESC_SetRotateDir(esc_buf, dir);
 	ret_val|=ESC_SetCurrentSpeed(esc_buf, speed);
 	
-	buf=ESC_GetControlInfo(num, &esc_buf);
-	
 	/**rotation dirction check*/
 	if(dir==ESC_DIR_CW)
 	{

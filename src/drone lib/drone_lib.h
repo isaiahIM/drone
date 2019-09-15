@@ -13,4 +13,5 @@ ret Drone_Init(void);
 
 ret Drone_HW_Init(void);
 ret Drone_AP_Init(void);
+ret Drone_Arm(void);
 #endif

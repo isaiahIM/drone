@@ -18,7 +18,7 @@ ret Propeller_SW_Init(void)
 	return ret_val;
 }
 
-ret Propeller_Init(uint32_t propeller_num, uint16_t max_speed, uint16_t min_speed)
+ret Propeller_Init(uint32_t propeller_num, uint16_t max_speed, uint16_t min_speed, uint8_t propeller_dir)
 {
 												printf("\t\tcall Propeller_Init();\n");
 	/**declare and initalize value*/
@@ -38,7 +38,7 @@ ret Propeller_Init(uint32_t propeller_num, uint16_t max_speed, uint16_t min_spee
 	ESC_SetMinSpeed(&esc_init, min_speed);
 
     ESC_SetCurrentSpeed(&esc_ctrl, PROPELLER_STOP);
-    ESC_SetRotateDir(&esc_ctrl, PROPELLER_DIR_CW);
+    ESC_SetRotateDir(&esc_ctrl, propeller_dir);
     
 	/**esc initalize*/
 	while(mask!=0x00)
@@ -165,7 +165,7 @@ ret Propeller_Start(uint32_t propeller_num)
 		if( (mask&propeller_num)!=0 )
 		{
 			ESC_SetCurrentNum(&esc, mask_number);
-			ESC_SetRotateDir(&esc, ESC_DIR_CW);
+			ESC_SetRotateDir(&esc, ESC_GetCurrentDir(mask_number));
 			ESC_SetCurrentSpeed(&esc, PROPELLER_SPEED_MIN);
 
 			ret_val|=ESC_Rotate(esc);
@@ -193,7 +193,7 @@ ret Propeller_Stop(uint32_t propeller_num)
 		if( (mask&propeller_num)!=0 )
 		{
 			ESC_SetCurrentNum(&esc, mask_number);
-			ESC_SetRotateDir(&esc, ESC_DIR_CW);
+			ESC_SetRotateDir(&esc, ESC_GetCurrentDir(mask_number));
 			ESC_SetCurrentSpeed(&esc, PROPELLER_STOP);
 
 			ret_val|=ESC_Rotate(esc);

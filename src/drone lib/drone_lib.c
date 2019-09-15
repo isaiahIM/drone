@@ -16,9 +16,8 @@ ret Drone_Init(void)
         ret_val|=DRONE_AP_INIT_FAIL; 
     }
 
-    Propeller_Init(PROPELLER_ALL, PROPELLER_SPEED_MAX, PROPELLER_STOP);
-    
-    Propeller_Start(PROPELLER_ALL);
+    ret_val|=Propeller_Init(PROPELLER_1|PROPELLER_3, PROPELLER_SPEED_MAX, PROPELLER_STOP, PROPELLER_DIR_CW);
+    ret_val|=Propeller_Init(PROPELLER_2|PROPELLER_4, PROPELLER_SPEED_MAX, PROPELLER_STOP, PROPELLER_DIR_CCW);
     
     return ret_val;
 }
@@ -39,5 +38,13 @@ ret Drone_AP_Init(void)
     /**ESC application initalize */
     ret_val|=Propeller_SW_Init();
 
+    return ret_val;
+}
+
+ret Drone_Arm(void)
+{
+    ret ret_val=DRONE_INIT_SUCCESS;
+
+    ret_val|=Propeller_Start(PROPELLER_ALL);
     return ret_val;
 }

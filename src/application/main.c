@@ -15,6 +15,8 @@ int main(int argc, char *argv[])
 	ret ret_val;
 	ret_val|=Drone_Init();
 
+	Drone_Arm();
+	
 	Propeller_CCW_Rotate(PROPELLER_1, 30);
 	Propeller_CCW_Rotate(PROPELLER_1, 50);
 
