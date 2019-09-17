@@ -4,7 +4,10 @@ ret Propeller_HW_Init(void)
 {
 	ret ret_val=PROPELLER_OK;
 
-	ret_val|=ESC_HW_Init();
+	if(ESC_HW_Init()!=PROPELLER_OK)
+	{
+		ret_val|=PROPELLER_HW_INIT_FAIL;
+	}
 
 	return ret_val;
 }
@@ -13,12 +16,24 @@ ret Propeller_SW_Init(void)
 {
 	ret ret_val=PROPELLER_OK;
 
-	ret_val|=ESC_SystemInit();
+	if(ESC_SystemInit()!=PROPELLER_OK)
+	{
+		ret_val|=PROPELLER_SW_INIT_FAIL;
+	}
 
 	return ret_val;
 }
 
-ret Propeller_Init(uint32_t propeller_num, uint16_t max_speed, uint16_t min_speed, uint8_t propeller_dir)
+ret Propeller_Init(void)
+{
+	ret ret_val=PROPELLER_OK;
+
+	ret_val|=Propeller_HW_Init();
+	ret_val|=Propeller_SW_Init();
+
+	return ret_val;
+}
+ret Propeller_Config(uint32_t propeller_num, uint16_t max_speed, uint16_t min_speed, uint8_t propeller_dir)
 {
 												printf("\t\tcall Propeller_Init();\n");
 	/**declare and initalize value*/
@@ -34,11 +49,11 @@ ret Propeller_Init(uint32_t propeller_num, uint16_t max_speed, uint16_t min_spee
 	mask_number=1;
 
 	
-    ESC_SetMaxSpeed(&esc_init, max_speed);
-	ESC_SetMinSpeed(&esc_init, min_speed);
+    ret_val|=ESC_SetMaxSpeed(&esc_init, max_speed);
+	ret_val|=ESC_SetMinSpeed(&esc_init, min_speed);
 
-    ESC_SetCurrentSpeed(&esc_ctrl, PROPELLER_STOP);
-    ESC_SetRotateDir(&esc_ctrl, propeller_dir);
+    ret_val|=ESC_SetCurrentSpeed(&esc_ctrl, PROPELLER_STOP);
+    ret_val|=ESC_SetRotateDir(&esc_ctrl, propeller_dir);
     
 	/**esc initalize*/
 	while(mask!=0x00)
@@ -46,19 +61,25 @@ ret Propeller_Init(uint32_t propeller_num, uint16_t max_speed, uint16_t min_spee
 		if( (mask&propeller_num)!=0 )
 		{
 											printf("propeller num: %d\n", mask_number);
-			ESC_SetInitNum(&esc_init, mask_number);
-			ESC_SetCurrentNum(&esc_ctrl, mask_number);
+			ret_val|=ESC_SetInitNum(&esc_init, mask_number);
+			ret_val|=ESC_SetCurrentNum(&esc_ctrl, mask_number);
 
-			ESC_AddInfo(esc_init, esc_ctrl);
+			ret_val|=ESC_AddInfo(esc_init, esc_ctrl);
 		}
 		mask<<=1;
 		mask_number++;
 	}
 											printf("\t\texit Propeller_Init();\n");
+
+	if(ret_val|=PROPELLER_OK)
+	{
+		ret_val=PROPELLER_CONF_FAIL;
+	}
+
 	return ret_val;
 }
 
-ret Propeller_DeInit(uint32_t propeller_num)
+ret Propeller_DeConfig(uint32_t propeller_num)
 {
 	ret ret_val;
 	uint32_t mask;

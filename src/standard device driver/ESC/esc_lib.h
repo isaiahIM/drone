@@ -269,15 +269,59 @@ ret ESC_DeleteControlInfo(uint8_t esc_num);
  */
 ret ESC_GetControlInfo(uint8_t esc_num, ESC_ctrlStruct **esc);
 
-
+/**
+ * @brief Set initalize information in list.
+ * 
+ * @param esc Input ESC initalize data
+ * @return ret result of function state.
+ *  @arg ESC_SUCCESS success to add initalize information in list
+ *  @arg ESC_MEMALLOC_FAIL list memory allocate fail.
+ */
 ret ESC_AddInitalizeInfo(const ESC_initStruct esc);
+
+/**
+ * @brief Delete ESC initalize information in list
+ * 
+ * @param esc_num delete esc number
+ * @return ret result of function state.
+ *  @argESC_SUCCESS success to delete initalize information in list
+ *  @arg ESC_UNKNOWN_NUM esc number is not exist.
+ */
 ret ESC_DeleteInitalizeInfo(uint8_t esc_num);
+
+/**
+ * @brief Get initalize information in list.
+ * 
+ * @param esc_num ESC number
+ * @param esc Get pointed ESC initalize data in list(pointer type). 
+ * @return ret result of function state.
+ * 	@arg ESC_SUCCESS success to get initalize information.
+ *  @arg ESC_UNKNOWN_NUM fail to ger initalize information.
+ */
 ret ESC_GetInitalizeInfo(uint8_t esc_num, ESC_initStruct **esc);
 
+/**
+ * @brief Increment ESC total count. 
+ * 
+ */
 void ESC_CountIncrement(void);
+
+/**
+ * @brief Decrement ESC total count.
+ * 
+ */
 void ESC_CountDecrement(void);
 
+/**
+ * @brief Reset pointed control list position(current position, preview position).
+ * 
+ */
 void ESC_ResetCtrlListPosition(void);
+
+/**
+ * @brief Reset pointed initalize list position(current position, preview position).
+ * 
+ */
 void ESC_ResetInitListPosition(void);
 
 

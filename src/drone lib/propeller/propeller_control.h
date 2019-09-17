@@ -25,11 +25,53 @@
 #define PROPELLER_DIR_CW ESC_DIR_CW
 #define PROPELLER_DIR_CCW ESC_DIR_CCW
 
+#define PROPELLER_HW_INIT_FAIL 0X01
+#define PROPELLER_SW_INIT_FAIL 0X01
+#define PROPELLER_CONF_FAIL 0X01
+
+/**
+ * @brief propeller hardware initalize.
+ * 
+ * @return ret initalize result
+ *  @arg PROPELLER_OK propeller hardware initalize success
+ *  @arg PROPELLER_HW_INIT_FAIL propeller hardware initalize fail
+ */
 ret Propeller_HW_Init(void);
+
+/**
+ * @brief propeller sortware initalize.
+ * 
+ * @return ret initalize result
+ *  @arg PROPELLER_OK propeller software initalize success
+ *  @arg PROPELLER_SW_INIT_FAIL propeller software initalize fail
+ */
 ret Propeller_SW_Init(void);
 
-ret Propeller_Init(uint32_t propeller_num, uint16_t max_speed, uint16_t min_speed, uint8_t propeller_dir);
-ret Propeller_DeInit(uint32_t propeller_num);
+/**
+ * @brief propeller hardware, software initalize.
+ * @see Propeller_HW_Init(void)
+ * @see Propeller_SW_Init(void)
+ * 
+ * @return ret initalize result
+ *  @arg PROPELLER_OK propeller initalize success
+ *  @arg PROPELLER_HW_INIT_FAIL propeller hardware initalize fail
+ *  @arg PROPELLER_SW_INIT_FAIL propeller software initalize fail
+ */
+ret Propeller_Init(void);
+
+/**
+ * @brief propeller configuration.
+ * 
+ * @param propeller_num propeller number
+ * @param max_speed propeller maximum speed
+ * @param min_speed propeller minimum speed
+ * @param propeller_dir propeller rotate direction
+ * @return ret configuration result
+ *  @arg PROPELLER_OK propeller initalize success
+ *  @arg PROPELLER_CONF_FAIL propeller configuration fail
+ */
+ret Propeller_Config(uint32_t propeller_num, uint16_t max_speed, uint16_t min_speed, uint8_t propeller_dir);
+ret Propeller_DeConfig(uint32_t propeller_num);
 ret Propeller_CCW_Rotate(uint32_t propeller_num, uint16_t speed);
 ret Propeller_CW_Rotate(uint32_t propeller_num, uint16_t speed);
 

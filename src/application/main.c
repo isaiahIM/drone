@@ -4,8 +4,10 @@
 // TODO:
 // add doxygen comment
 // add code flow comment
+// implement ESC BSP middleware, system.
 // implement log, history system
 // implement IMU middleware
+// implement GPS middleware
 
 /**user include header*/
 #include "drone_lib.h"
@@ -35,7 +37,7 @@ int main(int argc, char *argv[])
 	Propeller_Stop(PROPELLER_2);
 	Propeller_Stop(PROPELLER_1|PROPELLER_3);
 
-	Propeller_DeInit(PROPELLER_ALL);
+	Propeller_DeConfig(PROPELLER_ALL);
 
 	return 0;
 }

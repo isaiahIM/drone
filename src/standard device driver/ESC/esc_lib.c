@@ -42,8 +42,8 @@ ret ESC_HW_Init(void)
 {
 	ret ret_val=ESC_SUCCESS;
 
+	/**bsp ESC part initlaize */
 	ret_val|=BSP_ESC_HW_Initalize();
-
 	return ret_val;
 }
 
@@ -52,7 +52,10 @@ ret ESC_AddInfo(ESC_initStruct esc_init, ESC_ctrlStruct esc_ctrl)
 {
 	ret ret_val=ESC_SUCCESS;
 
+	/**add initalize info */
 	ret_val|=ESC_AddInitalizeInfo(esc_init);
+
+	/**add control info */
 	ret_val|=ESC_AddControlInfo(esc_ctrl);
 	
 	return ret_val;
@@ -62,7 +65,10 @@ ret ESC_DeleteInfo(uint8_t esc_num)
 {
 	ret ret_val=ESC_SUCCESS;
 
+	/**delete control info */
 	ret_val|=ESC_DeleteControlInfo(esc_num);
+
+	/**delete initalize info */
 	ret_val|=ESC_DeleteInitalizeInfo(esc_num);
 	
 	return ret_val;
@@ -81,12 +87,13 @@ ret ESC_Rotate(ESC_ctrlStruct esc)
 
 	ret_val=ESC_SUCCESS;
 
-	num=ESC_GetNumber(esc);
-	speed=ESC_GetSpeed(esc);
-	dir=ESC_GetRotateDir(esc);
+	num=ESC_GetNumber(esc);/// get purpose number
+	speed=ESC_GetSpeed(esc);/// get purpose speed
+	dir=ESC_GetRotateDir(esc);/// get purpose direction
 
-	ret_val|=ESC_GetControlInfo(num, &esc_buf);
+	ret_val|=ESC_GetControlInfo(num, &esc_buf);/// get control information in list
 
+	/**set purpose control data in list */
 	ret_val|=ESC_SetRotateDir(esc_buf, dir);
 	ret_val|=ESC_SetCurrentSpeed(esc_buf, speed);
 	
@@ -217,7 +224,7 @@ ret ESC_AddControlInfo(const ESC_ctrlStruct esc)
 		return ESC_MEMALLOC_FAIL;
 	}
 
-	/**struct set*/
+	/**node data set*/
 	buf->num=ESC_GetNumber(esc);
 	buf->speed=ESC_GetSpeed(esc);
 	buf->rotate_dir=ESC_GetRotateDir(esc);
@@ -248,7 +255,7 @@ ret ESC_DeleteControlInfo(uint8_t esc_num)
 	ctrl_cur=ctrl_cur->next;
 													printf("ESC_DeleteControlInfo:\n");
 													printf("num: %d, speed: %d, dir: %d\n", esc->num, esc->speed, esc->rotate_dir);
-	free(esc);/// node de-allocate
+	free(esc);/// node remove in memory
 													printf("exit ESC_DeleteControlInfo();\n");
 	return ret_val;
 }
