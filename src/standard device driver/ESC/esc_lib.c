@@ -5,9 +5,10 @@
  * @version 0.1
  * @date 2019-09-13
  * 
- * @copyright Copyright (c) 2019
+ * @copyright Copyright (c) 2019 isaiah IM
  * 
  */
+
 
 #include "esc_lib.h"
 

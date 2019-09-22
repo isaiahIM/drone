@@ -2,11 +2,8 @@
 #include <stdlib.h>
  
 // TODO:
-// add doxygen comment
-// add code flow comment
-// implement ESC BSP middleware, system.
-// implement log, history system
 // implement IMU middleware
+// implement log, history system
 // implement GPS middleware
 
 /**user include header*/

@@ -1,3 +1,13 @@
+/**
+ * @file drone_lib.c
+ * @author isaiah IM || isaiahim0214@gmail.com
+ * @brief drone library source file
+ * @version 0.1
+ * @date 2019-09-22
+ * 
+ * @copyright Copyright (c) 2019 isaiah IM
+ * 
+ */
 #include "drone_lib.h"
 
 ret Drone_Init(void)

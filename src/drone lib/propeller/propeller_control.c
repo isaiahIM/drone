@@ -1,3 +1,13 @@
+/**
+ * @file propeller_control.c
+ * @author isaiah IM || isaiahim0214@gmail.com
+ * @brief propeller control source file
+ * @version 0.1
+ * @date 2019-09-22
+ * 
+ * @copyright Copyright (c) 2019 isaiah IM
+ * 
+ */
 #include "propeller_control.h"
 
 ret Propeller_HW_Init(void)
@@ -33,6 +43,7 @@ ret Propeller_Init(void)
 
 	return ret_val;
 }
+
 ret Propeller_Config(uint32_t propeller_num, uint16_t max_speed, uint16_t min_speed, uint8_t propeller_dir)
 {
 												printf("\t\tcall Propeller_Init();\n");
@@ -89,17 +100,23 @@ ret Propeller_DeConfig(uint32_t propeller_num)
 	mask=0x01;
 	mask_number=1;
     
-	/**esc initalize*/
+	/**esc de-initalize*/
 	while(mask!=0x00)
 	{
 		if( (mask&propeller_num)!=0 )
 		{
 											printf("propeller num: %d\n", mask_number);
-			ESC_DeleteInfo(mask_number);
+			ret_val|=ESC_DeleteInfo(mask_number);
 		}
 		mask<<=1;
 		mask_number++;
 	}
+
+	if(ret_val !=PROPELLER_OK)
+	{
+		ret_val=PROPELLER_DECONF_FAIL;
+	}
+	return ret_val;
 }
 
 ret Propeller_CCW_Rotate(uint32_t propeller_num, uint16_t speed)
@@ -120,9 +137,16 @@ ret Propeller_CCW_Rotate(uint32_t propeller_num, uint16_t speed)
 		if( (mask&propeller_num)!=0 )
 		{
 													printf("propeller num: %d, speed: %d\n", mask_number, speed);
-			ESC_SetCurrentNum(&esc, mask_number);
-			ESC_SetRotateDir(&esc, ESC_DIR_CCW);
-			ESC_SetCurrentSpeed(&esc, speed);
+			/**set rotate data */
+			ret_val|=ESC_SetCurrentNum(&esc, mask_number);
+			ret_val|=ESC_SetRotateDir(&esc, ESC_DIR_CCW);
+			ret_val|=ESC_SetCurrentSpeed(&esc, speed);
+
+			if(speed<PROPELLER_SPEED_MIN || speed>PROPELLER_SPEED_MAX)
+			{
+				ret_val|=PROPELLER_ROTATE_FAIL;
+				break;
+			}
 
 			ret_val|=ESC_Rotate(esc);
 
@@ -133,6 +157,12 @@ ret Propeller_CCW_Rotate(uint32_t propeller_num, uint16_t speed)
 		mask_number++;
 	}
 													printf("\t\texit Propeller_CCW_Rotate();\n");
+
+	if(ret_val!=PROPELLER_OK)
+	{
+		ret_val=PROPELLER_ROTATE_FAIL;
+	}
+
 	return ret_val;
 }
 
@@ -149,15 +179,24 @@ ret Propeller_CW_Rotate(uint32_t propeller_num, uint16_t speed)
 	mask=0x01;
 	mask_number=1;
 
+	
+
 	while(mask!=0x00)
 	{
 		if( (mask&propeller_num)!=0 )
 		{
 												printf("propeller num: %d, speed: %d\n", mask_number, speed);
-			ESC_SetCurrentNum(&esc, mask_number);
-			ESC_SetRotateDir(&esc, ESC_DIR_CW);
-			ESC_SetCurrentSpeed(&esc, speed);
+			/**set rotate data */
+			ret_val|=ESC_SetCurrentNum(&esc, mask_number);
+			ret_val|=ESC_SetRotateDir(&esc, ESC_DIR_CW);
+			ret_val|=ESC_SetCurrentSpeed(&esc, speed);
 
+			if(speed<PROPELLER_SPEED_MIN || speed>PROPELLER_SPEED_MAX)
+			{
+				ret_val|=PROPELLER_ROTATE_FAIL;
+				break;
+			}
+			
 			ret_val|=ESC_Rotate(esc);
 
 			printf("current speed: %d\n", ESC_GetCurrentSpeed(mask_number));
@@ -167,6 +206,11 @@ ret Propeller_CW_Rotate(uint32_t propeller_num, uint16_t speed)
 		mask_number++;
 	}
 													printf("\t\texit Propeller_CW_Rotate\n");
+	if(ret_val!=PROPELLER_OK)
+	{
+		ret_val=PROPELLER_ROTATE_FAIL;
+	}
+
 	return ret_val;
 }
 
@@ -183,11 +227,12 @@ ret Propeller_Start(uint32_t propeller_num)
 
 	while(mask!=0x00)
 	{
+		/**propeller arming */
 		if( (mask&propeller_num)!=0 )
 		{
-			ESC_SetCurrentNum(&esc, mask_number);
-			ESC_SetRotateDir(&esc, ESC_GetCurrentDir(mask_number));
-			ESC_SetCurrentSpeed(&esc, PROPELLER_SPEED_MIN);
+			ret_val|=ESC_SetCurrentNum(&esc, mask_number);
+			ret_val|=ESC_SetRotateDir(&esc, ESC_GetCurrentDir(mask_number));
+			ret_val|=ESC_SetCurrentSpeed(&esc, PROPELLER_SPEED_MIN);
 
 			ret_val|=ESC_Rotate(esc);
 															printf("propeller num: %d, speed: %d\n", mask_number, PROPELLER_SPEED_MIN);
@@ -196,6 +241,11 @@ ret Propeller_Start(uint32_t propeller_num)
 		mask_number++;
 	}
 															printf("\t\texit Propeller_Start\n");
+	if(ret_val!=PROPELLER_OK)
+	{
+		ret_val=PROPELLER_START_FAIL;
+	}
+
 	return ret_val;
 }
 
@@ -209,13 +259,14 @@ ret Propeller_Stop(uint32_t propeller_num)
 
 	ret_val=PROPELLER_OK;
 
+	/**propeller de-arming */
 	while(mask!=0x00)
 	{
 		if( (mask&propeller_num)!=0 )
 		{
-			ESC_SetCurrentNum(&esc, mask_number);
-			ESC_SetRotateDir(&esc, ESC_GetCurrentDir(mask_number));
-			ESC_SetCurrentSpeed(&esc, PROPELLER_STOP);
+			ret_val|=ESC_SetCurrentNum(&esc, mask_number);
+			ret_val|=ESC_SetRotateDir(&esc, ESC_GetCurrentDir(mask_number));
+			ret_val|=ESC_SetCurrentSpeed(&esc, PROPELLER_STOP);
 
 			ret_val|=ESC_Rotate(esc);
 															printf("propeller num: %d, speed: %d\n", mask_number, PROPELLER_STOP);
@@ -224,6 +275,11 @@ ret Propeller_Stop(uint32_t propeller_num)
 		mask_number++;
 	}
 															printf("\t\texit Propeller_Stop\n");
+	if(ret_val!=PROPELLER_OK)
+	{
+		ret_val=PROPELLER_STOP_FAIL;
+	}
+	
 	return ret_val;
 }
 

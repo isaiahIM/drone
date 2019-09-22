@@ -1,13 +1,23 @@
+/**
+ * @file propeller_control.h
+ * @author isaiah IM || isaiahim0214@gmail.com
+ * @brief propeller control header file
+ * @version 0.1
+ * @date 2019-09-22
+ * 
+ * @copyright Copyright (c) 2019 isaiah IM
+ * 
+ */
 #ifndef PROPELLER_CONTROL__H
 #define PROPELLER_CONTROL__H
 
 
-/**include header*/
+/*include header*/
 #include "esc_lib.h"
 #include "drone_types.h"
 
 
-/**user define*/
+/*user define*/
 #define PROPELLER_1 0X01
 #define PROPELLER_2 0X02
 #define PROPELLER_3 0X04
@@ -28,7 +38,10 @@
 #define PROPELLER_HW_INIT_FAIL 0X01
 #define PROPELLER_SW_INIT_FAIL 0X01
 #define PROPELLER_CONF_FAIL 0X01
-
+#define PROPELLER_DECONF_FAIL 0X01
+#define PROPELLER_ROTATE_FAIL 0X01
+#define PROPELLER_START_FAIL 0X01
+#define PROPELLER_STOP_FAIL 0X01
 /**
  * @brief propeller hardware initalize.
  * 
@@ -71,11 +84,57 @@ ret Propeller_Init(void);
  *  @arg PROPELLER_CONF_FAIL propeller configuration fail
  */
 ret Propeller_Config(uint32_t propeller_num, uint16_t max_speed, uint16_t min_speed, uint8_t propeller_dir);
+
+/**
+ * @brief propeller delete configuration
+ * 
+ * @param propeller_num delete configuration propeller number
+ * @return ret result of delete configuration.
+ *  @arg PROPELLER_OK propeller delete success
+ *  @arg PROPELLER_DECONF_FAIL propeller delete fail
+ */
 ret Propeller_DeConfig(uint32_t propeller_num);
+
+/**
+ * @brief propeller Counterclockwise direction rotate
+ * 
+ * @param propeller_num propeller number
+ * @param speed ratarte speed
+ * @return ret CCW rotate result
+ *  @arg PROPELLER_OK ccw rotate success
+ *  @arg PROPELLER_ROTATE_FAIL ccw rotate fail
+ */
 ret Propeller_CCW_Rotate(uint32_t propeller_num, uint16_t speed);
+
+/**
+ * @brief propeller Clockwise direction rotate
+ * 
+ * @param propeller_num propeller number
+ * @param speed ratarte speed
+ * @return ret CW rotate result
+ *  @arg PROPELLER_OK cw rotate success
+ *  @arg PROPELLER_ROTATE_FAIL cw rotate fail
+ */
 ret Propeller_CW_Rotate(uint32_t propeller_num, uint16_t speed);
 
+/**
+ * @brief propeller armming(start to run)
+ * 
+ * @param propeller_num propeller number
+ * @return ret propeller start result
+ *  @arg PROPELLER_OK propeller start success
+ *  @arg PROPELLER_START_FAIL propeller start fail
+ */
 ret Propeller_Start(uint32_t propeller_num);
+
+/**
+ * @brief propeller de-armming(stop to run)
+ * 
+ * @param propeller_num propeller number
+ * @return ret propeller stop result
+ *  @arg PROPELLER_OK propeller stop success
+ *  @arg PROPELLER_STOP_FAIL propeller stop fail
+ */
 ret Propeller_Stop(uint32_t propeller_num);
 
 #endif

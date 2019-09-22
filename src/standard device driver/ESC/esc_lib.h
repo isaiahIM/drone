@@ -1,11 +1,11 @@
 /**
  * @file esc_lib.h
  * @author isaiah IM || isaiahim0214@gmail.com
- * @brief esc HAL library header file
+ * @brief esc HAL Library header file
  * @version 0.1
  * @date 2019-09-13
  * 
- * @copyright Copyright (c) 2019
+ * @copyright Copyright (c) 2019 isaiah IM
  * 
  */
 
@@ -16,11 +16,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-/** user include*/
+/* user include*/
 #include "drone_types.h"
 #include "esc_driver.h"
 
-/**user define*/
+/*user define*/
 #define ESC_DIR_CW 0x00 /// ESC CW direction
 #define ESC_DIR_CCW 0x01 /// ESC CCW direction
 
@@ -167,7 +167,7 @@ uint16_t ESC_GetSpeed(const ESC_ctrlStruct esc);
 /**
  * @brief Get ESC rotate direction.
  * @detail This function call ESC_GetRotateDir().
- * @see ESC_GetRotateDir(const ESC_ctrlStruct esc).
+ * @see ESC_GetRotateDir(const ESESC_SetCurrentNumC_ctrlStruct esc).
  * 
  * @param esc_num ESC number
  * @return uint8_t ESC current direction

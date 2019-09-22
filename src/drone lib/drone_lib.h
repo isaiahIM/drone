@@ -1,7 +1,7 @@
 /**
  * @file drone_lib.h
  * @author isaiah IM || isaiahim0214@gmail.com
- * @brief drone library
+ * @brief drone library header file
  * @version 0.1
  * @date 2019-09-17
  * 
@@ -14,7 +14,7 @@
 #include "drone_types.h"
 #include "propeller_control.h"
 
-/**user define */
+/*user define */
 #define DRONE_INIT_SUCCESS 0x00
 #define DRONE_AP_INIT_FAIL 0x01
 #define DRONE_HW_INIT_FAIL 0x02 
