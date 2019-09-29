@@ -35,30 +35,13 @@
 #define PROPELLER_DIR_CW ESC_DIR_CW
 #define PROPELLER_DIR_CCW ESC_DIR_CCW
 
-#define PROPELLER_HW_INIT_FAIL 0X01
-#define PROPELLER_SW_INIT_FAIL 0X01
+#define PROPELLER_HW_INIT_FAIL ESC_HW_INIT_FAIL
+#define PROPELLER_SW_INIT_FAIL ESC_AP_INIT_FAIL
 #define PROPELLER_CONF_FAIL 0X01
 #define PROPELLER_DECONF_FAIL 0X01
 #define PROPELLER_ROTATE_FAIL 0X01
 #define PROPELLER_START_FAIL 0X01
 #define PROPELLER_STOP_FAIL 0X01
-/**
- * @brief propeller hardware initalize.
- * 
- * @return ret initalize result
- *  @arg PROPELLER_OK propeller hardware initalize success
- *  @arg PROPELLER_HW_INIT_FAIL propeller hardware initalize fail
- */
-ret Propeller_HW_Init(void);
-
-/**
- * @brief propeller sortware initalize.
- * 
- * @return ret initalize result
- *  @arg PROPELLER_OK propeller software initalize success
- *  @arg PROPELLER_SW_INIT_FAIL propeller software initalize fail
- */
-ret Propeller_SW_Init(void);
 
 /**
  * @brief propeller hardware, software initalize.

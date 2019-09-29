@@ -2,8 +2,8 @@
  * @file esc_lib.h
  * @author isaiah IM || isaiahim0214@gmail.com
  * @brief esc HAL Library header file
- * @version 0.1
- * @date 2019-09-13
+ * @version 0.1.1
+ * @date 2019-09-26
  * 
  * @copyright Copyright (c) 2019 isaiah IM
  * 
@@ -28,6 +28,9 @@
 #define ESC_MEMALLOC_FAIL 0X01
 #define ESC_UNKNOWN_NUM 0X02
 #define ESC_UNKNOWN_DIR 0x04
+
+#define ESC_HW_INIT_FAIL 0x01
+#define ESC_AP_INIT_FAIL 0x02
 
 /**
  * @brief ESC intialize information structure.
@@ -67,31 +70,18 @@ static ESC_ctrlStruct *ctrl_head=NULL;
 static ESC_ctrlStruct *ctrl_cur=NULL;
 static ESC_ctrlStruct *ctrl_prev=NULL;
 
-/**user functions*/
+/*user functions*/
+
 
 /**
- * @brief ESC system initalize.
- * @detail This function is initaling ESC_initStruct, ESC_ctrlStruct.
- * 			And, these structure are using dummy node base linked list. and queue type list insert. 
- * @see typedef struct ESC_initalize_structure
- * @see typedef struct ESC_control_structu
- * re
- * @return ret initalize result
- * 	@arg ESC_SUCCESS ESC initalze success.
- * 	@arg ESC_MEMALLOC_FAIL ESC node memory allocate fail.
- */
-ret ESC_SystemInit(void);
-
-/**
- * @brief ESC H/W initalize.
- * @detail This function is ESC hardware initalizing function.
- * 			And hardware initalizing is Referential BSP function.
- * @see BSP_ESC_HW_Initalize()
+ * @brief ESC H/W, application initalize
  * 
  * @return ret initalize result
- * 	@arg ESC_SUCCESS ESC initalze success.
+ *  @arg ESC_SUCCESS ESC initalze success.
+ *  @arg ESC_HW_INIT_FAIL ESC H/W initalize fail
+ *  @arg ESC_AP_INIT_FAIL ESC application initalize fail
  */
-ret ESC_HW_Init(void);
+ret ESC_Init(void);
 
 /**
  * @brief Add ESC inforamtion.
@@ -107,7 +97,7 @@ ret ESC_HW_Init(void);
  *  @arg ESC_SUCCESS Success to add information.
  * 	@arg ESC_MEMALLOC_FAIL ESC node memory allocate fail.
  */
-ret ESC_AddInfo(ESC_initStruct esc_init, ESC_ctrlStruct esc_ctrl);
+ret ESC_AddESC(ESC_initStruct esc_init, ESC_ctrlStruct esc_ctrl);
 
 /**
  * @brief Delete ESC information.
@@ -122,7 +112,7 @@ ret ESC_AddInfo(ESC_initStruct esc_init, ESC_ctrlStruct esc_ctrl);
  * 	@arg ESC_SUCCESS Success to delete information in list.
  *  @arg ESC_UNKNOWN_NUM unknown ESC number 
  */
-ret ESC_DeleteInfo(uint8_t esc_num);
+ret ESC_DeleteESC(uint8_t esc_num);
 
 /**
  * @brief Rotate ESC.
@@ -164,27 +154,6 @@ uint8_t ESC_GetNumber(const ESC_ctrlStruct esc);
  */
 uint16_t ESC_GetSpeed(const ESC_ctrlStruct esc);
 
-/**
- * @brief Get ESC rotate direction.
- * @detail This function call ESC_GetRotateDir().
- * @see ESC_GetRotateDir(const ESESC_SetCurrentNumC_ctrlStruct esc).
- * 
- * @param esc_num ESC number
- * @return uint8_t ESC current direction
- *  @arg ESC_DIR_CW Clockwise direction
- *  @arg ESC_DIR_CCW Counterclockwise direction
- */
-uint8_t ESC_GetCurrentDir(uint8_t esc_num);
-
-/**
- * @brief Get ESC current speed.
- * @detail This function call ESC_GetSpeed() function.
- * @see ESC_GetSpeed(const ESC_ctrlStruct esc).
- * 
- * @param esc_num ESC number
- * @return uint16_t current speed
- */
-uint16_t ESC_GetCurrentSpeed(uint8_t esc_num);
 
 /**
  * @brief Set initalize number in list.
@@ -257,6 +226,7 @@ ret ESC_AddControlInfo(const ESC_ctrlStruct esc);
  *  @arg ESC_UNKNOWN_NUM unknown ESC control number
  */
 ret ESC_DeleteControlInfo(uint8_t esc_num);
+
 
 /**
  * @brief Get control information in list.

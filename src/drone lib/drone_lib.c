@@ -12,6 +12,7 @@
 
 ret Drone_Init(void)
 {
+    /**Drone_Init() sequence: */
     ret ret_val=DRONE_INIT_SUCCESS;
 
     /**drone initalize */
@@ -37,7 +38,7 @@ ret Drone_Init(void)
 
 
 ret Drone_Arm(void)
-{
+{/**Drone_Arm() sequence: */
     ret ret_val=DRONE_ARM_SUCCESS;
 
     /**arming */

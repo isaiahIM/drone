@@ -6,8 +6,9 @@
 // implement log, history system
 // implement GPS middleware
 
-/**user include header*/
+/*user include header*/
 #include "drone_lib.h"
+#include "gyro_lib.h"
 
 int main(int argc, char *argv[])
 {
@@ -36,5 +37,6 @@ int main(int argc, char *argv[])
 
 	Propeller_DeConfig(PROPELLER_ALL);
 
+	
 	return 0;
 }
