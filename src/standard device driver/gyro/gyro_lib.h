@@ -10,12 +10,9 @@
  */
 #ifndef GYRO_LIB__H
 #define GYRO_LIB__H
-
-// TODO:
-// FIX BUGS, ERRORS
  
 
-// #include "gyro_dirver.h"
+#include "gyro_driver.h"
 #include "drone_types.h"
 #include <stdlib.h>
 
@@ -69,10 +66,9 @@ typedef struct Gyro_InitalizeStructure
     struct Gyro_InitalizeStructure *next;///< next link
 } Gyro_initStruct;
 
-static Gyro_dataStruct *data_prev=NULL, *data_cur=NULL, *data_head=NULL;
-static Gyro_initStruct *init_prev=NULL, *init_cur=NULL, *init_head=NULL;
 
-static uint8_t gyro_count=0;
+
+/*user functions*/
 
 /**
  * @brief gyroscope H/W, system initalize

@@ -56,22 +56,7 @@ typedef struct ESC_control_structure
 	struct ESC_control_structure *next;///< Self Referential Struct
 } ESC_ctrlStruct;
 
-
-static uint8_t esc_count=0;/// esc count
-
-
-/**ESC_initStruct position*/
-static ESC_initStruct *init_head=NULL;
-static ESC_initStruct *init_cur=NULL;
-static ESC_initStruct *init_prev=NULL;
-
-/**ESC_ctrlStruct position*/
-static ESC_ctrlStruct *ctrl_head=NULL;
-static ESC_ctrlStruct *ctrl_cur=NULL;
-static ESC_ctrlStruct *ctrl_prev=NULL;
-
 /*user functions*/
-
 
 /**
  * @brief ESC H/W, application initalize

@@ -12,6 +12,19 @@
 
 #include "esc_lib.h"
 
+static uint8_t esc_count=0;/// esc count
+
+/**ESC_initStruct position*/
+static ESC_initStruct *init_head=NULL;
+static ESC_initStruct *init_cur=NULL;
+static ESC_initStruct *init_prev=NULL;
+
+/**ESC_ctrlStruct position*/
+static ESC_ctrlStruct *ctrl_head=NULL;
+static ESC_ctrlStruct *ctrl_cur=NULL;
+static ESC_ctrlStruct *ctrl_prev=NULL;
+
+
 ret ESC_Init(void)
 {
 	/**ESC_Init() sequence: */

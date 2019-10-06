@@ -10,10 +10,13 @@
  */
 #include "gyro_lib.h"
 
+static Gyro_dataStruct *data_prev=NULL, *data_cur=NULL, *data_head=NULL;
+static Gyro_initStruct *init_prev=NULL, *init_cur=NULL, *init_head=NULL;
+static uint8_t gyro_count=0;
+
 // TODO:
-// FIX BUGS, ERRORS
-// 
-// 
+// implement BSP function
+
 ret Gyro_Init(void)
 {
     /**Gyro_Init() sequence: */
@@ -72,10 +75,18 @@ ret Gyro_AddGyro(Gyro_initStruct gyro)
 
     Gyro_dataStruct gyro_data;
     ret ret_val=GYRO_OK;
+    uint8_t num, resolution;
+    uint32_t capture_freq, com_freq;
 
+    num=Gyro_GetInitNum(gyro);
+    resolution=Gyro_GetResolution(gyro);
+    capture_freq=Gyro_GetCaptureFreq(gyro);
+    com_freq=Gyro_GetCommunicateFreq(gyro);
+    
     /**gyro H/W setting */
     ret_val|=BSP_Gyro_SetReolution(num, resolution);
     ret_val|=BSP_Gyro_SetCaptureFreq(num, capture_freq);
+    ret_val!=BSP_Gyro_SetCommunicateFreq(num, com_freq);
 
     /**gyro add informaion in list */
     ret_val|=Gyro_AddInitalizeInfo(gyro);
@@ -155,7 +166,7 @@ ret Gyro_GetInitalizeInfo(uint8_t num, Gyro_initStruct **gyro)
     /**search number in list */
     while(init_cur!=NULL)
     {
-        if(Gyro_GetDataNum(init_cur)==num)
+        if(Gyro_GetInitNum(*init_cur)==num)
         {
             *gyro=init_cur;
             break;
@@ -238,7 +249,7 @@ ret Gyro_GetDataInfo(uint8_t num, Gyro_dataStruct **gyro)
     /**search number in list */
     while(data_cur!=NULL)
     {
-        if(Gyro_GetDataNum(data_cur)==num)
+        if(Gyro_GetDataNum(*data_cur)==num)
         {
             *gyro=data_cur;
             break;
