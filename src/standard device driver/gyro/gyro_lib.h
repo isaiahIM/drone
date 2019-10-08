@@ -10,7 +10,7 @@
  */
 #ifndef GYRO_LIB__H
 #define GYRO_LIB__H
- 
+
 
 #include "gyro_driver.h"
 #include "drone_types.h"
