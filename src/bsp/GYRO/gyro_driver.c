@@ -1,5 +1,4 @@
 #include "gyro_driver.h"
-#include <stdio.h>
 
 
 uint8_t BSP_Gyro_HW_Initalize(void)

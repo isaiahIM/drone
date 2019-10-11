@@ -7,6 +7,9 @@
 #define BSP_GYRO_CONNECTED 0X00
 #define BSP_GYRO_DISCONNECTED 0X01
 
+#include "gyro_driver.h"
+#include <stdio.h>
+#include <stdint.h>
 
 /**
  * @brief gyro peripheral initalize

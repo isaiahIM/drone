@@ -15,6 +15,7 @@
 #include "gyro_driver.h"
 #include "drone_types.h"
 #include <stdlib.h>
+#include <stdio.h>
 
 typedef int16_t gyroType_t;
 
@@ -288,11 +289,20 @@ gyroType_t Gyro_Get_Z(Gyro_dataStruct gyro);
 /**
  * @brief get data number
  * 
- * @param gyro gyro data structure
+ * @param gyro gyro data structure pointer
  * @return uint8_t gyro data number
  */
 uint8_t Gyro_GetDataNum(Gyro_dataStruct gyro);
 
+/**
+ * @brief set data number
+ * 
+ * @param gyro gyro data structure pointer
+ * @param num number
+ * @return ret setting result
+ *  @arg GYRO_OK setting success
+ */
+ret Gyro_SetDataNum(Gyro_dataStruct *gyro, uint8_t num);
 
 /**
  * @brief gyroscope count encrement 1
