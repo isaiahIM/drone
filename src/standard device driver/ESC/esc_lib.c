@@ -370,7 +370,6 @@ ret ESC_GetInitalizeInfo(uint8_t esc_num, ESC_initStruct **esc)
 		if(init_cur->num==esc_num)
 		{
 			/**copy data */
-																printf("init_cur->num: %d\n", init_cur->num);
 			*esc=init_cur;
 																printf("esc data: num: %d, speed_max: %d, speed_min: %d\n", (*esc)->num, (*esc)->speed_max, (*esc)->speed_min);
 			break;

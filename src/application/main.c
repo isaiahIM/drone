@@ -15,7 +15,6 @@ int main(int argc, char *argv[])
 	ret ret_val;
 	ret_val|=Drone_Init();
 
-	/*
 	Drone_Arm();
 	
 	Propeller_CCW_Rotate(PROPELLER_1, 30);
@@ -37,13 +36,13 @@ int main(int argc, char *argv[])
 	Propeller_Stop(PROPELLER_1|PROPELLER_3);
 
 	Propeller_DeConfig(PROPELLER_ALL);
-*/
+
 
 
 	printf("\n\n-------GYRO----------\n\n");
 
 	Gyro_initStruct gyro1, gyro2, gyro3;
-	Gyro_dataStruct *g1, *g2, *g3;
+	Gyro_dataStruct g1, g2, g3;
 	gyroType_t data_x, data_y, data_z;
 
 	ret_val|=Gyro_Init();
@@ -72,26 +71,26 @@ int main(int argc, char *argv[])
 	ret_val|=Gyro_ConnectCheck(2);
 	ret_val|=Gyro_ConnectCheck(3);
 
-	ret_val|=Gyro_GetDataInfo(1, &g1);
-	ret_val|=Gyro_GetDataInfo(2, &g2);
-	ret_val|=Gyro_GetDataInfo(3, &g3);
+	ret_val|=Gyro_GetGyroData(1, &g1);
+	ret_val|=Gyro_GetGyroData(2, &g2);
+	ret_val|=Gyro_GetGyroData(3, &g3);
 
-	data_x=Gyro_Get_X(*g1);
-	data_y=Gyro_Get_Y(*g1);
-	data_z=Gyro_Get_Z(*g1);
-
-	printf("\t\tDATA: x: %d, y:%d, z:%d\n", data_x, data_y, data_z);
-
-	data_x=Gyro_Get_X(*g2);
-	data_y=Gyro_Get_Y(*g2);
-	data_z=Gyro_Get_Z(*g2);
+	data_x=Gyro_Get_X(g1);
+	data_y=Gyro_Get_Y(g1);
+	data_z=Gyro_Get_Z(g1);
 
 	printf("\t\tDATA: x: %d, y:%d, z:%d\n", data_x, data_y, data_z);
 
+	data_x=Gyro_Get_X(g2);
+	data_y=Gyro_Get_Y(g2);
+	data_z=Gyro_Get_Z(g2);
 
-	data_x=Gyro_Get_X(*g3);
-	data_y=Gyro_Get_Y(*g3);
-	data_z=Gyro_Get_Z(*g3);
+	printf("\t\tDATA: x: %d, y:%d, z:%d\n", data_x, data_y, data_z);
+
+
+	data_x=Gyro_Get_X(g3);
+	data_y=Gyro_Get_Y(g3);
+	data_z=Gyro_Get_Z(g3);
 
 	printf("\t\tDATA: x: %d, y:%d, z:%d\n", data_x, data_y, data_z);
 

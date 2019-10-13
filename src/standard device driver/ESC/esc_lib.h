@@ -239,7 +239,7 @@ ret ESC_AddInitalizeInfo(const ESC_initStruct esc);
  * 
  * @param esc_num delete esc number
  * @return ret result of function state.
- *  @argESC_SUCCESS success to delete initalize information in list
+ *  @arg ESC_SUCCESS success to delete initalize information in list
  *  @arg ESC_UNKNOWN_NUM esc number is not exist.
  */
 ret ESC_DeleteInitalizeInfo(uint8_t esc_num);

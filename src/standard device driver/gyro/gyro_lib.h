@@ -134,7 +134,7 @@ ret Gyro_SetCaptureFreq(Gyro_initStruct *gyro, uint32_t freq);
  * @param gyro gyro initalize structure pointer
  * @param freq communicate frequency [Hz]
  * @return ret frequency setting result
- *  @argGYRO_OK frequency setting success
+ *  @arg GYRO_OK frequency setting success
  *  @arg GYRO_SET_DATA_FAIL frequency setting fail
  */
 ret Gyro_SetCommunicateFreq(Gyro_initStruct *gyro, uint32_t freq);
@@ -260,6 +260,16 @@ ret Gyro_GetDataInfo(uint8_t num, Gyro_dataStruct **gyro);
  */
 ret Gyro_DeleteDataInfo(uint8_t num);
 
+/**
+ * @brief gyroscope sensor data read.
+ * 
+ * @param num gyro number
+ * @param gyro gyro dat structure pointer
+ * @return ret get sensor data result
+ *  @arg GYRO_OK 
+ *  @arg GYRO_GET_DATA_FAIL 
+ */
+ret Gyro_GetGyroData(uint8_t num, Gyro_dataStruct *gyro);
 
 /**
  * @brief get X axis in structure

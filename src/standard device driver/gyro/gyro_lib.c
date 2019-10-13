@@ -14,10 +14,6 @@ static Gyro_dataStruct *data_prev=NULL, *data_cur=NULL, *data_head=NULL;
 static Gyro_initStruct *init_prev=NULL, *init_cur=NULL, *init_head=NULL;
 static uint8_t gyro_count=0;
 
-
-// TODO:
-// Simplify comment
-
 ret Gyro_Init(void)
 {
     /**Gyro_Init() sequence: */
@@ -81,26 +77,23 @@ ret Gyro_AddGyro(Gyro_initStruct gyro)
     Gyro_dataStruct gyro_data;
     ret ret_val=GYRO_OK;
     uint8_t num, resolution;
-    uint32_t capture_freq, com_freq;
+    uint32_t cap_freq, com_freq;
 
     num=Gyro_GetInitNum(gyro);
-    printf("num: %d\n", num);
     Gyro_SetDataNum(&gyro_data, num);
 
     resolution=Gyro_GetResolution(gyro);
-    capture_freq=Gyro_GetCaptureFreq(gyro);
+    cap_freq=Gyro_GetCaptureFreq(gyro);
     com_freq=Gyro_GetCommunicateFreq(gyro);
-                                printf("num: %d, res: %d, cap_freq: %d, com_freq: %d\n", num, resolution, capture_freq, com_freq);
+                                printf("num: %d, res: %d, cap_freq: %d, com_freq: %d\n", num, resolution, cap_freq, com_freq);
     /**gyro H/W setting */
     ret_val|=BSP_Gyro_SetReolution(num, resolution);
-    ret_val|=BSP_Gyro_SetCaptureFreq(num, capture_freq);
+    ret_val|=BSP_Gyro_SetCaptureFreq(num, cap_freq);
     ret_val!=BSP_Gyro_SetCommunicateFreq(num, com_freq);
 
     /**gyro add informaion in list */
     ret_val|=Gyro_AddInitalizeInfo(gyro);
     ret_val|=Gyro_AddDataInfo(gyro_data);
-
-    printf("addr: %p\n", data_cur);
 
     /**increment gyro count */
     Gyro_CountIncrement();
@@ -135,14 +128,14 @@ ret Gyro_AddInitalizeInfo(Gyro_initStruct gyro)
     ret ret_val=GYRO_OK;
     Gyro_initStruct *buf;
     uint8_t num, resolution;
-    uint32_t cap_freq, communicate_freq;
+    uint32_t cap_freq, com_freq;
 
     /**get data in structure */
     cap_freq=Gyro_GetCaptureFreq(gyro);
     resolution=Gyro_GetResolution(gyro);
-    communicate_freq=Gyro_GetCommunicateFreq(gyro);
+    com_freq=Gyro_GetCommunicateFreq(gyro);
     num=Gyro_GetInitNum(gyro);
-                                    printf("PREV num: %d, res: %d, cap_freq: %d, com_freq: %d\n", num, resolution, cap_freq, communicate_freq);
+
     /**node allocate */
     buf=(Gyro_initStruct*)malloc(sizeof(Gyro_initStruct));
     if(buf==NULL)
@@ -155,14 +148,14 @@ ret Gyro_AddInitalizeInfo(Gyro_initStruct gyro)
     buf->num=num;
     buf->resolution=resolution;
     buf->capture_freq=cap_freq;
-    buf->communication_freq=communicate_freq;
+    buf->communication_freq=com_freq;
 
     /**add node in list */
     init_prev=init_cur;
     buf->next=init_cur->next;
     init_cur->next=buf;
     init_cur=buf;
-                                printf("CUR num: %d, res: %d, cap_freq: %d, com_freq: %d\n", init_cur->num, init_cur->resolution, init_cur->capture_freq, init_cur->communication_freq);
+                                printf("num: %d, res: %d, cap_freq: %d, com_freq: %d\n", init_cur->num, init_cur->resolution, init_cur->capture_freq, init_cur->communication_freq);
                                 printf("\t\tEND Gyro_AddInitalizeInfo();\n ");
 
     /**return result */
@@ -299,9 +292,6 @@ ret Gyro_GetDataInfo(uint8_t num, Gyro_dataStruct **gyro)
     /**search number in list */
     while(data_cur!=NULL)
     {
-        printf("num: %d, gyro_x: %d, gyro_y: %d, gyro_z: %d\n", data_cur->num, data_cur->gyro_x, data_cur->gyro_y, data_cur->gyro_z);
-        printf("addr: %p\n", data_cur);
-
         if(Gyro_GetDataNum(*data_cur)==num)
         {
             *gyro=data_cur;
@@ -470,34 +460,48 @@ uint32_t Gyro_GetCommunicateFreq(Gyro_initStruct gyro)
     return gyro.communication_freq;
 }
 
+ret Gyro_GetGyroData(uint8_t num, Gyro_dataStruct *gyro)
+{
+    ret ret_val=GYRO_OK;
+    uint32_t data;
+
+    ret_val|=Gyro_GetDataInfo(num, &gyro);
+    if(ret_val!=GYRO_OK)
+    {
+        return GYRO_GET_DATA_FAIL;
+    }
+
+    ret_val|=BSP_Gyro_GetX(num, &data);
+    gyro->gyro_x=data;
+
+    ret_val|=BSP_Gyro_GetY(num, &data);
+    gyro->gyro_y=data;
+    
+    ret_val|=BSP_Gyro_GetZ(num, &data);
+    gyro->gyro_z=data;
+
+    if(ret_val!=GYRO_OK)
+    {
+        return GYRO_GET_DATA_FAIL;
+    }
+    else
+    {
+        return GYRO_OK;
+    }
+}
 
 gyroType_t Gyro_Get_X(Gyro_dataStruct gyro)
 {
-    uint32_t data;
-
-    BSP_Gyro_GetX(gyro.num, &data);
-    gyro.gyro_x=data;
-    
     return gyro.gyro_x;
 }
 
 gyroType_t Gyro_Get_Y(Gyro_dataStruct gyro)
 {
-    uint32_t data;
-
-    BSP_Gyro_GetY(gyro.num, &data);
-    gyro.gyro_y=data;
-
     return gyro.gyro_y;
 }
 
 gyroType_t Gyro_Get_Z(Gyro_dataStruct gyro)
 {
-    uint32_t data;
-
-    BSP_Gyro_GetZ(gyro.num, &data);
-    gyro.gyro_z=data;
-
     return gyro.gyro_z;
 }
 
