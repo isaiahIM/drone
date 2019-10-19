@@ -11,11 +11,14 @@
 #ifndef ACCEL_LIB__H
 #define ACCEL_LIB__H
 
+#include "common_def.h"
 
 #include "accel_driver.h"
 #include "drone_types.h"
-#include <stdlib.h>
-#include <stdio.h>
+
+
+#define _USE_MATH_DEFINES
+#include <math.h>
 
 typedef int16_t accelType_t;
 
@@ -50,6 +53,8 @@ typedef struct Accel_DataStructure
     accelType_t accel_x;///< accel x
     accelType_t accel_y;///< accel y
     accelType_t accel_z;///< accel z
+    double roll;///< roll
+    double pitch;///< pitch
     struct Accel_DataStructure *next;///< next link
 } Accel_dataStruct;
 
@@ -270,6 +275,20 @@ ret Accel_DeleteDataInfo(uint8_t num);
  *  @arg ACCEL_GET_DATA_FAIL 
  */
 ret Accel_GetAccelData(uint8_t num, Accel_dataStruct *accel);
+
+/**
+ * @brief get euler angle pitch
+ * 
+ * @return double pitch angle [range: 0' ~ 180', -1' ~ -179']
+ */
+double Accel_GetPitch(Accel_dataStruct accel);
+
+/**
+ * @brief get euler angle roll
+ * 
+ * @return double roll angle [range: 0 - +180, -1 ~ -179]
+ */
+double Accel_GetRoll(Accel_dataStruct accel);
 
 /**
  * @brief get X axis in structure

@@ -12,10 +12,9 @@
 #define COMPASS_LIB__H
 
 
+#include "common_def.h"
 #include "compass_driver.h"
 #include "drone_types.h"
-#include <stdlib.h>
-#include <stdio.h>
 
 typedef int16_t compassType_t;
 

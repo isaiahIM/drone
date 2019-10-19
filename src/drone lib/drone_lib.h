@@ -11,6 +11,7 @@
 #ifndef DRONE_LIB__H
 #define DRONE_LIB__H
 
+#include "common_def.h"
 #include "drone_types.h"
 #include "propeller_control.h"
 

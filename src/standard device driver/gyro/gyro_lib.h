@@ -11,11 +11,10 @@
 #ifndef GYRO_LIB__H
 #define GYRO_LIB__H
 
-
+#include "common_def.h"
 #include "gyro_driver.h"
 #include "drone_types.h"
-#include <stdlib.h>
-#include <stdio.h>
+#include "time.h"
 
 typedef int16_t gyroType_t;
 
@@ -47,9 +46,12 @@ typedef int16_t gyroType_t;
 typedef struct Gyro_DataStructure
 {
     uint8_t num;///< gyro number
-    gyroType_t gyro_x;///< gyro x
-    gyroType_t gyro_y;///< gyro y
-    gyroType_t gyro_z;///< gyro z
+    gyroType_t gyro_x;///< Angular velocity x [degree/S]
+    gyroType_t gyro_y;///< Angular velocity y [degree/S]
+    gyroType_t gyro_z;///< Angular velocity z [degree/S]
+    double yaw;///< yaw
+    double pitch;///< pitch
+    double roll;///< roll
     struct Gyro_DataStructure *next;///< next link
 } Gyro_dataStruct;
 
@@ -264,12 +266,36 @@ ret Gyro_DeleteDataInfo(uint8_t num);
  * @brief gyroscope sensor data read.
  * 
  * @param num gyro number
- * @param gyro gyro dat structure pointer
+ * @param gyro gyro data structure pointer
  * @return ret get sensor data result
  *  @arg GYRO_OK 
  *  @arg GYRO_GET_DATA_FAIL 
  */
 ret Gyro_GetGyroData(uint8_t num, Gyro_dataStruct *gyro);
+
+/**
+ * @brief get euler angle roll
+ * 
+ * @param gyro gyro data structure
+ * @return double roll angle [range: 0' ~ 180', -1' ~ -179']
+ */
+double Gyro_GetRoll(Gyro_dataStruct gyro);
+
+/**
+ * @brief get euler angle pitch
+ * 
+ * @param gyro gyro data structure
+ * @return double pitch angle [range: 0' ~ 180', -1' ~ -179']
+ */
+double Gyro_GetPitch(Gyro_dataStruct gyro);
+
+/**
+ * @brief get euler angle yaw
+ * 
+ * @param gyro gyro data structure
+ * @return double yaw angle [range: 0' ~ 180', -1' ~ -179']
+ */
+double Gyro_GetYaw(Gyro_dataStruct gyro);
 
 /**
  * @brief get X axis in structure

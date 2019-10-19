@@ -13,8 +13,8 @@
 #ifndef ESC_LIB_H
 #define ESC_LIB_H
 
-#include <stdlib.h>
-#include <string.h>
+/*common define */
+#include "common_def.h"
 
 /* user include*/
 #include "drone_types.h"

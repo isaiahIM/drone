@@ -2,51 +2,57 @@
 #define IMU__H
 
 #include <math.h>
-#include <stdlib.h>
-#include <stdio.h>
+#include "common_def.h"
 #include "drone_types.h"
 #include "gyro_lib.h"
 #include "accel_lib.h"
 #include "compass_lib.h"
 
-typedef struct accelerator_YPL
-{
-    int16_t yaw;
-    int16_t pitch;
-    int16_t roll;
-    struct accelerator_YPL *next;
-} accel_YPLDataStruct;
+#define IMU_SUCCESS 0
+#define IMU_FAIL 1
 
-typedef struct gyroscope_YPL
+/**
+ * @brief accelerator euler angular structure structure
+ * 
+ */
+typedef struct accelerator_EulerAngleStructure
 {
-    int16_t yaw;
     int16_t pitch;
     int16_t roll;
-    struct gyroscope_YPL *next;
-} gyro_YPLDataStruct;
+} accel_angleStruct;
 
-typedef struct compass_YPL
+/**
+ * @brief gyroscope euler angular structure structure
+ * 
+ */
+typedef struct gyroscope_EulerAngleStructure
 {
     int16_t yaw;
     int16_t pitch;
     int16_t roll;
-    struct compass_YPL *next;
-} compass_YPLDataStruct;
+} gyro_angleStruct;
 
-typedef struct accelerator_YPL
+/**
+ * @brief compass euler angular structure structure
+ * 
+ */
+typedef struct compass_EulerAngleStructure
 {
     int16_t yaw;
     int16_t pitch;
     int16_t roll;
-    struct accelerator_YPL *next;
-} accel_YPLData;
+} compass_angleStruct;
 
-typedef struct drone_YPL
+/**
+ * @brief drone euler angular structure structure
+ * 
+ */
+typedef struct drone_EulerAngleStructure
 {
+    uint8_t num;
     int16_t yaw;
     int16_t pitch;
     int16_t roll;
-    struct drone_YPL *next;
-} drone_YPLData;
+} drone_angleStruct;
 
 #endif

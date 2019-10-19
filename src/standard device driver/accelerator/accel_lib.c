@@ -463,7 +463,12 @@ uint32_t Accel_GetCommunicateFreq(Accel_initStruct accel)
 ret Accel_GetAccelData(uint8_t num, Accel_dataStruct *accel)
 {
     ret ret_val=ACCEL_OK;
-    uint32_t data;
+    accelType_t x, y, z;
+    double pitch, roll;
+
+    x=Accel_Get_X(*accel);
+    y=Accel_Get_Y(*accel);
+    z=Accel_Get_Z(*accel);
 
     ret_val|=Accel_GetDataInfo(num, &accel);
     if(ret_val!=ACCEL_OK)
@@ -471,14 +476,39 @@ ret Accel_GetAccelData(uint8_t num, Accel_dataStruct *accel)
         return ACCEL_GET_DATA_FAIL;
     }
 
-    ret_val|=BSP_Accel_GetX(num, &data);
-    accel->accel_x=data;
+    ret_val|=BSP_Accel_GetX(num, &x);
+    accel->accel_x=x;
 
-    ret_val|=BSP_Accel_GetY(num, &data);
-    accel->accel_y=data;
+    ret_val|=BSP_Accel_GetY(num, &y);
+    accel->accel_y=y;
     
-    ret_val|=BSP_Accel_GetZ(num, &data);
-    accel->accel_z=data;
+    ret_val|=BSP_Accel_GetZ(num, &z);
+    accel->accel_z=z;
+
+    #ifdef USE_ARM_DSP
+
+    float32_t sqrt;
+
+    if(arm_sqrt_f32(y*y + z*z, &sqrt)!=ARM_MATH_SUCCESS)
+    {
+        return 0;
+    }
+    pitch=180*atan(x/sqrt)/M_PI;
+    
+    if(arm_sqrt_f32(x*x + z*z, &sqrt)!=ARM_MATH_SUCCESS)
+    {
+        return 0;
+    }
+    roll=180*atan(x/sqrt)/M_PI;
+
+    #else
+
+    pitch=180*atan(x/sqrt(y*y + z*z))/M_PI;
+    roll=180*atan(y/sqrt(x*x + z*z))/M_PI;
+    #endif
+
+    accel->roll=roll;
+    accel->pitch=pitch;
 
     if(ret_val!=ACCEL_OK)
     {
@@ -489,6 +519,18 @@ ret Accel_GetAccelData(uint8_t num, Accel_dataStruct *accel)
         return ACCEL_OK;
     }
 }
+
+
+double Accel_GetPitch(Accel_dataStruct accel)
+{
+    return accel.pitch;
+}
+
+double Accel_GetRoll(Accel_dataStruct accel)
+{
+    return accel.roll;
+}
+
 
 accelType_t Accel_Get_X(Accel_dataStruct accel)
 {

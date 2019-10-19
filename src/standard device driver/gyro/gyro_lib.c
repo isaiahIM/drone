@@ -13,6 +13,7 @@
 static Gyro_dataStruct *data_prev=NULL, *data_cur=NULL, *data_head=NULL;
 static Gyro_initStruct *init_prev=NULL, *init_cur=NULL, *init_head=NULL;
 static uint8_t gyro_count=0;
+double prev_sec;
 
 ret Gyro_Init(void)
 {
@@ -464,6 +465,8 @@ ret Gyro_GetGyroData(uint8_t num, Gyro_dataStruct *gyro)
 {
     ret ret_val=GYRO_OK;
     uint32_t data;
+    double roll, pitch, yaw, dt;
+    gyroType_t x, y, z;
 
     ret_val|=Gyro_GetDataInfo(num, &gyro);
     if(ret_val!=GYRO_OK)
@@ -471,14 +474,31 @@ ret Gyro_GetGyroData(uint8_t num, Gyro_dataStruct *gyro)
         return GYRO_GET_DATA_FAIL;
     }
 
-    ret_val|=BSP_Gyro_GetX(num, &data);
-    gyro->gyro_x=data;
+    roll=Gyro_GetRoll(*gyro);
+    pitch=Gyro_GetPitch(*gyro);
+    yaw=Gyro_GetYaw(*gyro);
 
-    ret_val|=BSP_Gyro_GetY(num, &data);
-    gyro->gyro_y=data;
+    ret_val|=BSP_Gyro_GetX(num, &x);
+    gyro->gyro_x=x;
+
+    ret_val|=BSP_Gyro_GetY(num, &y);
+    gyro->gyro_y=y;
     
-    ret_val|=BSP_Gyro_GetZ(num, &data);
-    gyro->gyro_z=data;
+    ret_val|=BSP_Gyro_GetZ(num, &z);
+    gyro->gyro_z=z;
+
+    // TODO:
+    // implement time library
+    dt=Time_GetRunSec() - prev_sec;
+    
+    roll=roll + dt*x;
+    pitch=pitch + dt*y;
+    yaw=yaw + dt*z;
+
+    gyro->roll=roll;
+    gyro->pitch=pitch;
+    gyro->yaw=yaw;
+
 
     if(ret_val!=GYRO_OK)
     {
@@ -488,6 +508,21 @@ ret Gyro_GetGyroData(uint8_t num, Gyro_dataStruct *gyro)
     {
         return GYRO_OK;
     }
+}
+
+double Gyro_GetRoll(Gyro_dataStruct gyro)
+{
+    return gyro.roll;
+}
+
+double Gyro_GetPitch(Gyro_dataStruct gyro)
+{
+    return gyro.pitch;
+}
+
+double Gyro_GetYaw(Gyro_dataStruct gyro)
+{
+    return gyro.yaw;
 }
 
 gyroType_t Gyro_Get_X(Gyro_dataStruct gyro)

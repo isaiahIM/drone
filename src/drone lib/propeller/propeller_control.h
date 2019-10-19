@@ -13,6 +13,7 @@
 
 
 /*include header*/
+#include "common_def.h"
 #include "esc_lib.h"
 #include "drone_types.h"
 
