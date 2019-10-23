@@ -266,7 +266,7 @@ ret Accel_GetDataInfo(uint8_t num, Accel_dataStruct **accel);
 ret Accel_DeleteDataInfo(uint8_t num);
 
 /**
- * @brief accelerator sensor data read.
+ * @brief accelerator sensor data update.
  * 
  * @param num accel number
  * @param accel accel dat structure pointer
@@ -274,7 +274,7 @@ ret Accel_DeleteDataInfo(uint8_t num);
  *  @arg ACCEL_OK 
  *  @arg ACCEL_GET_DATA_FAIL 
  */
-ret Accel_GetAccelData(uint8_t num, Accel_dataStruct *accel);
+ret Accel_UpdateData(uint8_t num, Accel_dataStruct *accel);
 
 /**
  * @brief get euler angle pitch

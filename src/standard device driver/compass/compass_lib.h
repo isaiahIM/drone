@@ -15,7 +15,7 @@
 #include "common_def.h"
 #include "compass_driver.h"
 #include "drone_types.h"
-
+#include <math.h>
 typedef int16_t compassType_t;
 
 #define COMPASS_CONNECTED 0X00
@@ -49,6 +49,9 @@ typedef struct Compass_DataStructure
     compassType_t compass_x;///< compass x
     compassType_t compass_y;///< compass y
     compassType_t compass_z;///< compass z
+    double yaw;///< yaw
+    double pitch;///< pitch
+    double roll;///< roll
     struct Compass_DataStructure *next;///< next link
 } Compass_dataStruct;
 
@@ -260,7 +263,7 @@ ret Compass_GetDataInfo(uint8_t num, Compass_dataStruct **compass);
 ret Compass_DeleteDataInfo(uint8_t num);
 
 /**
- * @brief compass sensor data read.
+ * @brief compass update sensor data.
  * 
  * @param num compass number
  * @param compass compass dat structure pointer
@@ -268,7 +271,33 @@ ret Compass_DeleteDataInfo(uint8_t num);
  *  @arg COMPASS_OK 
  *  @arg COMPASS_GET_DATA_FAIL 
  */
-ret Compass_GetCompassData(uint8_t num, Compass_dataStruct *compass);
+ret Compass_UpdateData(uint8_t num, Compass_dataStruct *compass);
+
+
+/**
+ * @brief get euler angle roll
+ * 
+ * @param compass compass data structure
+ * @return double roll angle [range: 0' ~ 180', -1' ~ -179']
+ */
+double Compass_GetRoll(Compass_dataStruct compass);
+
+/**
+ * @brief get euler angle pitch
+ * 
+ * @param compass compass data structure
+ * @return double pitch angle [range: 0' ~ 180', -1' ~ -179']
+ */
+double Compass_GetPitch(Compass_dataStruct compass);
+
+/**
+ * @brief get euler angle yaw
+ * 
+ * @param compass compass data structure
+ * @return double yaw angle [range: 0' ~ 180', -1' ~ -179']
+ */
+double Compass_GetYaw(Compass_dataStruct compass);
+
 
 /**
  * @brief get X axis in structure

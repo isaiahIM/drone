@@ -221,9 +221,8 @@ ret ESC_AddControlInfo(const ESC_ctrlStruct esc)
 	}
 
 	/**node data set*/
-	buf->num=ESC_GetNumber(esc);
-	buf->speed=ESC_GetSpeed(esc);
-	buf->rotate_dir=ESC_GetRotateDir(esc);
+	memcpy(buf, &esc, sizeof(ESC_ctrlStruct));
+	
 
 	/**insert new node*/
 	ctrl_prev=ctrl_cur;
@@ -306,10 +305,8 @@ ret ESC_AddInitalizeInfo(const ESC_initStruct esc)
 	}
 
 	/**copy data */
-	buf->num=esc.num;
-	buf->speed_max=esc.speed_max;
-	buf->speed_min=esc.speed_min;
-
+	memcpy(buf, &esc, sizeof(ESC_initStruct));
+	
 	/**insert new node*/
 	init_prev=init_cur;
 	buf->next=init_cur->next;

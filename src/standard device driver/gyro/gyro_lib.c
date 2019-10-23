@@ -13,7 +13,7 @@
 static Gyro_dataStruct *data_prev=NULL, *data_cur=NULL, *data_head=NULL;
 static Gyro_initStruct *init_prev=NULL, *init_cur=NULL, *init_head=NULL;
 static uint8_t gyro_count=0;
-double prev_sec;
+static double prev_sec=0.0;
 
 ret Gyro_Init(void)
 {
@@ -75,11 +75,14 @@ ret Gyro_AddGyro(Gyro_initStruct gyro)
 {
     /**Gyro_AddGyro() sequence: */
                                 printf("\t\tSTART Gyro_AddGyro();\n ");
+
+    /**declare values */
     Gyro_dataStruct gyro_data;
     ret ret_val=GYRO_OK;
     uint8_t num, resolution;
     uint32_t cap_freq, com_freq;
 
+    /**get gyro data */
     num=Gyro_GetInitNum(gyro);
     Gyro_SetDataNum(&gyro_data, num);
 
@@ -87,6 +90,7 @@ ret Gyro_AddGyro(Gyro_initStruct gyro)
     cap_freq=Gyro_GetCaptureFreq(gyro);
     com_freq=Gyro_GetCommunicateFreq(gyro);
                                 printf("num: %d, res: %d, cap_freq: %d, com_freq: %d\n", num, resolution, cap_freq, com_freq);
+    
     /**gyro H/W setting */
     ret_val|=BSP_Gyro_SetReolution(num, resolution);
     ret_val|=BSP_Gyro_SetCaptureFreq(num, cap_freq);
@@ -128,14 +132,6 @@ ret Gyro_AddInitalizeInfo(Gyro_initStruct gyro)
     /**declare and initalize values */
     ret ret_val=GYRO_OK;
     Gyro_initStruct *buf;
-    uint8_t num, resolution;
-    uint32_t cap_freq, com_freq;
-
-    /**get data in structure */
-    cap_freq=Gyro_GetCaptureFreq(gyro);
-    resolution=Gyro_GetResolution(gyro);
-    com_freq=Gyro_GetCommunicateFreq(gyro);
-    num=Gyro_GetInitNum(gyro);
 
     /**node allocate */
     buf=(Gyro_initStruct*)malloc(sizeof(Gyro_initStruct));
@@ -146,10 +142,7 @@ ret Gyro_AddInitalizeInfo(Gyro_initStruct gyro)
     }
 
     /**structure data copy */
-    buf->num=num;
-    buf->resolution=resolution;
-    buf->capture_freq=cap_freq;
-    buf->communication_freq=com_freq;
+    memcpy(buf, &gyro, sizeof(Gyro_initStruct));
 
     /**add node in list */
     init_prev=init_cur;
@@ -259,10 +252,7 @@ ret Gyro_AddDataInfo(Gyro_dataStruct gyro)
     }
 
     /**data copy */
-    buf->num=gyro.num;
-    buf->gyro_x=gyro.gyro_x;
-    buf->gyro_y=gyro.gyro_y;
-    buf->gyro_z=gyro.gyro_z;
+    memcpy(buf, &gyro, sizeof(Gyro_dataStruct));
 
     /**add node in list */
     data_prev=data_cur;
@@ -461,45 +451,58 @@ uint32_t Gyro_GetCommunicateFreq(Gyro_initStruct gyro)
     return gyro.communication_freq;
 }
 
-ret Gyro_GetGyroData(uint8_t num, Gyro_dataStruct *gyro)
+ret Gyro_UpdateData(uint8_t num, Gyro_dataStruct *gyro)
 {
+    /**Gyro_UpdateData() sequence: */
+
+    /**declare values */
     ret ret_val=GYRO_OK;
     uint32_t data;
-    double roll, pitch, yaw, dt;
+    double roll, pitch, yaw;
+    double dt, cur_sec;
     gyroType_t x, y, z;
 
+    /**get previous gyroscope data */
     ret_val|=Gyro_GetDataInfo(num, &gyro);
     if(ret_val!=GYRO_OK)
     {
         return GYRO_GET_DATA_FAIL;
     }
 
+    /**get previous roll, pitch, yaw */
     roll=Gyro_GetRoll(*gyro);
     pitch=Gyro_GetPitch(*gyro);
     yaw=Gyro_GetYaw(*gyro);
 
-    ret_val|=BSP_Gyro_GetX(num, &x);
-    gyro->gyro_x=x;
-
-    ret_val|=BSP_Gyro_GetY(num, &y);
-    gyro->gyro_y=y;
+    /**get current gyroscope data */
+    ret_val|=BSP_Gyro_GetX(num, (uint32_t*)&x);
+    ret_val|=BSP_Gyro_GetY(num, (uint32_t*)&y);
+    ret_val|=BSP_Gyro_GetZ(num, (uint32_t*)&z);
     
-    ret_val|=BSP_Gyro_GetZ(num, &z);
+    /**update current gyroscope data */
+    gyro->gyro_x=x;
+    gyro->gyro_y=y;
     gyro->gyro_z=z;
 
     // TODO:
     // implement time library
-    dt=Time_GetRunSec() - prev_sec;
     
+    /**update time */
+    cur_sec=Time_GetRunTimeSec();
+    dt=cur_sec-prev_sec;
+    prev_sec=cur_sec;
+
+    /**calculate current roll, pitch, yaw */
     roll=roll + dt*x;
     pitch=pitch + dt*y;
     yaw=yaw + dt*z;
 
+    /**update roll, pitch, yaw */
     gyro->roll=roll;
     gyro->pitch=pitch;
     gyro->yaw=yaw;
 
-
+    /**return result */
     if(ret_val!=GYRO_OK)
     {
         return GYRO_GET_DATA_FAIL;
@@ -581,3 +584,11 @@ void Gyro_ResetInitPos(void)
     init_cur=init_head->next;
     init_prev=init_head;
 }
+
+
+
+
+
+
+
+

@@ -13,6 +13,7 @@
 static Compass_dataStruct *data_prev=NULL, *data_cur=NULL, *data_head=NULL;
 static Compass_initStruct *init_prev=NULL, *init_cur=NULL, *init_head=NULL;
 static uint8_t compass_count=0;
+static double prev_sec=0.0;
 
 ret Compass_Init(void)
 {
@@ -127,14 +128,6 @@ ret Compass_AddInitalizeInfo(Compass_initStruct compass)
     /**declare and initalize values */
     ret ret_val=COMPASS_OK;
     Compass_initStruct *buf;
-    uint8_t num, resolution;
-    uint32_t cap_freq, com_freq;
-
-    /**get data in structure */
-    cap_freq=Compass_GetCaptureFreq(compass);
-    resolution=Compass_GetResolution(compass);
-    com_freq=Compass_GetCommunicateFreq(compass);
-    num=Compass_GetInitNum(compass);
 
     /**node allocate */
     buf=(Compass_initStruct*)malloc(sizeof(Compass_initStruct));
@@ -145,10 +138,7 @@ ret Compass_AddInitalizeInfo(Compass_initStruct compass)
     }
 
     /**structure data copy */
-    buf->num=num;
-    buf->resolution=resolution;
-    buf->capture_freq=cap_freq;
-    buf->communication_freq=com_freq;
+    memcpy(buf, &compass, sizeof(Compass_initStruct));
 
     /**add node in list */
     init_prev=init_cur;
@@ -247,7 +237,6 @@ ret Compass_AddDataInfo(Compass_dataStruct compass)
     Compass_dataStruct *buf;
     ret ret_val=COMPASS_OK;
 
-    printf("PREV num: %d\n", compass.num);
     /**node allocate */
     buf=(Compass_dataStruct*)malloc(sizeof(Compass_dataStruct));
     if(buf==NULL)
@@ -258,10 +247,7 @@ ret Compass_AddDataInfo(Compass_dataStruct compass)
     }
 
     /**data copy */
-    buf->num=compass.num;
-    buf->compass_x=compass.compass_x;
-    buf->compass_y=compass.compass_y;
-    buf->compass_z=compass.compass_z;
+    memcpy(buf, &compass, sizeof(Compass_dataStruct));
 
     /**add node in list */
     data_prev=data_cur;
@@ -460,26 +446,93 @@ uint32_t Compass_GetCommunicateFreq(Compass_initStruct compass)
     return compass.communication_freq;
 }
 
-ret Compass_GetCompassData(uint8_t num, Compass_dataStruct *compass)
+ret Compass_UpdateData(uint8_t num, Compass_dataStruct *compass)
 {
+    /**Compass_UpdateData() sequence: */
+
+    /**declare values */
     ret ret_val=COMPASS_OK;
     uint32_t data;
+    double dt, cur_time;
+    double roll, pitch, yaw;
+    compassType_t x, y, z;
 
+    /**get privious data */
     ret_val|=Compass_GetDataInfo(num, &compass);
     if(ret_val!=COMPASS_OK)
     {
         return COMPASS_GET_DATA_FAIL;
     }
+    roll=Compass_GetRoll(*compass);
+    pitch=Compass_GetPitch(*compass);
+    yaw=Compass_GetYaw(*compass);
 
-    ret_val|=BSP_Compass_GetX(num, &data);
-    compass->compass_x=data;
+    /**get current compass x, y, z data */
+    ret_val|=BSP_Compass_GetX(num, &x);
+    ret_val|=BSP_Compass_GetY(num, &y);
+    ret_val|=BSP_Compass_GetZ(num, &z);
 
-    ret_val|=BSP_Compass_GetY(num, &data);
-    compass->compass_y=data;
-    
-    ret_val|=BSP_Compass_GetZ(num, &data);
-    compass->compass_z=data;
+    /**update x, y, z data */
+    compass->compass_x=x;
+    compass->compass_y=y;
+    compass->compass_z=z;
 
+    /**update time */
+    cur_time=Time_GetRunTimeSec();
+    dt=cur_time-prev_time;
+    prev_time=cur_time;
+
+    /**calculate roll, pitch, yaw */
+    /*arm-dsp use */
+    #ifdef USE_ARM_DSP
+
+    float32_t sqrt;
+
+    /*roll calculate */
+    if(arm_sqrt_f32(x*x + z*z, &sqrt)!=ARM_MATH_SUCCESS)
+    {
+        return ACCEL_GET_DATA_FAIL;
+    }
+    roll=180*atan(x/sqrt)/M_PI;
+
+    /*pitch calculate */
+    if(arm_sqrt_f32(y*y + z*z, &sqrt)!=ARM_MATH_SUCCESS)
+    {
+        return ACCEL_GET_DATA_FAIL;
+    }
+    pitch=180*atan(x/sqrt)/M_PI;
+
+    /*yaw calculate */
+    yaw = 180 * atan(y/x)/M_PI;
+    /*arm-dsp not use */
+    #else
+
+    roll=180*atan(y/sqrt(x*x + z*z))/M_PI;
+    pitch=180*atan(x/sqrt(y*y + z*z))/M_PI;
+    yaw = 180 * atan(y/x)/M_PI;
+    #endif
+
+    /**update roll, pitch */
+    accel->roll=roll;
+    accel->pitch=pitch;
+
+    /**return result */
+    if(ret_val!=ACCEL_OK)
+    {
+        return ACCEL_GET_DATA_FAIL;
+    }
+    else
+    {
+        return ACCEL_OK;
+    }
+
+    /**update roll, pitch, yaw */
+    compass->roll=roll;
+    compass->pitch=pitch;
+    compass->yaw=yaw;
+
+
+    /**return result */
     if(ret_val!=COMPASS_OK)
     {
         return COMPASS_GET_DATA_FAIL;
@@ -488,6 +541,22 @@ ret Compass_GetCompassData(uint8_t num, Compass_dataStruct *compass)
     {
         return COMPASS_OK;
     }
+}
+
+
+double Compass_GetRoll(Compass_dataStruct compass)
+{
+    return compass->roll;
+}
+
+double Compass_GetPitch(Compass_dataStruct compass)
+{
+    return compass->pitch;
+}
+
+double Compass_GetYaw(Compass_dataStruct compass)
+{
+    return compass->yaw;
 }
 
 compassType_t Compass_Get_X(Compass_dataStruct compass)

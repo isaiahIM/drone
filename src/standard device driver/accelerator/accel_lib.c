@@ -127,14 +127,6 @@ ret Accel_AddInitalizeInfo(Accel_initStruct accel)
     /**declare and initalize values */
     ret ret_val=ACCEL_OK;
     Accel_initStruct *buf;
-    uint8_t num, resolution;
-    uint32_t cap_freq, com_freq;
-
-    /**get data in structure */
-    cap_freq=Accel_GetCaptureFreq(accel);
-    resolution=Accel_GetResolution(accel);
-    com_freq=Accel_GetCommunicateFreq(accel);
-    num=Accel_GetInitNum(accel);
 
     /**node allocate */
     buf=(Accel_initStruct*)malloc(sizeof(Accel_initStruct));
@@ -145,10 +137,7 @@ ret Accel_AddInitalizeInfo(Accel_initStruct accel)
     }
 
     /**structure data copy */
-    buf->num=num;
-    buf->resolution=resolution;
-    buf->capture_freq=cap_freq;
-    buf->communication_freq=com_freq;
+    memcpy(buf, &accel, sizeof(Accel_initStruct));
 
     /**add node in list */
     init_prev=init_cur;
@@ -258,10 +247,7 @@ ret Accel_AddDataInfo(Accel_dataStruct accel)
     }
 
     /**data copy */
-    buf->num=accel.num;
-    buf->accel_x=accel.accel_x;
-    buf->accel_y=accel.accel_y;
-    buf->accel_z=accel.accel_z;
+    memcpy(buf, &accel, sizeof(Accel_dataStruct));
 
     /**add node in list */
     data_prev=data_cur;
@@ -460,56 +446,65 @@ uint32_t Accel_GetCommunicateFreq(Accel_initStruct accel)
     return accel.communication_freq;
 }
 
-ret Accel_GetAccelData(uint8_t num, Accel_dataStruct *accel)
+ret Accel_UpdateData(uint8_t num, Accel_dataStruct *accel)
 {
+    /**Accel_UpdateData() sequence: */
+
+    /**declare values */
     ret ret_val=ACCEL_OK;
     accelType_t x, y, z;
     double pitch, roll;
 
-    x=Accel_Get_X(*accel);
-    y=Accel_Get_Y(*accel);
-    z=Accel_Get_Z(*accel);
-
+    /**get previous accelerator data */
     ret_val|=Accel_GetDataInfo(num, &accel);
     if(ret_val!=ACCEL_OK)
     {
         return ACCEL_GET_DATA_FAIL;
     }
 
+    /**get current accelerator x, y, z data */
     ret_val|=BSP_Accel_GetX(num, &x);
-    accel->accel_x=x;
-
     ret_val|=BSP_Accel_GetY(num, &y);
-    accel->accel_y=y;
-    
     ret_val|=BSP_Accel_GetZ(num, &z);
+
+    /**update accelerator x, y, z data */
+    accel->accel_x=x;
+    accel->accel_y=y;
     accel->accel_z=z;
 
+    /**calculate roll, pitch */
+    
+    /*arm-dsp use */
     #ifdef USE_ARM_DSP
 
     float32_t sqrt;
 
+    /*pitch calculate */
     if(arm_sqrt_f32(y*y + z*z, &sqrt)!=ARM_MATH_SUCCESS)
     {
         return 0;
     }
     pitch=180*atan(x/sqrt)/M_PI;
     
+    /*roll calculate */
     if(arm_sqrt_f32(x*x + z*z, &sqrt)!=ARM_MATH_SUCCESS)
     {
         return 0;
     }
     roll=180*atan(x/sqrt)/M_PI;
 
+    /*arm-dsp not use */
     #else
 
     pitch=180*atan(x/sqrt(y*y + z*z))/M_PI;
     roll=180*atan(y/sqrt(x*x + z*z))/M_PI;
     #endif
 
+    /**update roll, pitch */
     accel->roll=roll;
     accel->pitch=pitch;
 
+    /**return result */
     if(ret_val!=ACCEL_OK)
     {
         return ACCEL_GET_DATA_FAIL;
@@ -570,7 +565,7 @@ void Accel_CountIncrement(void)
 
 void Accel_CountDecrement(void)
 {
-                                printf("\t\tSTART Accel_CountDecrement();\n ");
+                 non dsp mode               printf("\t\tSTART Accel_CountDecrement();\n ");
     accel_count-=1;
     printf("count: %d\n", accel_count);
                                 printf("\t\tEND Accel_CountDecrement();\n ");

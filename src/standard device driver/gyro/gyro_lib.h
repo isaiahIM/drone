@@ -263,7 +263,7 @@ ret Gyro_GetDataInfo(uint8_t num, Gyro_dataStruct **gyro);
 ret Gyro_DeleteDataInfo(uint8_t num);
 
 /**
- * @brief gyroscope sensor data read.
+ * @brief gyroscope update sensor data.
  * 
  * @param num gyro number
  * @param gyro gyro data structure pointer
@@ -271,7 +271,7 @@ ret Gyro_DeleteDataInfo(uint8_t num);
  *  @arg GYRO_OK 
  *  @arg GYRO_GET_DATA_FAIL 
  */
-ret Gyro_GetGyroData(uint8_t num, Gyro_dataStruct *gyro);
+ret Gyro_UpdateData(uint8_t num, Gyro_dataStruct *gyro);
 
 /**
  * @brief get euler angle roll

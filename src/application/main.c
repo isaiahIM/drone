@@ -71,9 +71,9 @@ int main(int argc, char *argv[])
 	ret_val|=Gyro_ConnectCheck(2);
 	ret_val|=Gyro_ConnectCheck(3);
 
-	ret_val|=Gyro_GetGyroData(1, &g1);
-	ret_val|=Gyro_GetGyroData(2, &g2);
-	ret_val|=Gyro_GetGyroData(3, &g3);
+	ret_val|=Gyro_UpdateData(1, &g1);
+	ret_val|=Gyro_UpdateData(2, &g2);
+	ret_val|=Gyro_UpdateData(3, &g3);
 
 	data_x=Gyro_Get_X(g1);
 	data_y=Gyro_Get_Y(g1);
