@@ -29,11 +29,11 @@ ret ESC_Init(void)
 {
 	/**ESC_Init() sequence: */
 
-	ret ret_val=ESC_SUCCESS;
+	ret ret_val=ESC_OK;
 
 	/**H/W part part initlaize */
 	ret_val|=BSP_ESC_HW_Initalize();
-	if(ret_val!=ESC_SUCCESS)
+	if(ret_val!=ESC_OK)
 	{
 		ret_val=ESC_HW_INIT_FAIL;
 	}
@@ -42,7 +42,7 @@ ret ESC_Init(void)
 
 	/*initalize esc initalizing data list*/
 	init_prev=init_head;
-	init_head=(ESC_initStruct*)malloc(sizeof(ESC_initStruct) );
+	init_head=(ESC_initStruct*)calloc(1, sizeof(ESC_initStruct) );
 	if(init_head==NULL)
 	{
 		ret_val|=ESC_AP_INIT_FAIL;
@@ -52,7 +52,7 @@ ret ESC_Init(void)
 
 	/*initalize esc control data list*/
 	ctrl_prev=ctrl_head;
-	ctrl_head=(ESC_ctrlStruct*)malloc(sizeof(ESC_ctrlStruct) );
+	ctrl_head=(ESC_ctrlStruct*)calloc(1, sizeof(ESC_ctrlStruct) );
 	if(ctrl_head==NULL)
 	{
 		ret_val|=ESC_AP_INIT_FAIL;
@@ -66,7 +66,7 @@ ret ESC_Init(void)
 ret ESC_AddESC(ESC_initStruct esc_init, ESC_ctrlStruct esc_ctrl)
 {
 	/**ESC_AddESC() sequence: */
-	ret ret_val=ESC_SUCCESS;
+	ret ret_val=ESC_OK;
 
 	/**add initalize info */
 	ret_val|=ESC_AddInitalizeInfo(esc_init);
@@ -80,7 +80,7 @@ ret ESC_AddESC(ESC_initStruct esc_init, ESC_ctrlStruct esc_ctrl)
 ret ESC_DeleteESC(uint8_t esc_num)
 {
 	/**ESC_DeleteESC() sequence: */
-	ret ret_val=ESC_SUCCESS;
+	ret ret_val=ESC_OK;
 
 	/**delete control info */
 	ret_val|=ESC_DeleteControlInfo(esc_num);
@@ -103,7 +103,7 @@ ret ESC_Rotate(ESC_ctrlStruct esc)
 	ESC_ctrlStruct *esc_buf;
 
 
-	ret_val=ESC_SUCCESS;
+	ret_val=ESC_OK;
 
 	num=ESC_GetNumber(esc);/// get purpose number
 	speed=ESC_GetSpeed(esc);/// get purpose speed
@@ -113,7 +113,7 @@ ret ESC_Rotate(ESC_ctrlStruct esc)
 
 	/**set purpose control data in list */
 	ret_val|=ESC_SetRotateDir(esc_buf, dir);
-	ret_val|=ESC_SetCurrentSpeed(esc_buf, speed);
+	ret_val|=ESC_SetCurSpeed(esc_buf, speed);
 	
 	/**rotation dirction check*/
 	if(dir==ESC_DIR_CW)
@@ -151,7 +151,7 @@ uint16_t ESC_GetSpeed(const ESC_ctrlStruct esc)
 
 ret ESC_SetInitNum(ESC_initStruct *esc, uint8_t num)
 {
-	ret ret_val=ESC_SUCCESS;
+	ret ret_val=ESC_OK;
 
 	esc->num=num;
 
@@ -160,7 +160,7 @@ ret ESC_SetInitNum(ESC_initStruct *esc, uint8_t num)
 
 ret ESC_SetMaxSpeed(ESC_initStruct *esc, uint16_t speed)
 {
-	ret ret_val=ESC_SUCCESS;
+	ret ret_val=ESC_OK;
 
 	esc->speed_max=speed;
 
@@ -169,7 +169,7 @@ ret ESC_SetMaxSpeed(ESC_initStruct *esc, uint16_t speed)
 
 ret ESC_SetMinSpeed(ESC_initStruct *esc, uint16_t speed)
 {
-	ret ret_val=ESC_SUCCESS;
+	ret ret_val=ESC_OK;
 
 	esc->speed_min=speed;
 
@@ -177,9 +177,9 @@ ret ESC_SetMinSpeed(ESC_initStruct *esc, uint16_t speed)
 }
 
 
-ret ESC_SetCurrentSpeed(ESC_ctrlStruct *esc, uint16_t speed)
+ret ESC_SetCurSpeed(ESC_ctrlStruct *esc, uint16_t speed)
 {
-	ret ret_val=ESC_SUCCESS;
+	ret ret_val=ESC_OK;
 
 	esc->speed=speed;
 
@@ -188,16 +188,16 @@ ret ESC_SetCurrentSpeed(ESC_ctrlStruct *esc, uint16_t speed)
 
 ret ESC_SetRotateDir(ESC_ctrlStruct *esc, uint8_t dir)
 {
-	ret ret_val=ESC_SUCCESS;
+	ret ret_val=ESC_OK;
 
 	esc->rotate_dir=dir;
 
 	return ret_val;
 }
 
-ret ESC_SetCurrentNum(ESC_ctrlStruct *esc, uint8_t num)
+ret ESC_SetCurNum(ESC_ctrlStruct *esc, uint8_t num)
 {
-	ret ret_val=ESC_SUCCESS;
+	ret ret_val=ESC_OK;
 
 	esc->num=num;
 
@@ -213,10 +213,10 @@ ret ESC_AddControlInfo(const ESC_ctrlStruct esc)
 	ESC_ctrlStruct *buf;
 
 	/**node allocate*/
-	buf=(ESC_ctrlStruct*)malloc(sizeof(ESC_ctrlStruct) );
+	buf=(ESC_ctrlStruct*)calloc(1, sizeof(ESC_ctrlStruct) );
 	if(buf==NULL)
 	{
-													printf("malloc fail\n");
+													printf("calloc fail\n");
 		return ESC_MEMALLOC_FAIL;
 	}
 
@@ -230,7 +230,7 @@ ret ESC_AddControlInfo(const ESC_ctrlStruct esc)
 	ctrl_cur->next=buf;
 	ctrl_cur=buf;
 													printf("exit ESC_AddControlInfo();\n");
-	return ESC_SUCCESS;
+	return ESC_OK;
 }
 
 ret ESC_DeleteControlInfo(uint8_t esc_num)
@@ -285,7 +285,7 @@ ret ESC_GetControlInfo(uint8_t esc_num, ESC_ctrlStruct **esc)
 	}
 	else
 	{
-		return ESC_SUCCESS;
+		return ESC_OK;
 	}
 }
 
@@ -297,7 +297,7 @@ ret ESC_AddInitalizeInfo(const ESC_initStruct esc)
 	ESC_initStruct *buf;
 
 	/**node allocate*/
-	buf=(ESC_initStruct*)malloc(sizeof(ESC_initStruct) );
+	buf=(ESC_initStruct*)calloc(1, sizeof(ESC_initStruct) );
 	if(buf==NULL)
 	{
 																printf("buf is NULL!\n");
@@ -317,7 +317,7 @@ ret ESC_AddInitalizeInfo(const ESC_initStruct esc)
 
 	ESC_CountIncrement();/// increment esc count
 																	printf("exit ESC_AddInitalizeInfo();\n");
-	return ESC_SUCCESS;
+	return ESC_OK;
 }
 
 ret ESC_DeleteInitalizeInfo(uint8_t esc_num)
@@ -328,12 +328,12 @@ ret ESC_DeleteInitalizeInfo(uint8_t esc_num)
 	ret ret_val;
 	ESC_initStruct *esc;
 
-	ret_val=ESC_SUCCESS;
+	ret_val=ESC_OK;
 
 	/**get esc initalize info*/
 	ret_val|=ESC_GetInitalizeInfo(esc_num, &esc);
 
-	if(ret_val!=ESC_SUCCESS)/// if can't get initalize info
+	if(ret_val!=ESC_OK)/// if can't get initalize info
 	{
 		return ESC_UNKNOWN_NUM;/// return ESC_UNKNOWN_NUM
 	}
@@ -351,7 +351,7 @@ ret ESC_DeleteInitalizeInfo(uint8_t esc_num)
 		ESC_CountDecrement();/// decrement esc count
 	}
 																	printf("exit ESC_DeleteInitalizeInfo();\n");
-	return ESC_SUCCESS;
+	return ESC_OK;
 }
 
 ret ESC_GetInitalizeInfo(uint8_t esc_num, ESC_initStruct **esc)
@@ -385,7 +385,7 @@ ret ESC_GetInitalizeInfo(uint8_t esc_num, ESC_initStruct **esc)
 	}
 	else
 	{
-		return ESC_SUCCESS;
+		return ESC_OK;
 	}
 }
 

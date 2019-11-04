@@ -1,8 +1,12 @@
 #include "esc_driver.h"
 
+// TODO:
+// call BSP function to ESC model function
+// ex) BSP_ESC_HW_Initalize() calls MR_X3_ESC_Init()
+
 uint8_t BSP_ESC_HW_Initalize(void)
 {
-    uint8_t ret_val=BSP_ESC_SUCCESS;
+    uint8_t ret_val=BSP_ESC_OK;
 
     printf("----------------------------------------------START----------------------------------------------------\n");
     printf("esc hw initalize..\n");

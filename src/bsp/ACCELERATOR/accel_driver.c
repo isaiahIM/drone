@@ -44,7 +44,7 @@ uint8_t BSP_Accel_SetCommunicateFreq(uint8_t num, uint32_t freq)
     return BSP_ACCEL_OK;
 }
 
-uint8_t BSP_Accel_GetX(uint8_t num, uint32_t *x)
+uint8_t BSP_Accel_GetX(uint8_t num, int32_t *x)
 {
     printf("------------------START BSP_Accel_GetX()---------------\n ");
     *x=123;
@@ -54,7 +54,7 @@ uint8_t BSP_Accel_GetX(uint8_t num, uint32_t *x)
     return BSP_ACCEL_OK;
 }
 
-uint8_t BSP_Accel_GetY(uint8_t num, uint32_t *y)
+uint8_t BSP_Accel_GetY(uint8_t num, int32_t *y)
 {
     printf("------------------START BSP_Accel_GetY()---------------\n ");
     *y=510;
@@ -64,7 +64,7 @@ uint8_t BSP_Accel_GetY(uint8_t num, uint32_t *y)
     return BSP_ACCEL_OK;
 }
 
-uint8_t BSP_Accel_GetZ(uint8_t num, uint32_t *z)
+uint8_t BSP_Accel_GetZ(uint8_t num, int32_t *z)
 {
     printf("------------------START BSP_Accel_GetZ()---------------\n ");
     *z=8530;

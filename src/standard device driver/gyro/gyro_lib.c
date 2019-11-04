@@ -13,7 +13,6 @@
 static Gyro_dataStruct *data_prev=NULL, *data_cur=NULL, *data_head=NULL;
 static Gyro_initStruct *init_prev=NULL, *init_cur=NULL, *init_head=NULL;
 static uint8_t gyro_count=0;
-static double prev_sec=0.0;
 
 ret Gyro_Init(void)
 {
@@ -31,7 +30,7 @@ ret Gyro_Init(void)
     /**gyro application initalize */
 
     /*make initalize structure dummy node */
-    init_head=(Gyro_initStruct*)malloc(sizeof(Gyro_initStruct));
+    init_head=(Gyro_initStruct*)calloc(1, sizeof(Gyro_initStruct));
     if(init_head==NULL)
     {
                                         printf("Gyro_Init(); fail1!!\n ");
@@ -42,7 +41,7 @@ ret Gyro_Init(void)
     init_head->next=NULL;
 
     /*make data structure dummy node */
-    data_head=(Gyro_dataStruct*)malloc(sizeof(Gyro_dataStruct));
+    data_head=(Gyro_dataStruct*)calloc(1, sizeof(Gyro_dataStruct));
     if(data_head==NULL)
     {
                                         printf("Gyro_Init(); fail2!!\n ");
@@ -134,7 +133,7 @@ ret Gyro_AddInitalizeInfo(Gyro_initStruct gyro)
     Gyro_initStruct *buf;
 
     /**node allocate */
-    buf=(Gyro_initStruct*)malloc(sizeof(Gyro_initStruct));
+    buf=(Gyro_initStruct*)calloc(1, sizeof(Gyro_initStruct));
     if(buf==NULL)
     {
         ret_val=GYRO_ADD_FAIL;
@@ -243,7 +242,7 @@ ret Gyro_AddDataInfo(Gyro_dataStruct gyro)
 
     printf("PREV num: %d\n", gyro.num);
     /**node allocate */
-    buf=(Gyro_dataStruct*)malloc(sizeof(Gyro_dataStruct));
+    buf=(Gyro_dataStruct*)calloc(1, sizeof(Gyro_dataStruct));
     if(buf==NULL)
     {
                                 printf("gyro add fail!!\n");
@@ -259,8 +258,6 @@ ret Gyro_AddDataInfo(Gyro_dataStruct gyro)
     buf->next=data_cur->next;
     data_cur->next=buf;
     data_cur=buf;
-
-    printf("CUR num: %d\n", data_cur->num);
 
                                 printf("\t\tEND Gyro_AddDataInfo();\n ");
 
@@ -451,56 +448,67 @@ uint32_t Gyro_GetCommunicateFreq(Gyro_initStruct gyro)
     return gyro.communication_freq;
 }
 
+
 ret Gyro_UpdateData(uint8_t num, Gyro_dataStruct *gyro)
 {
     /**Gyro_UpdateData() sequence: */
 
     /**declare values */
+    Gyro_dataStruct *p_gyro;
     ret ret_val=GYRO_OK;
-    uint32_t data;
     double roll, pitch, yaw;
     double dt, cur_sec;
     gyroType_t x, y, z;
 
     /**get previous gyroscope data */
-    ret_val|=Gyro_GetDataInfo(num, &gyro);
+    ret_val|=Gyro_GetDataInfo(num, &p_gyro);
     if(ret_val!=GYRO_OK)
     {
         return GYRO_GET_DATA_FAIL;
     }
 
     /**get previous roll, pitch, yaw */
-    roll=Gyro_GetRoll(*gyro);
-    pitch=Gyro_GetPitch(*gyro);
-    yaw=Gyro_GetYaw(*gyro);
+    roll=Gyro_GetRoll(*p_gyro);
+    pitch=Gyro_GetPitch(*p_gyro);
+    yaw=Gyro_GetYaw(*p_gyro);
 
     /**get current gyroscope data */
     ret_val|=BSP_Gyro_GetX(num, (uint32_t*)&x);
     ret_val|=BSP_Gyro_GetY(num, (uint32_t*)&y);
     ret_val|=BSP_Gyro_GetZ(num, (uint32_t*)&z);
     
-    /**update current gyroscope data */
-    gyro->gyro_x=x;
-    gyro->gyro_y=y;
-    gyro->gyro_z=z;
-
-    // TODO:
-    // implement time library
-    
     /**update time */
     cur_sec=Time_GetRunTimeSec();
-    dt=cur_sec-prev_sec;
-    prev_sec=cur_sec;
+    dt=cur_sec-p_gyro->cap_sec;
+    p_gyro->cap_sec=cur_sec;
 
     /**calculate current roll, pitch, yaw */
     roll=roll + dt*x;
     pitch=pitch + dt*y;
     yaw=yaw + dt*z;
 
-    /**update roll, pitch, yaw */
-    gyro->roll=roll;
-    gyro->pitch=pitch;
-    gyro->yaw=yaw;
+    /**update gyro data */
+    p_gyro->gyro_x=x;
+    p_gyro->gyro_y=y;
+    p_gyro->gyro_z=z;
+    p_gyro->roll=roll;
+    p_gyro->pitch=pitch;
+    p_gyro->yaw=yaw;
+
+    /**move data */
+    gyro->gyro_x=p_gyro->gyro_x;
+    gyro->gyro_y=p_gyro->gyro_y;
+    gyro->gyro_z=p_gyro->gyro_z;
+    gyro->roll=p_gyro->roll;
+    gyro->pitch=p_gyro->pitch;
+    gyro->yaw=p_gyro->yaw;
+    gyro->num=p_gyro->num;
+    gyro->next=p_gyro->next;
+    gyro->cap_sec=p_gyro->cap_sec;
+
+    printf("================================Gyro_UpdateData:\n");
+    printf("1. roll: %f, pitch: %f, yaw: %f, x: %d, y: %d, z: %d\n", p_gyro->roll, p_gyro->pitch, p_gyro->yaw, p_gyro->gyro_x, p_gyro->gyro_y, p_gyro->gyro_z);
+    printf("2. roll: %f, pitch: %f, yaw: %f, x: %d, y: %d, z: %d\n", gyro->roll, gyro->pitch, gyro->yaw, gyro->gyro_x, gyro->gyro_y, gyro->gyro_z);
 
     /**return result */
     if(ret_val!=GYRO_OK)
@@ -584,11 +592,3 @@ void Gyro_ResetInitPos(void)
     init_cur=init_head->next;
     init_prev=init_head;
 }
-
-
-
-
-
-
-
-

@@ -11,16 +11,17 @@
 #ifndef ACCEL_LIB__H
 #define ACCEL_LIB__H
 
-#include "common_def.h"
+#define _USE_MATH_DEFINES
+#include <math.h>
 
+#include "common_def.h"
 #include "accel_driver.h"
 #include "drone_types.h"
 
 
-#define _USE_MATH_DEFINES
-#include <math.h>
 
-typedef int16_t accelType_t;
+
+typedef int32_t accelType_t;
 
 #define ACCEL_CONNECTED 0X00
 #define ACCEL_DISCONNECTED 0X01

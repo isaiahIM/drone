@@ -30,7 +30,7 @@ ret Accel_Init(void)
     /**accel application initalize */
 
     /*make initalize structure dummy node */
-    init_head=(Accel_initStruct*)malloc(sizeof(Accel_initStruct));
+    init_head=(Accel_initStruct*)calloc(1, sizeof(Accel_initStruct));
     if(init_head==NULL)
     {
                                         printf("Accel_Init(); fail1!!\n ");
@@ -41,7 +41,7 @@ ret Accel_Init(void)
     init_head->next=NULL;
 
     /*make data structure dummy node */
-    data_head=(Accel_dataStruct*)malloc(sizeof(Accel_dataStruct));
+    data_head=(Accel_dataStruct*)calloc(1, sizeof(Accel_dataStruct));
     if(data_head==NULL)
     {
                                         printf("Accel_Init(); fail2!!\n ");
@@ -129,7 +129,7 @@ ret Accel_AddInitalizeInfo(Accel_initStruct accel)
     Accel_initStruct *buf;
 
     /**node allocate */
-    buf=(Accel_initStruct*)malloc(sizeof(Accel_initStruct));
+    buf=(Accel_initStruct*)calloc(1, sizeof(Accel_initStruct));
     if(buf==NULL)
     {
         ret_val=ACCEL_ADD_FAIL;
@@ -238,7 +238,7 @@ ret Accel_AddDataInfo(Accel_dataStruct accel)
 
     printf("PREV num: %d\n", accel.num);
     /**node allocate */
-    buf=(Accel_dataStruct*)malloc(sizeof(Accel_dataStruct));
+    buf=(Accel_dataStruct*)calloc(1, sizeof(Accel_dataStruct));
     if(buf==NULL)
     {
                                 printf("accel add fail!!\n");
@@ -451,12 +451,13 @@ ret Accel_UpdateData(uint8_t num, Accel_dataStruct *accel)
     /**Accel_UpdateData() sequence: */
 
     /**declare values */
+    Accel_dataStruct *p_accel;
     ret ret_val=ACCEL_OK;
     accelType_t x, y, z;
     double pitch, roll;
 
     /**get previous accelerator data */
-    ret_val|=Accel_GetDataInfo(num, &accel);
+    ret_val|=Accel_GetDataInfo(num, &p_accel);
     if(ret_val!=ACCEL_OK)
     {
         return ACCEL_GET_DATA_FAIL;
@@ -467,31 +468,26 @@ ret Accel_UpdateData(uint8_t num, Accel_dataStruct *accel)
     ret_val|=BSP_Accel_GetY(num, &y);
     ret_val|=BSP_Accel_GetZ(num, &z);
 
-    /**update accelerator x, y, z data */
-    accel->accel_x=x;
-    accel->accel_y=y;
-    accel->accel_z=z;
-
     /**calculate roll, pitch */
     
     /*arm-dsp use */
     #ifdef USE_ARM_DSP
 
-    float32_t sqrt;
+    float32_t root;
 
     /*pitch calculate */
-    if(arm_sqrt_f32(y*y + z*z, &sqrt)!=ARM_MATH_SUCCESS)
+    if(arm_sqrt_f32(y*y + z*z, &root)!=ARM_MATH_SUCCESS)
     {
         return 0;
     }
-    pitch=180*atan(x/sqrt)/M_PI;
+    pitch=180*atan(x/root)/M_PI;
     
     /*roll calculate */
-    if(arm_sqrt_f32(x*x + z*z, &sqrt)!=ARM_MATH_SUCCESS)
+    if(arm_sqrt_f32(x*x + z*z, &root)!=ARM_MATH_SUCCESS)
     {
         return 0;
     }
-    roll=180*atan(x/sqrt)/M_PI;
+    roll=180*atan(x/root)/M_PI;
 
     /*arm-dsp not use */
     #else
@@ -500,9 +496,21 @@ ret Accel_UpdateData(uint8_t num, Accel_dataStruct *accel)
     roll=180*atan(y/sqrt(x*x + z*z))/M_PI;
     #endif
 
-    /**update roll, pitch */
-    accel->roll=roll;
-    accel->pitch=pitch;
+    /**update data */
+    p_accel->accel_x=x;
+    p_accel->accel_y=y;
+    p_accel->accel_z=z;
+    p_accel->roll=roll;
+    p_accel->pitch=pitch;
+
+    /**move data */
+    accel->accel_x=p_accel->accel_x;
+    accel->accel_y=p_accel->accel_y;
+    accel->accel_z=p_accel->accel_z;
+    accel->roll=p_accel->roll;
+    accel->pitch=p_accel->pitch;;
+    accel->num=p_accel->num;
+    accel->next=p_accel->next;
 
     /**return result */
     if(ret_val!=ACCEL_OK)
@@ -565,7 +573,7 @@ void Accel_CountIncrement(void)
 
 void Accel_CountDecrement(void)
 {
-                 non dsp mode               printf("\t\tSTART Accel_CountDecrement();\n ");
+                            printf("\t\tSTART Accel_CountDecrement();\n ");
     accel_count-=1;
     printf("count: %d\n", accel_count);
                                 printf("\t\tEND Accel_CountDecrement();\n ");

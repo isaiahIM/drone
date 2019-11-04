@@ -24,7 +24,8 @@
 #define ESC_DIR_CW 0x00 /// ESC CW direction
 #define ESC_DIR_CCW 0x01 /// ESC CCW direction
 
-#define ESC_SUCCESS 0x00
+#define ESC_OK 0x00
+
 #define ESC_MEMALLOC_FAIL 0X01
 #define ESC_UNKNOWN_NUM 0X02
 #define ESC_UNKNOWN_DIR 0x04
@@ -62,7 +63,7 @@ typedef struct ESC_control_structure
  * @brief ESC H/W, application initalize
  * 
  * @return ret initalize result
- *  @arg ESC_SUCCESS ESC initalze success.
+ *  @arg ESC_OK ESC initalze success.
  *  @arg ESC_HW_INIT_FAIL ESC H/W initalize fail
  *  @arg ESC_AP_INIT_FAIL ESC application initalize fail
  */
@@ -79,7 +80,7 @@ ret ESC_Init(void);
  * @param esc_init initalize data 
  * @param esc_ctrl control data 
  * @return ret result of adding information in list.
- *  @arg ESC_SUCCESS Success to add information.
+ *  @arg ESC_OK Success to add information.
  * 	@arg ESC_MEMALLOC_FAIL ESC node memory allocate fail.
  */
 ret ESC_AddESC(ESC_initStruct esc_init, ESC_ctrlStruct esc_ctrl);
@@ -94,7 +95,7 @@ ret ESC_AddESC(ESC_initStruct esc_init, ESC_ctrlStruct esc_ctrl);
  * 
  * @param esc_num number of ESC
  * @return ret result of deleting information in list.
- * 	@arg ESC_SUCCESS Success to delete information in list.
+ * 	@arg ESC_OK Success to delete information in list.
  *  @arg ESC_UNKNOWN_NUM unknown ESC number 
  */
 ret ESC_DeleteESC(uint8_t esc_num);
@@ -108,7 +109,7 @@ ret ESC_DeleteESC(uint8_t esc_num);
  * 
  * @param esc ESC control data satructure
  * @return ret result of ESC rotate
- *	@arg ESC_SUCCESS ESC success to rotate
+ *	@arg ESC_OK ESC success to rotate
  * 	@arg ESC_UNKNOWN_NUM unknown ESC number 
  */
 ret ESC_Rotate(ESC_ctrlStruct esc);
@@ -174,7 +175,7 @@ ret ESC_SetMinSpeed(ESC_initStruct *esc, uint16_t speed);
  * @param speed input speed
  * @return ret result of function state.
  */
-ret ESC_SetCurrentSpeed(ESC_ctrlStruct *esc, uint16_t speed);
+ret ESC_SetCurSpeed(ESC_ctrlStruct *esc, uint16_t speed);
 
 /**
  * @brief Set ESC rotate direction speed
@@ -192,7 +193,7 @@ ret ESC_SetRotateDir(ESC_ctrlStruct *esc, uint8_t dir);
  * @param num ESC control number
  * @return ret result of function state.
  */
-ret ESC_SetCurrentNum(ESC_ctrlStruct *esc, uint8_t num);
+ret ESC_SetCurNum(ESC_ctrlStruct *esc, uint8_t num);
 
 /**
  * @brief Add control information in list.
@@ -207,7 +208,7 @@ ret ESC_AddControlInfo(const ESC_ctrlStruct esc);
  * 
  * @param esc_num remove control number. 
  * @return ret result of function state.
- *  @arg ESC_SUCCESS success to delete control information in list
+ *  @arg ESC_OK success to delete control information in list
  *  @arg ESC_UNKNOWN_NUM unknown ESC control number
  */
 ret ESC_DeleteControlInfo(uint8_t esc_num);
@@ -219,7 +220,7 @@ ret ESC_DeleteControlInfo(uint8_t esc_num);
  * @param esc_num ESC number
  * @param esc Get pointed ESC control data in list(pointer type). 
  * @return ret result of function state.
- * 	@arg ESC_SUCCESS success to get control information.
+ * 	@arg ESC_OK success to get control information.
  *  @arg ESC_UNKNOWN_NUM fail to ger control information.
  */
 ret ESC_GetControlInfo(uint8_t esc_num, ESC_ctrlStruct **esc);
@@ -229,7 +230,7 @@ ret ESC_GetControlInfo(uint8_t esc_num, ESC_ctrlStruct **esc);
  * 
  * @param esc Input ESC initalize data
  * @return ret result of function state.
- *  @arg ESC_SUCCESS success to add initalize information in list
+ *  @arg ESC_OK success to add initalize information in list
  *  @arg ESC_MEMALLOC_FAIL list memory allocate fail.
  */
 ret ESC_AddInitalizeInfo(const ESC_initStruct esc);
@@ -239,7 +240,7 @@ ret ESC_AddInitalizeInfo(const ESC_initStruct esc);
  * 
  * @param esc_num delete esc number
  * @return ret result of function state.
- *  @arg ESC_SUCCESS success to delete initalize information in list
+ *  @arg ESC_OK success to delete initalize information in list
  *  @arg ESC_UNKNOWN_NUM esc number is not exist.
  */
 ret ESC_DeleteInitalizeInfo(uint8_t esc_num);
@@ -250,7 +251,7 @@ ret ESC_DeleteInitalizeInfo(uint8_t esc_num);
  * @param esc_num ESC number
  * @param esc Get pointed ESC initalize data in list(pointer type). 
  * @return ret result of function state.
- * 	@arg ESC_SUCCESS success to get initalize information.
+ * 	@arg ESC_OK success to get initalize information.
  *  @arg ESC_UNKNOWN_NUM fail to ger initalize information.
  */
 ret ESC_GetInitalizeInfo(uint8_t esc_num, ESC_initStruct **esc);

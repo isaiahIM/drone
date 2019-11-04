@@ -11,12 +11,16 @@
 #ifndef COMPASS_LIB__H
 #define COMPASS_LIB__H
 
+#define _USE_MATH_DEFINES
+#include <math.h>
 
 #include "common_def.h"
 #include "compass_driver.h"
 #include "drone_types.h"
-#include <math.h>
-typedef int16_t compassType_t;
+#include "time.h"
+
+
+typedef int32_t compassType_t;
 
 #define COMPASS_CONNECTED 0X00
 #define COMPASS_DISCONNECTED 0X01

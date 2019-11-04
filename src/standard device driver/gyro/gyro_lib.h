@@ -52,6 +52,7 @@ typedef struct Gyro_DataStructure
     double yaw;///< yaw
     double pitch;///< pitch
     double roll;///< roll
+    double cap_sec;///< data capture time[second]
     struct Gyro_DataStructure *next;///< next link
 } Gyro_dataStruct;
 
