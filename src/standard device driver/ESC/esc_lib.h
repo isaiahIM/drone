@@ -144,47 +144,47 @@ uint16_t ESC_GetSpeed(const ESC_ctrlStruct esc);
 /**
  * @brief Set initalize number in list.
  * 
- * @param esc Pointed ESC initalize data in list(pointer type). 
+ * @param p_esc Pointed ESC initalize data in list(pointer type). 
  * @param num ESC numnber
  * @return ret result of function state.
  */
-ret ESC_SetInitNum(ESC_initStruct *esc, uint8_t num);
+ret ESC_SetInitNum(ESC_initStruct *p_esc, uint8_t num);
 
 /**
  * @brief Set ESC maximum speed.
  * 
- * @param esc Pointed ESC initalize data in list(pointer type). 
+ * @param p_esc Pointed ESC initalize data in list(pointer type). 
  * @param speed maximum speed
  * @return ret result of function state.
  */
-ret ESC_SetMaxSpeed(ESC_initStruct *esc, uint16_t speed);
+ret ESC_SetMaxSpeed(ESC_initStruct *p_esc, uint16_t speed);
 
 /**
  * @brief Set ESC minimum speed.
  * 
- * @param esc Pointed ESC initalize data in list(pointer type). 
+ * @param p_esc Pointed ESC initalize data in list(pointer type). 
  * @param speed minumum speed
  * @return ret result of function state.
  */
-ret ESC_SetMinSpeed(ESC_initStruct *esc, uint16_t speed);
+ret ESC_SetMinSpeed(ESC_initStruct *p_esc, uint16_t speed);
 
 /**
  * @brief Set ESC current speed
  * 
- * @param esc Pointed ESC control data in list(pointer type). 
+ * @param p_esc Pointed ESC control data in list(pointer type). 
  * @param speed input speed
  * @return ret result of function state.
  */
-ret ESC_SetCurSpeed(ESC_ctrlStruct *esc, uint16_t speed);
+ret ESC_SetCurSpeed(ESC_ctrlStruct *p_esc, uint16_t speed);
 
 /**
  * @brief Set ESC rotate direction speed
  * 
- * @param esc Pointed ESC control data in list(pointer type). 
+ * @param p_esc Pointed ESC control data in list(pointer type). 
  * @param dir input direction.
  * @return ret result of function state.
  */
-ret ESC_SetRotateDir(ESC_ctrlStruct *esc, uint8_t dir);
+ret ESC_SetRotateDir(ESC_ctrlStruct *p_esc, uint8_t dir);
 
 /**
  * @brief Set ESC control number
@@ -193,7 +193,7 @@ ret ESC_SetRotateDir(ESC_ctrlStruct *esc, uint8_t dir);
  * @param num ESC control number
  * @return ret result of function state.
  */
-ret ESC_SetCurNum(ESC_ctrlStruct *esc, uint8_t num);
+ret ESC_SetCurNum(ESC_ctrlStruct *p_esc, uint8_t num);
 
 /**
  * @brief Add control information in list.
@@ -218,12 +218,12 @@ ret ESC_DeleteControlInfo(uint8_t esc_num);
  * @brief Get control information in list.
  * 
  * @param esc_num ESC number
- * @param esc Get pointed ESC control data in list(pointer type). 
+ * @param p_esc Get pointed ESC control data in list(pointer type). 
  * @return ret result of function state.
  * 	@arg ESC_OK success to get control information.
  *  @arg ESC_UNKNOWN_NUM fail to ger control information.
  */
-ret ESC_GetControlInfo(uint8_t esc_num, ESC_ctrlStruct **esc);
+ret ESC_GetControlInfo(uint8_t esc_num, ESC_ctrlStruct **p_esc);
 
 /**
  * @brief Set initalize information in list.
@@ -249,12 +249,12 @@ ret ESC_DeleteInitalizeInfo(uint8_t esc_num);
  * @brief Get initalize information in list.
  * 
  * @param esc_num ESC number
- * @param esc Get pointed ESC initalize data in list(pointer type). 
+ * @param p_esc Get pointed ESC initalize data in list(pointer type). 
  * @return ret result of function state.
  * 	@arg ESC_OK success to get initalize information.
  *  @arg ESC_UNKNOWN_NUM fail to ger initalize information.
  */
-ret ESC_GetInitalizeInfo(uint8_t esc_num, ESC_initStruct **esc);
+ret ESC_GetInitalizeInfo(uint8_t esc_num, ESC_initStruct **p_esc);
 
 /**
  * @brief Increment ESC total count. 

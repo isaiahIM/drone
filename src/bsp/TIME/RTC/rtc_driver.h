@@ -52,8 +52,8 @@ uint8_t BSP_RTC_SetCurDate(uint16_t years, uint8_t month, uint8_t date, uint8_t 
 /**
  * @brief get current date
  * 
- * @param years years pointer
- * @param month month pointer
+ * @param p_years years pointer
+ * @param p_month month pointer
  *  @arg JAN January
  *  @arg FEB February
  *  @arg MAR March
@@ -66,7 +66,7 @@ uint8_t BSP_RTC_SetCurDate(uint16_t years, uint8_t month, uint8_t date, uint8_t 
  *  @arg OCT October
  *  @arg NOV November
  *  @arg DEC December
- * @param date date pointer
+ * @param p_date date pointer
  *  @arg SUN Sunday
  *  @arg MON Monday
  *  @arg TUE Tuesday
@@ -74,12 +74,12 @@ uint8_t BSP_RTC_SetCurDate(uint16_t years, uint8_t month, uint8_t date, uint8_t 
  *  @arg THU Thursday
  *  @arg FRI Friday
  *  @arg SAT Saturday
- * @param day day pointer
+ * @param p_day day pointer
  * @return uint8_t date get result
  *  @arg BSP_RTC_OK date get success
  *  @arg BSP_RTC_FAIL date get fail
  */
-uint8_t BSP_RTC_GetCurDate(uint16_t *years, uint8_t *month, uint8_t *date, uint8_t *day);
+uint8_t BSP_RTC_GetCurDate(uint16_t *p_years, uint8_t *p_month, uint8_t *p_date, uint8_t *p_day);
 
 /**
  * @brief set current time
@@ -96,13 +96,13 @@ uint8_t BSP_RTC_SetCurTime(uint8_t hour, uint8_t min, uint8_t sec);
 /**
  * @brief get current time
  * 
- * @param hour hour
- * @param min minute
- * @param sec seconds
+ * @param p_hour hour
+ * @param p_min minute
+ * @param p_sec seconds
  * @return uint8_t get time result
  *  @arg BSP_RTC_OK time get success
  *  @arg BSP_RTC_FAIL time get fail
  */
-uint8_t BSP_RTC_GetCurTime(uint8_t *hour, uint8_t *min, uint8_t *sec);
+uint8_t BSP_RTC_GetCurTime(uint8_t *p_hour, uint8_t *p_min, uint8_t *p_sec);
 
 #endif

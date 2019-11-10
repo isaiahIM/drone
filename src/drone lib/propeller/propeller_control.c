@@ -27,7 +27,6 @@ ret Propeller_Config(uint32_t propeller_num, uint16_t max_speed, uint16_t min_sp
 	/**declare and initalize value*/
 	ESC_initStruct esc_init;
 	ESC_ctrlStruct esc_ctrl;
-
 	ret ret_val;
 	uint32_t mask;
 	uint8_t mask_number;
@@ -61,7 +60,7 @@ ret Propeller_Config(uint32_t propeller_num, uint16_t max_speed, uint16_t min_sp
 
 	if(ret_val|=PROPELLER_OK)
 	{
-		ret_val=PROPELLER_CONF_FAIL;
+		ret_val=PROPELLER_FAIL;
 	}
 
 	return ret_val;
@@ -93,7 +92,7 @@ ret Propeller_DeConfig(uint32_t propeller_num)
 
 	if(ret_val !=PROPELLER_OK)
 	{
-		ret_val=PROPELLER_DECONF_FAIL;
+		ret_val=PROPELLER_FAIL;
 	}
 	return ret_val;
 }
@@ -125,7 +124,7 @@ ret Propeller_CCW_Rotate(uint32_t propeller_num, uint16_t speed)
 
 			if(speed<PROPELLER_SPEED_MIN || speed>PROPELLER_SPEED_MAX)
 			{
-				ret_val|=PROPELLER_ROTATE_FAIL;
+				ret_val|=PROPELLER_FAIL;
 				break;
 			}
 
@@ -177,7 +176,7 @@ ret Propeller_CW_Rotate(uint32_t propeller_num, uint16_t speed)
 
 			if(speed<PROPELLER_SPEED_MIN || speed>PROPELLER_SPEED_MAX)
 			{
-				ret_val|=PROPELLER_ROTATE_FAIL;
+				ret_val|=PROPELLER_FAIL;
 				break;
 			}
 			/**propeller rotate */
@@ -234,7 +233,7 @@ ret Propeller_Start(uint32_t propeller_num)
 															printf("\t\texit Propeller_Start\n");
 	if(ret_val!=PROPELLER_OK)
 	{
-		ret_val=PROPELLER_START_FAIL;
+		ret_val=PROPELLER_FAIL;
 	}
 
 	return ret_val;
@@ -271,7 +270,7 @@ ret Propeller_Stop(uint32_t propeller_num)
 															printf("\t\texit Propeller_Stop\n");
 	if(ret_val!=PROPELLER_OK)
 	{
-		ret_val=PROPELLER_STOP_FAIL;
+		ret_val=PROPELLER_FAIL;
 	}
 	
 	return ret_val;

@@ -33,11 +33,6 @@ typedef int16_t gyroType_t;
 #define GYRO_HW_INIT_FAIL 0x01
 #define GYRO_AP_INIT_FAIL 0x02
 
-/*gyro resolution define */
-#define GYRO_RESOLUTION_8BIT 0X01
-#define GYRO_RESOLUTION_16BIT 0X02
-#define GYRO_RESOLUTION_32BIT 0X03
-
 /**
  * @brief Gyroscope data structure.
  * @detail This structure can working linked list
@@ -92,44 +87,41 @@ ret Gyro_Init(void);
  *  @arg GYRO_CONNECTED gyroscope is connected
  *  @arg GYRO_DISCONNECTED gyroscope is disconnected
  */
-uint8_t Gyro_ConnectCheck(uint8_t num);
+uint8_t Gyro_ChkConnect(uint8_t num);
 
 
 /**
  * @brief gyroscope number setting
  * 
- * @param gyro gyro initalize structure pointer
+ * @param p_gyro gyro initalize structure pointer
  * @param num gyro number
  * @return ret number setting result
  *  @arg GYRO_OK number setting success
  *  @arg GYRO_SET_DATA_FAIL number setting fail
  */
-ret Gyro_SetNum(Gyro_initStruct *gyro, uint8_t num);
+ret Gyro_SetNum(Gyro_initStruct *p_gyro, uint8_t num);
 
 /**
  * @brief gyroscope resolution setting
  * 
- * @param gyro gyro initalize structure pointer
- * @param resolution_bit gyro data resolution bit
- *  @arg GYRO_RESOLUTION_8BIT gyro data 8bit scale resolution
- *  @arg GYRO_RESOLUTION_16BIT gyro data 16bit scale resolution
- *  @arg GYRO_RESOLUTION_32BIT gyro data 32bit scale resolution
+ * @param p_gyro gyro initalize structure pointer
+ * @param resolution_bit gyro data resolution bit [bit]
  * @return ret resolution setting result
  *  @arg GYRO_OK resoluition setting success
  *  @arg GYRO_SET_DATA_FAIL resolution setting fail
  */
-ret Gyro_SetResolution(Gyro_initStruct *gyro, uint8_t resolution_bit);
+ret Gyro_SetResolution(Gyro_initStruct *p_gyro, uint8_t resolution_bit);
 
 /**
  * @brief gyroscope capture frequency set
  * 
  * @param gyro gyro initalize structure pointer
- * @param freq data capture frequency
+ * @param freq data capture frequency [HZ]
  * @return ret frequency setting result
  *  @arg GYRO_OK frequency setting success
  *  @arg GYRO_SET_DATA_FAIL frequency setting fail
  */
-ret Gyro_SetCaptureFreq(Gyro_initStruct *gyro, uint32_t freq);
+ret Gyro_SetCaptureFreq(Gyro_initStruct *p_gyro, uint32_t freq);
 
 /**
  * @brief gyroscope communicate frequency set
@@ -140,17 +132,14 @@ ret Gyro_SetCaptureFreq(Gyro_initStruct *gyro, uint32_t freq);
  *  @arg GYRO_OK frequency setting success
  *  @arg GYRO_SET_DATA_FAIL frequency setting fail
  */
-ret Gyro_SetCommunicateFreq(Gyro_initStruct *gyro, uint32_t freq);
+ret Gyro_SetCommunicateFreq(Gyro_initStruct *p_gyro, uint32_t freq);
 
 
 /**
  * @brief get resolution in structure
  * 
  * @param gyro gyro initalize structure 
- * @return uint8_t resolution
- *  @arg GYRO_RESOLUTION_8BIT resolution 8 bit
- *  @arg GYRO_RESOLUTION_16BIT resolution 16 bit
- *  @arg GYRO_RESOLUTION_32BITresolution 32 bit
+ * @return uint8_t resolution [bit]
  */
 uint8_t Gyro_GetResolution(Gyro_initStruct gyro);
 
@@ -158,7 +147,7 @@ uint8_t Gyro_GetResolution(Gyro_initStruct gyro);
  * @brief get capture frequency in structure
  * 
  * @param gyro gyro initalize structure
- * @return uint32_t resolution[Hz]
+ * @return uint32_t resolution [Hz]
  */
 uint32_t Gyro_GetCaptureFreq(Gyro_initStruct gyro);
 
@@ -166,7 +155,7 @@ uint32_t Gyro_GetCaptureFreq(Gyro_initStruct gyro);
  * @brief get communication frequency in structure
  * 
  * @param gyro gyro initalize structure
- * @return uint32_t communication speed[Hz]
+ * @return uint32_t communication speed [Hz]
  */
 uint32_t Gyro_GetCommunicateFreq(Gyro_initStruct gyro);
 
@@ -219,7 +208,7 @@ ret Gyro_AddInitalizeInfo(Gyro_initStruct gyro);
  *  @arg GYRO_OK get information success
  *  @arg GYRO_UNKNOWN_DATA gyro number is not exist
  */
-ret Gyro_GetInitalizeInfo(uint8_t num, Gyro_initStruct **gyro);
+ret Gyro_GetInitalizeInfo(uint8_t num, Gyro_initStruct **p_gyro);
 
 /**
  * @brief delete initalize information in list
@@ -251,7 +240,7 @@ ret Gyro_AddDataInfo(Gyro_dataStruct gyro);
  *  @arg GYRO_OK get information success
  *  @arg GYRO_UNKNOWN_DATA gyro number is not exist
  */
-ret Gyro_GetDataInfo(uint8_t num, Gyro_dataStruct **gyro);
+ret Gyro_GetDataInfo(uint8_t num, Gyro_dataStruct **p_gyro);
 
 /**
  * @brief delete data information in list
@@ -272,7 +261,7 @@ ret Gyro_DeleteDataInfo(uint8_t num);
  *  @arg GYRO_OK 
  *  @arg GYRO_GET_DATA_FAIL 
  */
-ret Gyro_UpdateData(uint8_t num, Gyro_dataStruct *gyro);
+ret Gyro_UpdateData(uint8_t num, Gyro_dataStruct *p_gyro);
 
 /**
  * @brief get euler angle roll
@@ -339,7 +328,7 @@ uint8_t Gyro_GetDataNum(Gyro_dataStruct gyro);
  * @return ret setting result
  *  @arg GYRO_OK setting success
  */
-ret Gyro_SetDataNum(Gyro_dataStruct *gyro, uint8_t num);
+ret Gyro_SetDataNum(Gyro_dataStruct *p_gyro, uint8_t num);
 
 /**
  * @brief gyroscope count encrement 1

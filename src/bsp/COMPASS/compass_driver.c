@@ -44,31 +44,31 @@ uint8_t BSP_Compass_SetCommunicateFreq(uint8_t num, uint32_t freq)
     return BSP_COMPASS_OK;
 }
 
-uint8_t BSP_Compass_GetX(uint8_t num, int32_t *x)
+uint8_t BSP_Compass_GetX(uint8_t num, int32_t *p_x)
 {
     printf("------------------START BSP_Compass_GetX()---------------\n ");
-    *x=123;
-    printf("num: %d, x: %d\n", num, *x);
+    *p_x=123;
+    printf("num: %d, x: %d\n", num, *p_x);
     printf("------------------END BSP_Compass_GetX()---------------\n ");
     
     return BSP_COMPASS_OK;
 }
 
-uint8_t BSP_Compass_GetY(uint8_t num, int32_t *y)
+uint8_t BSP_Compass_GetY(uint8_t num, int32_t *p_y)
 {
     printf("------------------START BSP_Compass_GetY()---------------\n ");
-    *y=510;
-    printf("num: %d, y: %d\n", num, *y);
+    *p_y=510;
+    printf("num: %d, y: %d\n", num, *p_y);
     printf("------------------END BSP_Compass_GetY()---------------\n ");
 
     return BSP_COMPASS_OK;
 }
 
-uint8_t BSP_Compass_GetZ(uint8_t num, int32_t *z)
+uint8_t BSP_Compass_GetZ(uint8_t num, int32_t *p_z)
 {
     printf("------------------START BSP_Compass_GetZ()---------------\n ");
-    *z=8530;
-    printf("num: %d, y: %d\n", num, *z);
+    *p_z=8530;
+    printf("num: %d, y: %d\n", num, *p_z);
     printf("------------------END BSP_Compass_GetZ()---------------\n ");
 
     return BSP_COMPASS_OK;

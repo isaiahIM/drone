@@ -67,33 +67,33 @@ uint8_t BSP_Compass_SetCommunicateFreq(uint8_t num, uint32_t freq);
  * @brief get compass x data
  * 
  * @param num compass number
- * @param x x data
+ * @param p_x x data
  * @return uint8_t get data result
  *  @arg BSP_COMPASS_OK data get success
  *  @arg BSP_COMPASS_FAIL data get fail
  */
-uint8_t BSP_Compass_GetX(uint8_t num, int32_t *x);
+uint8_t BSP_Compass_GetX(uint8_t num, int32_t *p_x);
 
 /**
  * @brief get compass y data
  * 
  * @param num compass number
- * @param y y data
+ * @param p_y y data
  * @return uint8_t get data result
  *  @arg BSP_COMPASS_OK data get success
  *  @arg BSP_COMPASS_FAIL data get fail
  */
-uint8_t BSP_Compass_GetY(uint8_t num, int32_t *y);
+uint8_t BSP_Compass_GetY(uint8_t num, int32_t *p_y);
 
 /**
  * @brief get compass z data
  * 
  * @param num compass number
- * @param z z data
+ * @param p_z z data
  * @return uint8_t get data result
  *  @arg BSP_COMPASS_OK data get success
  *  @arg BSP_COMPASS_FAIL data get fail
  */
-uint8_t BSP_Compass_GetZ(uint8_t num, int32_t *z);
+uint8_t BSP_Compass_GetZ(uint8_t num, int32_t *p_z);
 
 #endif

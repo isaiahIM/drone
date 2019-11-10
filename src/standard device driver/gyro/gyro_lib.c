@@ -59,13 +59,13 @@ ret Gyro_Init(void)
     return ret_val;
 }
 
-uint8_t Gyro_ConnectCheck(uint8_t num)
+uint8_t Gyro_ChkConnect(uint8_t num)
 {
-                                printf("\t\tSTART Gyro_ConnectCheck();\n ");
+                                printf("\t\tSTART Gyro_ChkConnect();\n ");
     uint8_t connect_status=GYRO_DISCONNECTED;
 
     connect_status=BSP_Gyro_ChkConnect(num);
-                                printf("\t\tEXIT Gyro_ConnectCheck();\n ");
+                                printf("\t\tEXIT Gyro_ChkConnect();\n ");
     return connect_status;
 }
 
@@ -155,7 +155,7 @@ ret Gyro_AddInitalizeInfo(Gyro_initStruct gyro)
     return ret_val;
 }
 
-ret Gyro_GetInitalizeInfo(uint8_t num, Gyro_initStruct **gyro)
+ret Gyro_GetInitalizeInfo(uint8_t num, Gyro_initStruct **p_gyro)
 {
     /**Gyro_GetInitalizeInfo() sequence: */
 
@@ -172,9 +172,9 @@ ret Gyro_GetInitalizeInfo(uint8_t num, Gyro_initStruct **gyro)
     {
         if(Gyro_GetInitNum(*init_cur)==num)
         {
-            *gyro=init_cur;
+            *p_gyro=init_cur;
 
-                                    printf("search num: %d, res: %d, cap_freq: %d, com_freq: %d\n", (*gyro)->num, (*gyro)->resolution, (*gyro)->capture_freq, (*gyro)->communication_freq);
+                                    printf("search num: %d, res: %d, cap_freq: %d, com_freq: %d\n", (*p_gyro)->num, (*p_gyro)->resolution, (*p_gyro)->capture_freq, (*p_gyro)->communication_freq);
 
             break;
         }
@@ -265,7 +265,7 @@ ret Gyro_AddDataInfo(Gyro_dataStruct gyro)
     return ret_val;
 }
 
-ret Gyro_GetDataInfo(uint8_t num, Gyro_dataStruct **gyro)
+ret Gyro_GetDataInfo(uint8_t num, Gyro_dataStruct **p_gyro)
 {
     /**Gyro_GetDataInfo() sequence: */
 
@@ -282,9 +282,9 @@ ret Gyro_GetDataInfo(uint8_t num, Gyro_dataStruct **gyro)
     {
         if(Gyro_GetDataNum(*data_cur)==num)
         {
-            *gyro=data_cur;
+            *p_gyro=data_cur;
 
-            printf("search num: %d, gyro_x: %d, gyro_y: %d, gyro_z: %d\n", (*gyro)->num, (*gyro)->gyro_x, (*gyro)->gyro_y, (*gyro)->gyro_z);
+            printf("search num: %d, gyro_x: %d, gyro_y: %d, gyro_z: %d\n", (*p_gyro)->num, (*p_gyro)->gyro_x, (*p_gyro)->gyro_y, (*p_gyro)->gyro_z);
 
             break;
         }
@@ -337,13 +337,13 @@ ret Gyro_DeleteDataInfo(uint8_t num)
 }
 
 
-ret Gyro_SetNum(Gyro_initStruct *gyro, uint8_t num)
+ret Gyro_SetNum(Gyro_initStruct *p_gyro, uint8_t num)
 {
     ret ret_val=GYRO_OK;
 
                                 printf("\t\tSTART Gyro_SetNum();\n ");
 
-    if(gyro==NULL)
+    if(p_gyro==NULL)
     {
         printf("gyro set fail!!\n");
 
@@ -351,21 +351,21 @@ ret Gyro_SetNum(Gyro_initStruct *gyro, uint8_t num)
         return ret_val;
     }
 
-    gyro->num=num;
+    p_gyro->num=num;
 
-    printf("num: %d\n", gyro->num);
+    printf("num: %d\n", p_gyro->num);
 
                                 printf("\t\tEND Gyro_SetNum();\n ");
     return ret_val;
 }
 
-ret Gyro_SetResolution(Gyro_initStruct *gyro, uint8_t resolution_bit)
+ret Gyro_SetResolution(Gyro_initStruct *p_gyro, uint8_t resolution_bit)
 {
     ret ret_val=GYRO_OK;
 
                                 printf("\t\tSTART Gyro_SetResolution();\n ");
 
-    if(gyro==NULL)
+    if(p_gyro==NULL)
     {
         printf("gyro set fail!!\n");
 
@@ -373,21 +373,21 @@ ret Gyro_SetResolution(Gyro_initStruct *gyro, uint8_t resolution_bit)
         return ret_val;
     }
 
-    gyro->resolution=resolution_bit;
+    p_gyro->resolution=resolution_bit;
 
-    printf("resolution: %d\n", gyro->resolution);
+    printf("resolution: %d\n", p_gyro->resolution);
 
                                 printf("\t\tEND Gyro_SetResolution();\n ");
 
     return ret_val;
 }
 
-ret Gyro_SetCaptureFreq(Gyro_initStruct *gyro, uint32_t freq)
+ret Gyro_SetCaptureFreq(Gyro_initStruct *p_gyro, uint32_t freq)
 {
     ret ret_val=GYRO_OK;
                                 printf("\t\tSTART Gyro_SetCaptureFreq();\n ");
 
-    if(gyro==NULL)
+    if(p_gyro==NULL)
     {
         printf("gyro set fail!!\n");
 
@@ -395,22 +395,22 @@ ret Gyro_SetCaptureFreq(Gyro_initStruct *gyro, uint32_t freq)
         return ret_val;
     }
 
-    gyro->capture_freq=freq;
+    p_gyro->capture_freq=freq;
 
-    printf("cap_frq: %d\n", gyro->capture_freq);
+    printf("cap_frq: %d\n", p_gyro->capture_freq);
 
                                 printf("\t\tEND Gyro_SetCaptureFreq();\n ");
 
     return ret_val;
 }
 
-ret Gyro_SetCommunicateFreq(Gyro_initStruct *gyro, uint32_t freq)
+ret Gyro_SetCommunicateFreq(Gyro_initStruct *p_gyro, uint32_t freq)
 {
     ret ret_val=GYRO_OK;
 
                                 printf("\t\tSTART Gyro_SetCommunicateFreq();\n ");
 
-    if(gyro==NULL)
+    if(p_gyro==NULL)
     {
         printf("gyro set fail!!\n");
 
@@ -418,9 +418,9 @@ ret Gyro_SetCommunicateFreq(Gyro_initStruct *gyro, uint32_t freq)
         return ret_val;
     }
 
-    gyro->communication_freq=freq;
+    p_gyro->communication_freq=freq;
 
-    printf("communication_freq: %d\n", gyro->communication_freq);
+    printf("communication_freq: %d\n", p_gyro->communication_freq);
 
                                 printf("\t\tEND Gyro_SetCommunicateFreq();\n ");
 
@@ -449,28 +449,28 @@ uint32_t Gyro_GetCommunicateFreq(Gyro_initStruct gyro)
 }
 
 
-ret Gyro_UpdateData(uint8_t num, Gyro_dataStruct *gyro)
+ret Gyro_UpdateData(uint8_t num, Gyro_dataStruct *p_gyro)
 {
     /**Gyro_UpdateData() sequence: */
 
     /**declare values */
-    Gyro_dataStruct *p_gyro;
+    Gyro_dataStruct *p_buf;
     ret ret_val=GYRO_OK;
     double roll, pitch, yaw;
     double dt, cur_sec;
     gyroType_t x, y, z;
 
     /**get previous gyroscope data */
-    ret_val|=Gyro_GetDataInfo(num, &p_gyro);
+    ret_val|=Gyro_GetDataInfo(num, &p_buf);
     if(ret_val!=GYRO_OK)
     {
         return GYRO_GET_DATA_FAIL;
     }
 
     /**get previous roll, pitch, yaw */
-    roll=Gyro_GetRoll(*p_gyro);
-    pitch=Gyro_GetPitch(*p_gyro);
-    yaw=Gyro_GetYaw(*p_gyro);
+    roll=Gyro_GetRoll(*p_buf);
+    pitch=Gyro_GetPitch(*p_buf);
+    yaw=Gyro_GetYaw(*p_buf);
 
     /**get current gyroscope data */
     ret_val|=BSP_Gyro_GetX(num, (uint32_t*)&x);
@@ -479,8 +479,8 @@ ret Gyro_UpdateData(uint8_t num, Gyro_dataStruct *gyro)
     
     /**update time */
     cur_sec=Time_GetRunTimeSec();
-    dt=cur_sec-p_gyro->cap_sec;
-    p_gyro->cap_sec=cur_sec;
+    dt=cur_sec-p_buf->cap_sec;
+    p_buf->cap_sec=cur_sec;
 
     /**calculate current roll, pitch, yaw */
     roll=roll + dt*x;
@@ -488,27 +488,27 @@ ret Gyro_UpdateData(uint8_t num, Gyro_dataStruct *gyro)
     yaw=yaw + dt*z;
 
     /**update gyro data */
-    p_gyro->gyro_x=x;
-    p_gyro->gyro_y=y;
-    p_gyro->gyro_z=z;
-    p_gyro->roll=roll;
-    p_gyro->pitch=pitch;
-    p_gyro->yaw=yaw;
+    p_buf->gyro_x=x;
+    p_buf->gyro_y=y;
+    p_buf->gyro_z=z;
+    p_buf->roll=roll;
+    p_buf->pitch=pitch;
+    p_buf->yaw=yaw;
 
     /**move data */
-    gyro->gyro_x=p_gyro->gyro_x;
-    gyro->gyro_y=p_gyro->gyro_y;
-    gyro->gyro_z=p_gyro->gyro_z;
-    gyro->roll=p_gyro->roll;
-    gyro->pitch=p_gyro->pitch;
-    gyro->yaw=p_gyro->yaw;
-    gyro->num=p_gyro->num;
-    gyro->next=p_gyro->next;
-    gyro->cap_sec=p_gyro->cap_sec;
+    p_gyro->gyro_x=p_buf->gyro_x;
+    p_gyro->gyro_y=p_buf->gyro_y;
+    p_gyro->gyro_z=p_buf->gyro_z;
+    p_gyro->roll=p_buf->roll;
+    p_gyro->pitch=p_buf->pitch;
+    p_gyro->yaw=p_buf->yaw;
+    p_gyro->num=p_buf->num;
+    p_gyro->next=p_buf->next;
+    p_gyro->cap_sec=p_buf->cap_sec;
 
     printf("================================Gyro_UpdateData:\n");
-    printf("1. roll: %f, pitch: %f, yaw: %f, x: %d, y: %d, z: %d\n", p_gyro->roll, p_gyro->pitch, p_gyro->yaw, p_gyro->gyro_x, p_gyro->gyro_y, p_gyro->gyro_z);
-    printf("2. roll: %f, pitch: %f, yaw: %f, x: %d, y: %d, z: %d\n", gyro->roll, gyro->pitch, gyro->yaw, gyro->gyro_x, gyro->gyro_y, gyro->gyro_z);
+    printf("1. roll: %f, pitch: %f, yaw: %f, x: %d, y: %d, z: %d\n", p_buf->roll, p_buf->pitch, p_buf->yaw, p_buf->gyro_x, p_buf->gyro_y, p_buf->gyro_z);
+    printf("2. roll: %f, pitch: %f, yaw: %f, x: %d, y: %d, z: %d\n", p_gyro->roll, p_gyro->pitch, p_gyro->yaw, p_gyro->gyro_x, p_gyro->gyro_y, p_gyro->gyro_z);
 
     /**return result */
     if(ret_val!=GYRO_OK)
@@ -552,9 +552,9 @@ gyroType_t Gyro_Get_Z(Gyro_dataStruct gyro)
 }
 
 
-ret Gyro_SetDataNum(Gyro_dataStruct *gyro, uint8_t num)
+ret Gyro_SetDataNum(Gyro_dataStruct *p_gyro, uint8_t num)
 {
-    gyro->num=num;
+    p_gyro->num=num;
     return GYRO_OK;
 }
 

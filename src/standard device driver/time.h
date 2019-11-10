@@ -65,8 +65,8 @@ ret Time_SetCurDate(uint16_t years, uint8_t month, uint8_t date, uint8_t day);
 /**
  * @brief get current date
  * 
- * @param years years pointer
- * @param month month pointer
+ * @param p_years years pointer
+ * @param p_month month pointer
  *  @arg JAN January
  *  @arg FEB February
  *  @arg MAR March
@@ -79,8 +79,8 @@ ret Time_SetCurDate(uint16_t years, uint8_t month, uint8_t date, uint8_t day);
  *  @arg OCT October
  *  @arg NOV November
  *  @arg DEC December
- * @param date date pointer
- * @param day day pointer
+ * @param p_date date pointer
+ * @param p_day day pointer
  *  @arg SUN sunday
  *  @arg MON monday
  *  @arg TUE tuesday
@@ -92,7 +92,7 @@ ret Time_SetCurDate(uint16_t years, uint8_t month, uint8_t date, uint8_t day);
  *  @arg TIME_SUCCESS get date success
  *  @arg TIME_FAIL get date fail
  */
-ret Time_GetCurDate(uint16_t *years, uint8_t *month, uint8_t *date, uint8_t *day);
+ret Time_GetCurDate(uint16_t *p_years, uint8_t *p_month, uint8_t *p_date, uint8_t *p_day);
 
 /**
  * @brief set current time 
@@ -109,14 +109,14 @@ ret Time_SetCurTime(uint8_t hour, uint8_t min, uint8_t sec);
 /**
  * @brief get current time
  * 
- * @param hour hour
- * @param min minute
- * @param sec seconds
+ * @param p_hour hour
+ * @param p_min minute
+ * @param p_sec seconds
  * @return ret current time get result
  *  @arg TIME_SUCCESS time get success
  *  @arg TIME_FAIL time get fail
  */
-ret Time_GetCurTime(uint8_t *hour, uint8_t *min, uint8_t *sec);
+ret Time_GetCurTime(uint8_t *p_hour, uint8_t *p_min, uint8_t *p_sec);
 
 
 /**

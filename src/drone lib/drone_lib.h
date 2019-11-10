@@ -16,7 +16,8 @@
 #include "propeller_control.h"
 
 /*user define */
-#define DRONE_INIT_SUCCESS 0x00
+#define DRONE_OK 0x00
+#define DRONE_FAIL 0X01
 #define DRONE_AP_INIT_FAIL 0x01
 #define DRONE_HW_INIT_FAIL 0x02 
 
@@ -31,9 +32,8 @@
  * @detail This function is initalize propeller, IMU, GPS, 
  * 
  * @return ret initalize result.
- *  @arg DRONE_INIT_SUCCESS initalize success
- *  @arg DRONE_PROPELLER_INIT_FAILl propeller initalize fail
- *  @arg DRONE_PROPELLER_CONF_FAIL propeller configuration fail
+ *  @arg DRONE_OK initalize success
+ *  @arg DRONE_FAIL initalize fail
  */
 ret Drone_Init(void);
 
@@ -41,8 +41,8 @@ ret Drone_Init(void);
  * @brief arming drone.
  * 
  * @return ret arming result
- *  @arg DRONE_ARM_SUCCESS armming success.
- *  @arg DRONE_ARM_FAIL arming fail
+ *  @arg DRONE_OK armming success.
+ *  @arg DRONE_FAIL arming fail
  */
 ret Drone_Arm(void);
 

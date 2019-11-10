@@ -67,33 +67,33 @@ uint8_t BSP_Accel_SetCommunicateFreq(uint8_t num, uint32_t freq);
  * @brief get accel x data
  * 
  * @param num accel number
- * @param x x data
+ * @param p_x x data
  * @return uint8_t get data result
  *  @arg BSP_ACCEL_OK data get success
  *  @arg BSP_ACCEL_FAIL data get fail
  */
-uint8_t BSP_Accel_GetX(uint8_t num, int32_t *x);
+uint8_t BSP_Accel_GetX(uint8_t num, int32_t *p_x);
 
 /**
  * @brief get accel y data
  * 
  * @param num accel number
- * @param y y data
+ * @param p_y y data
  * @return uint8_t get data result
  *  @arg BSP_ACCEL_OK data get success
  *  @arg BSP_ACCEL_FAIL data get fail
  */
-uint8_t BSP_Accel_GetY(uint8_t num, int32_t *y);
+uint8_t BSP_Accel_GetY(uint8_t num, int32_t *p_y);
 
 /**
  * @brief get accel z data
  * 
  * @param num accel number
- * @param z z data
+ * @param p_z z data
  * @return uint8_t get data result
  *  @arg BSP_ACCEL_OK data get success
  *  @arg BSP_ACCEL_FAIL data get fail
  */
-uint8_t BSP_Accel_GetZ(uint8_t num, int32_t *z);
+uint8_t BSP_Accel_GetZ(uint8_t num, int32_t *p_z);
 
 #endif

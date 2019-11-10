@@ -51,17 +51,17 @@ int main(int argc, char *argv[])
 	ret_val|=Gyro_Init();
 
 	ret_val|=Gyro_SetNum(&gyro1, 1);
-	ret_val|=Gyro_SetResolution(&gyro1, GYRO_RESOLUTION_8BIT);
+	ret_val|=Gyro_SetResolution(&gyro1, 1);
 	ret_val|=Gyro_SetCaptureFreq(&gyro1, 1234);
 	ret_val|=Gyro_SetCommunicateFreq(&gyro1, 1234);
 
 	ret_val|=Gyro_SetNum(&gyro2, 2);
-	ret_val|=Gyro_SetResolution(&gyro2, GYRO_RESOLUTION_8BIT);
+	ret_val|=Gyro_SetResolution(&gyro2, 1);
 	ret_val|=Gyro_SetCaptureFreq(&gyro2, 1234);
 	ret_val|=Gyro_SetCommunicateFreq(&gyro2, 1234);
 
 	ret_val|=Gyro_SetNum(&gyro3, 3);
-	ret_val|=Gyro_SetResolution(&gyro3, GYRO_RESOLUTION_8BIT);
+	ret_val|=Gyro_SetResolution(&gyro3, 1);
 	ret_val|=Gyro_SetCaptureFreq(&gyro3, 1234);
 	ret_val|=Gyro_SetCommunicateFreq(&gyro3, 1234);
 
@@ -69,9 +69,9 @@ int main(int argc, char *argv[])
 	ret_val|=Gyro_AddGyro(gyro2);
 	ret_val|=Gyro_AddGyro(gyro3);
 
-	ret_val|=Gyro_ConnectCheck(1);
-	ret_val|=Gyro_ConnectCheck(2);
-	ret_val|=Gyro_ConnectCheck(3);
+	ret_val|=Gyro_ChkConnect(1);
+	ret_val|=Gyro_ChkConnect(2);
+	ret_val|=Gyro_ChkConnect(3);
 
 	ret_val|=Gyro_UpdateData(1, &g1);
 	ret_val|=Gyro_UpdateData(2, &g2);
@@ -112,17 +112,17 @@ printf("\n\n-------ACCLE----------\n\n");
 	ret_val|=Accel_Init();
 
 	ret_val|=Accel_SetNum(&accel1, 1);
-	ret_val|=Accel_SetResolution(&accel1, ACCEL_RESOLUTION_8BIT);
+	ret_val|=Accel_SetResolution(&accel1, 1);
 	ret_val|=Accel_SetCaptureFreq(&accel1, 1234);
 	ret_val|=Accel_SetCommunicateFreq(&accel1, 1234);
 
 	ret_val|=Accel_SetNum(&accel2, 2);
-	ret_val|=Accel_SetResolution(&accel2, ACCEL_RESOLUTION_8BIT);
+	ret_val|=Accel_SetResolution(&accel2, 1);
 	ret_val|=Accel_SetCaptureFreq(&accel2, 1234);
 	ret_val|=Accel_SetCommunicateFreq(&accel2, 1234);
 
 	ret_val|=Accel_SetNum(&accel3, 3);
-	ret_val|=Accel_SetResolution(&accel3, ACCEL_RESOLUTION_8BIT);
+	ret_val|=Accel_SetResolution(&accel3, 1);
 	ret_val|=Accel_SetCaptureFreq(&accel3, 1234);
 	ret_val|=Accel_SetCommunicateFreq(&accel3, 1234);
 
@@ -131,9 +131,9 @@ printf("\n\n-------ACCLE----------\n\n");
 	ret_val|=Accel_AddAccel(accel2);
 	ret_val|=Accel_AddAccel(accel3);
 
-	ret_val|=Accel_ConnectCheck(1);
-	ret_val|=Accel_ConnectCheck(2);
-	ret_val|=Accel_ConnectCheck(3);
+	ret_val|=Accel_ChkConnect(1);
+	ret_val|=Accel_ChkConnect(2);
+	ret_val|=Accel_ChkConnect(3);
 
 	ret_val|=Accel_UpdateData(1, &a1);
 	ret_val|=Accel_UpdateData(2, &a2);
@@ -176,17 +176,17 @@ printf("\n\n-------ACCLE----------\n\n");
 	ret_val|=Compass_Init();
 
 	ret_val|=Compass_SetNum(&compass1, 1);
-	ret_val|=Compass_SetResolution(&compass1, ACCEL_RESOLUTION_8BIT);
+	ret_val|=Compass_SetResolution(&compass1, 1);
 	ret_val|=Compass_SetCaptureFreq(&compass1, 1234);
 	ret_val|=Compass_SetCommunicateFreq(&compass1, 1234);
 
 	ret_val|=Compass_SetNum(&compass2, 2);
-	ret_val|=Compass_SetResolution(&compass2, ACCEL_RESOLUTION_8BIT);
+	ret_val|=Compass_SetResolution(&compass2, 1);
 	ret_val|=Compass_SetCaptureFreq(&compass2, 1234);
 	ret_val|=Compass_SetCommunicateFreq(&compass2, 1234);
 
 	ret_val|=Compass_SetNum(&compass3, 3);
-	ret_val|=Compass_SetResolution(&compass3, ACCEL_RESOLUTION_8BIT);
+	ret_val|=Compass_SetResolution(&compass3, 1);
 	ret_val|=Compass_SetCaptureFreq(&compass3, 1234);
 	ret_val|=Compass_SetCommunicateFreq(&compass3, 1234);
 
@@ -195,9 +195,9 @@ printf("\n\n-------ACCLE----------\n\n");
 	ret_val|=Compass_AddCompass(compass2);
 	ret_val|=Compass_AddCompass(compass3);
 
-	ret_val|=Compass_ConnectCheck(1);
-	ret_val|=Compass_ConnectCheck(2);
-	ret_val|=Compass_ConnectCheck(3);
+	ret_val|=Compass_ChkConnect(1);
+	ret_val|=Compass_ChkConnect(2);
+	ret_val|=Compass_ChkConnect(3);
 
 	ret_val|=Compass_UpdateData(1, &c1);
 	ret_val|=Compass_UpdateData(2, &c2);

@@ -67,33 +67,33 @@ uint8_t BSP_Gyro_SetCommunicateFreq(uint8_t num, uint32_t freq);
  * @brief get gyro x data
  * 
  * @param num gyro number
- * @param x x data
+ * @param p_x x data
  * @return uint8_t get data result
  *  @arg BSP_GYRO_OK data get success
  *  @arg BSP_GYRO_FAIL data get fail
  */
-uint8_t BSP_Gyro_GetX(uint8_t num, int32_t *x);
+uint8_t BSP_Gyro_GetX(uint8_t num, int32_t *p_x);
 
 /**
  * @brief get gyro y data
  * 
  * @param num gyro number
- * @param y y data
+ * @param p_y y data
  * @return uint8_t get data result
  *  @arg BSP_GYRO_OK data get success
  *  @arg BSP_GYRO_FAIL data get fail
  */
-uint8_t BSP_Gyro_GetY(uint8_t num, int32_t *y);
+uint8_t BSP_Gyro_GetY(uint8_t num, int32_t *p_y);
 
 /**
  * @brief get gyro z data
  * 
  * @param num gyro number
- * @param z z data
+ * @param p_z z data
  * @return uint8_t get data result
  *  @arg BSP_GYRO_OK data get success
  *  @arg BSP_GYRO_FAIL data get fail
  */
-uint8_t BSP_Gyro_GetZ(uint8_t num, int32_t *z);
+uint8_t BSP_Gyro_GetZ(uint8_t num, int32_t *p_z);
 
 #endif

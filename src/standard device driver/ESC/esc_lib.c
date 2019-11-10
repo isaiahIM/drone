@@ -149,57 +149,57 @@ uint16_t ESC_GetSpeed(const ESC_ctrlStruct esc)
 	return esc.speed;
 }
 
-ret ESC_SetInitNum(ESC_initStruct *esc, uint8_t num)
+ret ESC_SetInitNum(ESC_initStruct *p_esc, uint8_t num)
 {
 	ret ret_val=ESC_OK;
 
-	esc->num=num;
+	p_esc->num=num;
 
 	return ret_val;
 }
 
-ret ESC_SetMaxSpeed(ESC_initStruct *esc, uint16_t speed)
+ret ESC_SetMaxSpeed(ESC_initStruct *p_esc, uint16_t speed)
 {
 	ret ret_val=ESC_OK;
 
-	esc->speed_max=speed;
+	p_esc->speed_max=speed;
 
 	return ret_val;
 }
 
-ret ESC_SetMinSpeed(ESC_initStruct *esc, uint16_t speed)
+ret ESC_SetMinSpeed(ESC_initStruct *p_esc, uint16_t speed)
 {
 	ret ret_val=ESC_OK;
 
-	esc->speed_min=speed;
+	p_esc->speed_min=speed;
 
 	return ret_val;
 }
 
 
-ret ESC_SetCurSpeed(ESC_ctrlStruct *esc, uint16_t speed)
+ret ESC_SetCurSpeed(ESC_ctrlStruct *p_esc, uint16_t speed)
 {
 	ret ret_val=ESC_OK;
 
-	esc->speed=speed;
+	p_esc->speed=speed;
 
 	return ret_val;
 }
 
-ret ESC_SetRotateDir(ESC_ctrlStruct *esc, uint8_t dir)
+ret ESC_SetRotateDir(ESC_ctrlStruct *p_esc, uint8_t dir)
 {
 	ret ret_val=ESC_OK;
 
-	esc->rotate_dir=dir;
+	p_esc->rotate_dir=dir;
 
 	return ret_val;
 }
 
-ret ESC_SetCurNum(ESC_ctrlStruct *esc, uint8_t num)
+ret ESC_SetCurNum(ESC_ctrlStruct *p_esc, uint8_t num)
 {
 	ret ret_val=ESC_OK;
 
-	esc->num=num;
+	p_esc->num=num;
 
 	return ret_val;
 }
@@ -253,7 +253,7 @@ ret ESC_DeleteControlInfo(uint8_t esc_num)
 	return ret_val;
 }
 
-ret ESC_GetControlInfo(uint8_t esc_num, ESC_ctrlStruct **esc)
+ret ESC_GetControlInfo(uint8_t esc_num, ESC_ctrlStruct **p_esc)
 {
 	/**ESC_GetControlInfo() sequence: */
 														printf("call ESC_GetControlInfo();\n");
@@ -267,8 +267,8 @@ ret ESC_GetControlInfo(uint8_t esc_num, ESC_ctrlStruct **esc)
 		if(ctrl_cur->num==esc_num)
 		{
 			/**copy data */
-			*esc=ctrl_cur;
-			printf("esc data: num: %d, speed: %d, dir: %d\n", (*esc)->num, (*esc)->speed, (*esc)->rotate_dir);
+			*p_esc=ctrl_cur;
+			printf("esc data: num: %d, speed: %d, dir: %d\n", (*p_esc)->num, (*p_esc)->speed, (*p_esc)->rotate_dir);
 			break;
 		}
 		else
@@ -354,7 +354,7 @@ ret ESC_DeleteInitalizeInfo(uint8_t esc_num)
 	return ESC_OK;
 }
 
-ret ESC_GetInitalizeInfo(uint8_t esc_num, ESC_initStruct **esc)
+ret ESC_GetInitalizeInfo(uint8_t esc_num, ESC_initStruct **p_esc)
 {
 	/**ESC_GetInitalizeInfo() sequence: */
 																		printf("call ESC_GetInitalizeInfo();\n");
@@ -367,8 +367,8 @@ ret ESC_GetInitalizeInfo(uint8_t esc_num, ESC_initStruct **esc)
 		if(init_cur->num==esc_num)
 		{
 			/**copy data */
-			*esc=init_cur;
-																printf("esc data: num: %d, speed_max: %d, speed_min: %d\n", (*esc)->num, (*esc)->speed_max, (*esc)->speed_min);
+			*p_esc=init_cur;
+																printf("esc data: num: %d, speed_max: %d, speed_min: %d\n", (*p_esc)->num, (*p_esc)->speed_max, (*p_esc)->speed_min);
 			break;
 		}
 		else

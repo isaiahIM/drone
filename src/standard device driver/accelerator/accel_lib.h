@@ -19,8 +19,6 @@
 #include "drone_types.h"
 
 
-
-
 typedef int32_t accelType_t;
 
 #define ACCEL_CONNECTED 0X00
@@ -37,11 +35,6 @@ typedef int32_t accelType_t;
 
 #define ACCEL_HW_INIT_FAIL 0x01
 #define ACCEL_AP_INIT_FAIL 0x02
-
-/*accel resolution define */
-#define ACCEL_RESOLUTION_8BIT 0X01
-#define ACCEL_RESOLUTION_16BIT 0X02
-#define ACCEL_RESOLUTION_32BIT 0X03
 
 /**
  * @brief Accelerator data structure.
@@ -95,65 +88,59 @@ ret Accel_Init(void);
  *  @arg ACCEL_CONNECTED accelerator is connected
  *  @arg ACCEL_DISCONNECTED accelerator is disconnected
  */
-uint8_t Accel_ConnectCheck(uint8_t num);
+uint8_t Accel_ChkConnect(uint8_t num);
 
 
 /**
  * @brief accelerator number setting
  * 
- * @param accel accel initalize structure pointer
+ * @param p_accel accel initalize structure pointer
  * @param num accel number
  * @return ret number setting result
  *  @arg ACCEL_OK number setting success
  *  @arg ACCEL_SET_DATA_FAIL number setting fail
  */
-ret Accel_SetNum(Accel_initStruct *accel, uint8_t num);
+ret Accel_SetNum(Accel_initStruct *p_accel, uint8_t num);
 
 /**
  * @brief accelerator resolution setting
  * 
- * @param accel accel initalize structure pointer
- * @param resolution_bit accel data resolution bit
- *  @arg ACCEL_RESOLUTION_8BIT accel data 8bit scale resolution
- *  @arg ACCEL_RESOLUTION_16BIT accel data 16bit scale resolution
- *  @arg ACCEL_RESOLUTION_32BIT accel data 32bit scale resolution
+ * @param p_accel accel initalize structure pointer
+ * @param resolution_bit accel data resolution bit [bit]
  * @return ret resolution setting result
  *  @arg ACCEL_OK resoluition setting success
  *  @arg ACCEL_SET_DATA_FAIL resolution setting fail
  */
-ret Accel_SetResolution(Accel_initStruct *accel, uint8_t resolution_bit);
+ret Accel_SetResolution(Accel_initStruct *p_accel, uint8_t resolution_bit);
 
 /**
  * @brief accelerator capture frequency set
  * 
- * @param accel accel initalize structure pointer
+ * @param accel p_accel initalize structure pointer
  * @param freq data capture frequency
  * @return ret frequency setting result
  *  @arg ACCEL_OK frequency setting success
  *  @arg ACCEL_SET_DATA_FAIL frequency setting fail
  */
-ret Accel_SetCaptureFreq(Accel_initStruct *accel, uint32_t freq);
+ret Accel_SetCaptureFreq(Accel_initStruct *p_accel, uint32_t freq);
 
 /**
  * @brief accelerator communicate frequency set
  * 
- * @param accel accel initalize structure pointer
+ * @param accel p_accel initalize structure pointer
  * @param freq communicate frequency [Hz]
  * @return ret frequency setting result
  *  @arg ACCEL_OK frequency setting success
  *  @arg ACCEL_SET_DATA_FAIL frequency setting fail
  */
-ret Accel_SetCommunicateFreq(Accel_initStruct *accel, uint32_t freq);
+ret Accel_SetCommunicateFreq(Accel_initStruct *p_accel, uint32_t freq);
 
 
 /**
  * @brief get resolution in structure
  * 
  * @param accel accel initalize structure 
- * @return uint8_t resolution
- *  @arg ACCEL_RESOLUTION_8BIT resolution 8 bit
- *  @arg ACCEL_RESOLUTION_16BIT resolution 16 bit
- *  @arg ACCEL_RESOLUTION_32BITresolution 32 bit
+ * @return uint8_t resolution [bit]
  */
 uint8_t Accel_GetResolution(Accel_initStruct accel);
 
@@ -217,12 +204,12 @@ ret Accel_AddInitalizeInfo(Accel_initStruct accel);
  * @brief get number of accel initalize information
  * 
  * @param num accel number
- * @param accel accel initalize structure pointer
+ * @param p_accel accel initalize structure pointer
  * @return ret get information result
  *  @arg ACCEL_OK get information success
  *  @arg ACCEL_UNKNOWN_DATA accel number is not exist
  */
-ret Accel_GetInitalizeInfo(uint8_t num, Accel_initStruct **accel);
+ret Accel_GetInitalizeInfo(uint8_t num, Accel_initStruct **p_accel);
 
 /**
  * @brief delete initalize information in list
@@ -249,12 +236,12 @@ ret Accel_AddDataInfo(Accel_dataStruct accel);
  * @brief get number of accel data information
  * 
  * @param num accel number
- * @param accel accel data structure pointer
+ * @param p_accel accel data structure pointer
  * @return ret get information result
  *  @arg ACCEL_OK get information success
  *  @arg ACCEL_UNKNOWN_DATA accel number is not exist
  */
-ret Accel_GetDataInfo(uint8_t num, Accel_dataStruct **accel);
+ret Accel_GetDataInfo(uint8_t num, Accel_dataStruct **p_accel);
 
 /**
  * @brief delete data information in list
@@ -270,12 +257,12 @@ ret Accel_DeleteDataInfo(uint8_t num);
  * @brief accelerator sensor data update.
  * 
  * @param num accel number
- * @param accel accel dat structure pointer
+ * @param p_accel accel dat structure pointer
  * @return ret get sensor data result
  *  @arg ACCEL_OK 
  *  @arg ACCEL_GET_DATA_FAIL 
  */
-ret Accel_UpdateData(uint8_t num, Accel_dataStruct *accel);
+ret Accel_UpdateData(uint8_t num, Accel_dataStruct *p_accel);
 
 /**
  * @brief get euler angle pitch
@@ -327,12 +314,12 @@ uint8_t Accel_GetDataNum(Accel_dataStruct accel);
 /**
  * @brief set data number
  * 
- * @param accel accel data structure pointer
+ * @param p_accel accel data structure pointer
  * @param num number
  * @return ret setting result
  *  @arg ACCEL_OK setting success
  */
-ret Accel_SetDataNum(Accel_dataStruct *accel, uint8_t num);
+ret Accel_SetDataNum(Accel_dataStruct *p_accel, uint8_t num);
 
 /**
  * @brief accelerator count encrement 1

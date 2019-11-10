@@ -37,11 +37,6 @@ typedef int32_t compassType_t;
 #define COMPASS_HW_INIT_FAIL 0x01
 #define COMPASS_AP_INIT_FAIL 0x02
 
-/*compass resolution define */
-#define COMPASS_RESOLUTION_8BIT 0X01
-#define COMPASS_RESOLUTION_16BIT 0X02
-#define COMPASS_RESOLUTION_32BIT 0X03
-
 /**
  * @brief Compass data structure.
  * @detail This structure can working linked list
@@ -95,65 +90,59 @@ ret Compass_Init(void);
  *  @arg COMPASS_CONNECTED compass is connected
  *  @arg COMPASS_DISCONNECTED compass is disconnected
  */
-uint8_t Compass_ConnectCheck(uint8_t num);
+uint8_t Compass_ChkConnect(uint8_t num);
 
 
 /**
  * @brief compass number setting
  * 
- * @param compass compass initalize structure pointer
+ * @param p_compass compass initalize structure pointer
  * @param num compass number
  * @return ret number setting result
  *  @arg COMPASS_OK number setting success
  *  @arg COMPASS_SET_DATA_FAIL number setting fail
  */
-ret Compass_SetNum(Compass_initStruct *compass, uint8_t num);
+ret Compass_SetNum(Compass_initStruct *p_compass, uint8_t num);
 
 /**
  * @brief compass resolution setting
  * 
- * @param compass compass initalize structure pointer
- * @param resolution_bit compass data resolution bit
- *  @arg COMPASS_RESOLUTION_8BIT compass data 8bit scale resolution
- *  @arg COMPASS_RESOLUTION_16BIT compass data 16bit scale resolution
- *  @arg COMPASS_RESOLUTION_32BIT compass data 32bit scale resolution
+ * @param p_compass compass initalize structure pointer
+ * @param resolution_bit compass data resolution bit [bit]
  * @return ret resolution setting result
  *  @arg COMPASS_OK resoluition setting success
  *  @arg COMPASS_SET_DATA_FAIL resolution setting fail
  */
-ret Compass_SetResolution(Compass_initStruct *compass, uint8_t resolution_bit);
+ret Compass_SetResolution(Compass_initStruct *p_compass, uint8_t resolution_bit);
 
 /**
  * @brief compass capture frequency set
  * 
- * @param compass compass initalize structure pointer
+ * @param p_compass compass initalize structure pointer
  * @param freq data capture frequency
  * @return ret frequency setting result
  *  @arg COMPASS_OK frequency setting success
  *  @arg COMPASS_SET_DATA_FAIL frequency setting fail
  */
-ret Compass_SetCaptureFreq(Compass_initStruct *compass, uint32_t freq);
+ret Compass_SetCaptureFreq(Compass_initStruct *p_compass, uint32_t freq);
 
 /**
  * @brief compass communicate frequency set
  * 
- * @param compass compass initalize structure pointer
+ * @param p_compass compass initalize structure pointer
  * @param freq communicate frequency [Hz]
  * @return ret frequency setting result
  *  @arg COMPASS_OK frequency setting success
  *  @arg COMPASS_SET_DATA_FAIL frequency setting fail
  */
-ret Compass_SetCommunicateFreq(Compass_initStruct *compass, uint32_t freq);
+ret Compass_SetCommunicateFreq(Compass_initStruct *p_compass, uint32_t freq);
 
 
 /**
  * @brief get resolution in structure
  * 
  * @param compass compass initalize structure 
- * @return uint8_t resolution
- *  @arg COMPASS_RESOLUTION_8BIT resolution 8 bit
- *  @arg COMPASS_RESOLUTION_16BIT resolution 16 bit
- *  @arg COMPASS_RESOLUTION_32BITresolution 32 bit
+ * @return uint8_t resolution [bit]
  */
 uint8_t Compass_GetResolution(Compass_initStruct compass);
 
@@ -217,12 +206,12 @@ ret Compass_AddInitalizeInfo(Compass_initStruct compass);
  * @brief get number of compass initalize information
  * 
  * @param num compass number
- * @param compass compass initalize structure pointer
+ * @param p_compass compass initalize structure pointer
  * @return ret get information result
  *  @arg COMPASS_OK get information success
  *  @arg COMPASS_UNKNOWN_DATA compass number is not exist
  */
-ret Compass_GetInitalizeInfo(uint8_t num, Compass_initStruct **compass);
+ret Compass_GetInitalizeInfo(uint8_t num, Compass_initStruct **p_compass);
 
 /**
  * @brief delete initalize information in list
@@ -249,12 +238,12 @@ ret Compass_AddDataInfo(Compass_dataStruct compass);
  * @brief get number of compass data information
  * 
  * @param num compass number
- * @param compass compass data structure pointer
+ * @param p_compass compass data structure pointer
  * @return ret get information result
  *  @arg COMPASS_OK get information success
  *  @arg COMPASS_UNKNOWN_DATA compass number is not exist
  */
-ret Compass_GetDataInfo(uint8_t num, Compass_dataStruct **compass);
+ret Compass_GetDataInfo(uint8_t num, Compass_dataStruct **p_compass);
 
 /**
  * @brief delete data information in list
@@ -270,12 +259,12 @@ ret Compass_DeleteDataInfo(uint8_t num);
  * @brief compass update sensor data.
  * 
  * @param num compass number
- * @param compass compass dat structure pointer
+ * @param p_compass compass dat structure pointer
  * @return ret get sensor data result
  *  @arg COMPASS_OK 
  *  @arg COMPASS_GET_DATA_FAIL 
  */
-ret Compass_UpdateData(uint8_t num, Compass_dataStruct *compass);
+ret Compass_UpdateData(uint8_t num, Compass_dataStruct *p_compass);
 
 
 /**
@@ -339,12 +328,12 @@ uint8_t Compass_GetDataNum(Compass_dataStruct compass);
 /**
  * @brief set data number
  * 
- * @param compass compass data structure pointer
+ * @param p_compass compass data structure pointer
  * @param num number
  * @return ret setting result
  *  @arg COMPASS_OK setting success
  */
-ret Compass_SetDataNum(Compass_dataStruct *compass, uint8_t num);
+ret Compass_SetDataNum(Compass_dataStruct *p_compass, uint8_t num);
 
 /**
  * @brief compass count encrement 1

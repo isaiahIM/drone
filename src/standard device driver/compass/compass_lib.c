@@ -59,13 +59,13 @@ ret Compass_Init(void)
     return ret_val;
 }
 
-uint8_t Compass_ConnectCheck(uint8_t num)
+uint8_t Compass_ChkConnect(uint8_t num)
 {
-                                printf("\t\tSTART Compass_ConnectCheck();\n ");
+                                printf("\t\tSTART Compass_ChkConnect();\n ");
     uint8_t connect_status=COMPASS_DISCONNECTED;
 
     connect_status=BSP_Compass_ChkConnect(num);
-                                printf("\t\tEXIT Compass_ConnectCheck();\n ");
+                                printf("\t\tEXIT Compass_ChkConnect();\n ");
     return connect_status;
 }
 
@@ -151,7 +151,7 @@ ret Compass_AddInitalizeInfo(Compass_initStruct compass)
     return ret_val;
 }
 
-ret Compass_GetInitalizeInfo(uint8_t num, Compass_initStruct **compass)
+ret Compass_GetInitalizeInfo(uint8_t num, Compass_initStruct **p_compass)
 {
     /**Compass_GetInitalizeInfo() sequence: */
 
@@ -168,9 +168,9 @@ ret Compass_GetInitalizeInfo(uint8_t num, Compass_initStruct **compass)
     {
         if(Compass_GetInitNum(*init_cur)==num)
         {
-            *compass=init_cur;
+            *p_compass=init_cur;
 
-                                    printf("search num: %d, res: %d, cap_freq: %d, com_freq: %d\n", (*compass)->num, (*compass)->resolution, (*compass)->capture_freq, (*compass)->communication_freq);
+                                    printf("search num: %d, res: %d, cap_freq: %d, com_freq: %d\n", (*p_compass)->num, (*p_compass)->resolution, (*p_compass)->capture_freq, (*p_compass)->communication_freq);
 
             break;
         }
@@ -262,7 +262,7 @@ ret Compass_AddDataInfo(Compass_dataStruct compass)
     return ret_val;
 }
 
-ret Compass_GetDataInfo(uint8_t num, Compass_dataStruct **compass)
+ret Compass_GetDataInfo(uint8_t num, Compass_dataStruct **p_compass)
 {
     /**Compass_GetDataInfo() sequence: */
 
@@ -279,9 +279,9 @@ ret Compass_GetDataInfo(uint8_t num, Compass_dataStruct **compass)
     {
         if(Compass_GetDataNum(*data_cur)==num)
         {
-            *compass=data_cur;
+            *p_compass=data_cur;
 
-            printf("search num: %d, compass_x: %d, compass_y: %d, compass_z: %d\n", (*compass)->num, (*compass)->compass_x, (*compass)->compass_y, (*compass)->compass_z);
+            printf("search num: %d, compass_x: %d, compass_y: %d, compass_z: %d\n", (*p_compass)->num, (*p_compass)->compass_x, (*p_compass)->compass_y, (*p_compass)->compass_z);
 
             break;
         }
@@ -334,13 +334,13 @@ ret Compass_DeleteDataInfo(uint8_t num)
 }
 
 
-ret Compass_SetNum(Compass_initStruct *compass, uint8_t num)
+ret Compass_SetNum(Compass_initStruct *p_compass, uint8_t num)
 {
     ret ret_val=COMPASS_OK;
 
                                 printf("\t\tSTART Compass_SetNum();\n ");
 
-    if(compass==NULL)
+    if(p_compass==NULL)
     {
         printf("compass set fail!!\n");
 
@@ -348,21 +348,21 @@ ret Compass_SetNum(Compass_initStruct *compass, uint8_t num)
         return ret_val;
     }
 
-    compass->num=num;
+    p_compass->num=num;
 
-    printf("num: %d\n", compass->num);
+    printf("num: %d\n", p_compass->num);
 
                                 printf("\t\tEND Compass_SetNum();\n ");
     return ret_val;
 }
 
-ret Compass_SetResolution(Compass_initStruct *compass, uint8_t resolution_bit)
+ret Compass_SetResolution(Compass_initStruct *p_compass, uint8_t resolution_bit)
 {
     ret ret_val=COMPASS_OK;
 
                                 printf("\t\tSTART Compass_SetResolution();\n ");
 
-    if(compass==NULL)
+    if(p_compass==NULL)
     {
         printf("compass set fail!!\n");
 
@@ -370,21 +370,21 @@ ret Compass_SetResolution(Compass_initStruct *compass, uint8_t resolution_bit)
         return ret_val;
     }
 
-    compass->resolution=resolution_bit;
+    p_compass->resolution=resolution_bit;
 
-    printf("resolution: %d\n", compass->resolution);
+    printf("resolution: %d\n", p_compass->resolution);
 
                                 printf("\t\tEND Compass_SetResolution();\n ");
 
     return ret_val;
 }
 
-ret Compass_SetCaptureFreq(Compass_initStruct *compass, uint32_t freq)
+ret Compass_SetCaptureFreq(Compass_initStruct *p_compass, uint32_t freq)
 {
     ret ret_val=COMPASS_OK;
                                 printf("\t\tSTART Compass_SetCaptureFreq();\n ");
 
-    if(compass==NULL)
+    if(p_compass==NULL)
     {
         printf("compass set fail!!\n");
 
@@ -392,22 +392,22 @@ ret Compass_SetCaptureFreq(Compass_initStruct *compass, uint32_t freq)
         return ret_val;
     }
 
-    compass->capture_freq=freq;
+    p_compass->capture_freq=freq;
 
-    printf("cap_frq: %d\n", compass->capture_freq);
+    printf("cap_frq: %d\n", p_compass->capture_freq);
 
                                 printf("\t\tEND Compass_SetCaptureFreq();\n ");
 
     return ret_val;
 }
 
-ret Compass_SetCommunicateFreq(Compass_initStruct *compass, uint32_t freq)
+ret Compass_SetCommunicateFreq(Compass_initStruct *p_compass, uint32_t freq)
 {
     ret ret_val=COMPASS_OK;
 
                                 printf("\t\tSTART Compass_SetCommunicateFreq();\n ");
 
-    if(compass==NULL)
+    if(p_compass==NULL)
     {
         printf("compass set fail!!\n");
 
@@ -415,9 +415,9 @@ ret Compass_SetCommunicateFreq(Compass_initStruct *compass, uint32_t freq)
         return ret_val;
     }
 
-    compass->communication_freq=freq;
+    p_compass->communication_freq=freq;
 
-    printf("communication_freq: %d\n", compass->communication_freq);
+    printf("communication_freq: %d\n", p_compass->communication_freq);
 
                                 printf("\t\tEND Compass_SetCommunicateFreq();\n ");
 
@@ -445,26 +445,26 @@ uint32_t Compass_GetCommunicateFreq(Compass_initStruct compass)
     return compass.communication_freq;
 }
 
-ret Compass_UpdateData(uint8_t num, Compass_dataStruct *compass)
+ret Compass_UpdateData(uint8_t num, Compass_dataStruct *p_compass)
 {
     /**Compass_UpdateData() sequence: */
 
     /**declare values */
     ret ret_val=COMPASS_OK;
-    Compass_dataStruct *p_compass;
+    Compass_dataStruct *p_buf;
     uint32_t data;
     double roll, pitch, yaw;
     compassType_t x, y, z;
 
     /**get privious data */
-    ret_val|=Compass_GetDataInfo(num, &p_compass);
+    ret_val|=Compass_GetDataInfo(num, &p_buf);
     if(ret_val!=COMPASS_OK)
     {
         return COMPASS_GET_DATA_FAIL;
     }
-    roll=Compass_GetRoll(*p_compass);
-    pitch=Compass_GetPitch(*p_compass);
-    yaw=Compass_GetYaw(*p_compass);
+    roll=Compass_GetRoll(*p_buf);
+    pitch=Compass_GetPitch(*p_buf);
+    yaw=Compass_GetYaw(*p_buf);
 
     /**get current compass x, y, z data */
     ret_val|=BSP_Compass_GetX(num, &x);
@@ -502,22 +502,22 @@ ret Compass_UpdateData(uint8_t num, Compass_dataStruct *compass)
     yaw = 180 * atan((double)(y/x))/M_PI;
 
     /**update data */
-    p_compass->compass_x=x;
-    p_compass->compass_y=y;
-    p_compass->compass_z=z;
-    p_compass->roll=roll;
-    p_compass->pitch=pitch;
-    p_compass->yaw=yaw;
+    p_buf->compass_x=x;
+    p_buf->compass_y=y;
+    p_buf->compass_z=z;
+    p_buf->roll=roll;
+    p_buf->pitch=pitch;
+    p_buf->yaw=yaw;
 
     /**move data */
-    compass->compass_x=p_compass->compass_x;
-    compass->compass_y=p_compass->compass_y;
-    compass->compass_z=p_compass->compass_z;
-    compass->roll=p_compass->roll;
-    compass->pitch=p_compass->pitch;
-    compass->yaw=p_compass->yaw;
-    compass->num=p_compass->num;
-    compass->next=p_compass->next;
+    p_compass->compass_x=p_buf->compass_x;
+    p_compass->compass_y=p_buf->compass_y;
+    p_compass->compass_z=p_buf->compass_z;
+    p_compass->roll=p_buf->roll;
+    p_compass->pitch=p_buf->pitch;
+    p_compass->yaw=p_buf->yaw;
+    p_compass->num=p_buf->num;
+    p_compass->next=p_buf->next;
 
 
     /**return result */
@@ -563,9 +563,9 @@ compassType_t Compass_Get_Z(Compass_dataStruct compass)
 }
 
 
-ret Compass_SetDataNum(Compass_dataStruct *compass, uint8_t num)
+ret Compass_SetDataNum(Compass_dataStruct *p_compass, uint8_t num)
 {
-    compass->num=num;
+    p_compass->num=num;
     return COMPASS_OK;
 }
 

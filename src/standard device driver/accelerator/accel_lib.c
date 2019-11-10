@@ -59,13 +59,13 @@ ret Accel_Init(void)
     return ret_val;
 }
 
-uint8_t Accel_ConnectCheck(uint8_t num)
+uint8_t Accel_ChkConnect(uint8_t num)
 {
-                                printf("\t\tSTART Accel_ConnectCheck();\n ");
+                                printf("\t\tSTART Accel_ChkConnect();\n ");
     uint8_t connect_status=ACCEL_DISCONNECTED;
 
     connect_status=BSP_Accel_ChkConnect(num);
-                                printf("\t\tEXIT Accel_ConnectCheck();\n ");
+                                printf("\t\tEXIT Accel_ChkConnect();\n ");
     return connect_status;
 }
 
@@ -335,13 +335,13 @@ ret Accel_DeleteDataInfo(uint8_t num)
 }
 
 
-ret Accel_SetNum(Accel_initStruct *accel, uint8_t num)
+ret Accel_SetNum(Accel_initStruct *p_accel, uint8_t num)
 {
     ret ret_val=ACCEL_OK;
 
                                 printf("\t\tSTART Accel_SetNum();\n ");
 
-    if(accel==NULL)
+    if(p_accel==NULL)
     {
         printf("accel set fail!!\n");
 
@@ -349,21 +349,21 @@ ret Accel_SetNum(Accel_initStruct *accel, uint8_t num)
         return ret_val;
     }
 
-    accel->num=num;
+    p_accel->num=num;
 
-    printf("num: %d\n", accel->num);
+    printf("num: %d\n", p_accel->num);
 
                                 printf("\t\tEND Accel_SetNum();\n ");
     return ret_val;
 }
 
-ret Accel_SetResolution(Accel_initStruct *accel, uint8_t resolution_bit)
+ret Accel_SetResolution(Accel_initStruct *p_accel, uint8_t resolution_bit)
 {
     ret ret_val=ACCEL_OK;
 
                                 printf("\t\tSTART Accel_SetResolution();\n ");
 
-    if(accel==NULL)
+    if(p_accel==NULL)
     {
         printf("accel set fail!!\n");
 
@@ -371,21 +371,21 @@ ret Accel_SetResolution(Accel_initStruct *accel, uint8_t resolution_bit)
         return ret_val;
     }
 
-    accel->resolution=resolution_bit;
+    p_accel->resolution=resolution_bit;
 
-    printf("resolution: %d\n", accel->resolution);
+    printf("resolution: %d\n", p_accel->resolution);
 
                                 printf("\t\tEND Accel_SetResolution();\n ");
 
     return ret_val;
 }
 
-ret Accel_SetCaptureFreq(Accel_initStruct *accel, uint32_t freq)
+ret Accel_SetCaptureFreq(Accel_initStruct *p_accel, uint32_t freq)
 {
     ret ret_val=ACCEL_OK;
                                 printf("\t\tSTART Accel_SetCaptureFreq();\n ");
 
-    if(accel==NULL)
+    if(p_accel==NULL)
     {
         printf("accel set fail!!\n");
 
@@ -393,22 +393,22 @@ ret Accel_SetCaptureFreq(Accel_initStruct *accel, uint32_t freq)
         return ret_val;
     }
 
-    accel->capture_freq=freq;
+    p_accel->capture_freq=freq;
 
-    printf("cap_frq: %d\n", accel->capture_freq);
+    printf("cap_frq: %d\n", p_accel->capture_freq);
 
                                 printf("\t\tEND Accel_SetCaptureFreq();\n ");
 
     return ret_val;
 }
 
-ret Accel_SetCommunicateFreq(Accel_initStruct *accel, uint32_t freq)
+ret Accel_SetCommunicateFreq(Accel_initStruct *p_accel, uint32_t freq)
 {
     ret ret_val=ACCEL_OK;
 
                                 printf("\t\tSTART Accel_SetCommunicateFreq();\n ");
 
-    if(accel==NULL)
+    if(p_accel==NULL)
     {
         printf("accel set fail!!\n");
 
@@ -416,9 +416,9 @@ ret Accel_SetCommunicateFreq(Accel_initStruct *accel, uint32_t freq)
         return ret_val;
     }
 
-    accel->communication_freq=freq;
+    p_accel->communication_freq=freq;
 
-    printf("communication_freq: %d\n", accel->communication_freq);
+    printf("communication_freq: %d\n", p_accel->communication_freq);
 
                                 printf("\t\tEND Accel_SetCommunicateFreq();\n ");
 
@@ -446,18 +446,18 @@ uint32_t Accel_GetCommunicateFreq(Accel_initStruct accel)
     return accel.communication_freq;
 }
 
-ret Accel_UpdateData(uint8_t num, Accel_dataStruct *accel)
+ret Accel_UpdateData(uint8_t num, Accel_dataStruct *p_accel)
 {
     /**Accel_UpdateData() sequence: */
 
     /**declare values */
-    Accel_dataStruct *p_accel;
+    Accel_dataStruct *p_buf;
     ret ret_val=ACCEL_OK;
     accelType_t x, y, z;
     double pitch, roll;
 
     /**get previous accelerator data */
-    ret_val|=Accel_GetDataInfo(num, &p_accel);
+    ret_val|=Accel_GetDataInfo(num, &p_buf);
     if(ret_val!=ACCEL_OK)
     {
         return ACCEL_GET_DATA_FAIL;
@@ -497,20 +497,20 @@ ret Accel_UpdateData(uint8_t num, Accel_dataStruct *accel)
     #endif
 
     /**update data */
-    p_accel->accel_x=x;
-    p_accel->accel_y=y;
-    p_accel->accel_z=z;
-    p_accel->roll=roll;
-    p_accel->pitch=pitch;
+    p_buf->accel_x=x;
+    p_buf->accel_y=y;
+    p_buf->accel_z=z;
+    p_buf->roll=roll;
+    p_buf->pitch=pitch;
 
     /**move data */
-    accel->accel_x=p_accel->accel_x;
-    accel->accel_y=p_accel->accel_y;
-    accel->accel_z=p_accel->accel_z;
-    accel->roll=p_accel->roll;
-    accel->pitch=p_accel->pitch;;
-    accel->num=p_accel->num;
-    accel->next=p_accel->next;
+    p_accel->accel_x=p_buf->accel_x;
+    p_accel->accel_y=p_buf->accel_y;
+    p_accel->accel_z=p_buf->accel_z;
+    p_accel->roll=p_buf->roll;
+    p_accel->pitch=p_buf->pitch;;
+    p_accel->num=p_buf->num;
+    p_accel->next=p_buf->next;
 
     /**return result */
     if(ret_val!=ACCEL_OK)
@@ -551,9 +551,9 @@ accelType_t Accel_Get_Z(Accel_dataStruct accel)
 }
 
 
-ret Accel_SetDataNum(Accel_dataStruct *accel, uint8_t num)
+ret Accel_SetDataNum(Accel_dataStruct *p_accel, uint8_t num)
 {
-    accel->num=num;
+    p_accel->num=num;
     return ACCEL_OK;
 }
 

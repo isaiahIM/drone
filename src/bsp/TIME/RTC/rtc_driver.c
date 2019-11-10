@@ -28,14 +28,14 @@ uint8_t BSP_RTC_SetCurDate(uint16_t years, uint8_t month, uint8_t date, uint8_t 
     return ret_val;
 }
 
-uint8_t BSP_RTC_GetCurDate(uint16_t *years, uint8_t *month, uint8_t *date, uint8_t *day)
+uint8_t BSP_RTC_GetCurDate(uint16_t *p_years, uint8_t *p_month, uint8_t *p_date, uint8_t *p_day)
 {
     uint8_t ret_val=BSP_RTC_OK;
     printf("-----------START BSP_RTC_GetCurDate()-------------\n");
-    *years=_years;
-    *month=_month;
-    *date=_date;
-    *day=_day;
+    *p_years=_years;
+    *p_month=_month;
+    *p_date=_date;
+    *p_day=_day;
     printf("-----------END BSP_RTC_GetCurDate()-------------\n");
     
     return ret_val;
@@ -54,13 +54,13 @@ uint8_t BSP_RTC_SetCurTime(uint8_t hour, uint8_t min, uint8_t sec)
     return ret_val;
 }
 
-uint8_t BSP_RTC_GetCurTime(uint8_t *hour, uint8_t *min, uint8_t *sec)
+uint8_t BSP_RTC_GetCurTime(uint8_t *p_hour, uint8_t *p_min, uint8_t *p_sec)
 {
     uint8_t ret_val=BSP_RTC_OK;
     printf("-----------START BSP_RTC_GetCurTime()-------------\n");
-    *hour=_hour;
-    *min=_min;
-    *sec=_sec;
+    *p_hour=_hour;
+    *p_min=_min;
+    *p_sec=_sec;
     printf("-----------END BSP_RTC_GetCurTime()-------------\n");
     
     return ret_val;

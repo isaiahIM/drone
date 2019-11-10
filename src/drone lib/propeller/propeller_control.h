@@ -32,17 +32,14 @@
 #define PROPELLER_SPEED_MIN 5
 
 #define PROPELLER_OK 0
+#define PROPELLER_FAIL 0X01
 
 #define PROPELLER_DIR_CW ESC_DIR_CW
 #define PROPELLER_DIR_CCW ESC_DIR_CCW
 
 #define PROPELLER_HW_INIT_FAIL ESC_HW_INIT_FAIL
 #define PROPELLER_SW_INIT_FAIL ESC_AP_INIT_FAIL
-#define PROPELLER_CONF_FAIL 0X01
-#define PROPELLER_DECONF_FAIL 0X01
-#define PROPELLER_ROTATE_FAIL 0X01
-#define PROPELLER_START_FAIL 0X01
-#define PROPELLER_STOP_FAIL 0X01
+
 
 /**
  * @brief propeller hardware, software initalize.
@@ -65,7 +62,7 @@ ret Propeller_Init(void);
  * @param propeller_dir propeller rotate direction
  * @return ret configuration result
  *  @arg PROPELLER_OK propeller initalize success
- *  @arg PROPELLER_CONF_FAIL propeller configuration fail
+ *  @arg PROPELLER_FAIL propeller configuration fail
  */
 ret Propeller_Config(uint32_t propeller_num, uint16_t max_speed, uint16_t min_speed, uint8_t propeller_dir);
 
@@ -75,7 +72,7 @@ ret Propeller_Config(uint32_t propeller_num, uint16_t max_speed, uint16_t min_sp
  * @param propeller_num delete configuration propeller number
  * @return ret result of delete configuration.
  *  @arg PROPELLER_OK propeller delete success
- *  @arg PROPELLER_DECONF_FAIL propeller delete fail
+ *  @arg PROPELLER_FAIL propeller delete fail
  */
 ret Propeller_DeConfig(uint32_t propeller_num);
 
@@ -86,7 +83,7 @@ ret Propeller_DeConfig(uint32_t propeller_num);
  * @param speed ratarte speed
  * @return ret CCW rotate result
  *  @arg PROPELLER_OK ccw rotate success
- *  @arg PROPELLER_ROTATE_FAIL ccw rotate fail
+ *  @arg PROPELLER_FAIL ccw rotate fail
  */
 ret Propeller_CCW_Rotate(uint32_t propeller_num, uint16_t speed);
 
@@ -97,7 +94,7 @@ ret Propeller_CCW_Rotate(uint32_t propeller_num, uint16_t speed);
  * @param speed ratarte speed
  * @return ret CW rotate result
  *  @arg PROPELLER_OK cw rotate success
- *  @arg PROPELLER_ROTATE_FAIL cw rotate fail
+ *  @arg PROPELLER_FAIL cw rotate fail
  */
 ret Propeller_CW_Rotate(uint32_t propeller_num, uint16_t speed);
 
@@ -107,7 +104,7 @@ ret Propeller_CW_Rotate(uint32_t propeller_num, uint16_t speed);
  * @param propeller_num propeller number
  * @return ret propeller start result
  *  @arg PROPELLER_OK propeller start success
- *  @arg PROPELLER_START_FAIL propeller start fail
+ *  @arg PROPELLER_FAIL propeller start fail
  */
 ret Propeller_Start(uint32_t propeller_num);
 
@@ -117,7 +114,7 @@ ret Propeller_Start(uint32_t propeller_num);
  * @param propeller_num propeller number
  * @return ret propeller stop result
  *  @arg PROPELLER_OK propeller stop success
- *  @arg PROPELLER_STOP_FAIL propeller stop fail
+ *  @arg PROPELLER_FAIL propeller stop fail
  */
 ret Propeller_Stop(uint32_t propeller_num);
 
