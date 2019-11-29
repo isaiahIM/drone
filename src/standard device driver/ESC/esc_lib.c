@@ -2,34 +2,28 @@
  * @file esc_lib.c
  * @author isaiah IM ||isaiahim0214@gmail.com
  * @brief esc HAL Library source file
- * @version 0.1.1
- * @date 2019-09-26
+ * @version 0.2.1
+ * @date 2019-11-28
  * 
  * @copyright Copyright (c) 2019 isaiah IM
  * 
  */
 
-
 #include "esc_lib.h"
 
-static uint8_t esc_count=0;/// esc count
+/**ESC information structure */
+static ESC_infoStruct esc_info; 
 
-/**ESC_initStruct position*/
-static ESC_initStruct *init_head=NULL;
-static ESC_initStruct *init_cur=NULL;
-static ESC_initStruct *init_prev=NULL;
-
-/**ESC_ctrlStruct position*/
-static ESC_ctrlStruct *ctrl_head=NULL;
-static ESC_ctrlStruct *ctrl_cur=NULL;
-static ESC_ctrlStruct *ctrl_prev=NULL;
-
-
-ret ESC_Init(void)
+ret ESC_Init(uint8_t count)
 {
 	/**ESC_Init() sequence: */
 
 	ret ret_val=ESC_OK;
+
+	/**initalize values */
+	esc_info.count=count;
+	esc_info.init_arr=NULL;
+	esc_info.ctrl_arr=NULL;
 
 	/**H/W part part initlaize */
 	ret_val|=BSP_ESC_HW_Initalize();
@@ -38,74 +32,40 @@ ret ESC_Init(void)
 		ret_val=ESC_HW_INIT_FAIL;
 	}
 
-	/**Application part initalize */
+	/**memory initalize */
 
-	/*initalize esc initalizing data list*/
-	init_prev=init_head;
-	init_head=(ESC_initStruct*)calloc(1, sizeof(ESC_initStruct) );
-	if(init_head==NULL)
+	/*initalize info memory initalize*/
+	esc_info.init_arr=(ESC_initStruct*)calloc(count, sizeof(ESC_initStruct) );
+	if(esc_info.init_arr==NULL)
 	{
-		ret_val|=ESC_AP_INIT_FAIL;
+		ret_val|=ESC_MEMALLOC_FAIL;
 	}
-	init_cur=init_head;
-	init_head->next=NULL;
 
-	/*initalize esc control data list*/
-	ctrl_prev=ctrl_head;
-	ctrl_head=(ESC_ctrlStruct*)calloc(1, sizeof(ESC_ctrlStruct) );
-	if(ctrl_head==NULL)
+	/*control info memory initalize*/
+	esc_info.ctrl_arr=(ESC_ctrlStruct*)calloc(count, sizeof(ESC_ctrlStruct) );
+	if(esc_info.ctrl_arr==NULL)
 	{
-		ret_val|=ESC_AP_INIT_FAIL;
+		ret_val|=ESC_MEMALLOC_FAIL;
 	}
-	ctrl_cur=ctrl_head;
-	ctrl_head->next=NULL;
 
 	return ret_val;
 }
 
-ret ESC_AddESC(ESC_initStruct esc_init, ESC_ctrlStruct esc_ctrl)
-{
-	/**ESC_AddESC() sequence: */
-	ret ret_val=ESC_OK;
 
-	/**add initalize info */
-	ret_val|=ESC_AddInitalizeInfo(esc_init);
-
-	/**add control info */
-	ret_val|=ESC_AddControlInfo(esc_ctrl);
-	
-	return ret_val;
-}
-
-ret ESC_DeleteESC(uint8_t esc_num)
-{
-	/**ESC_DeleteESC() sequence: */
-	ret ret_val=ESC_OK;
-
-	/**delete control info */
-	ret_val|=ESC_DeleteControlInfo(esc_num);
-
-	/**delete initalize info */
-	ret_val|=ESC_DeleteInitalizeInfo(esc_num);
-	
-	return ret_val;
-}
-
-ret ESC_Rotate(ESC_ctrlStruct esc)
+ret ESC_Rotate(uint8_t num, ESC_ctrlStruct esc)
 {
 	/**ESC_Rotate() sequence: */
 											printf("call ESC_Rotate();\n");
 	/**declare and initalize value*/
 	ret ret_val;
 
-	uint8_t dir, num;
+	uint8_t dir;
 	uint16_t speed;
 	ESC_ctrlStruct *esc_buf;
 
 
 	ret_val=ESC_OK;
 
-	num=ESC_GetNumber(esc);/// get purpose number
 	speed=ESC_GetSpeed(esc);/// get purpose speed
 	dir=ESC_GetRotateDir(esc);/// get purpose direction
 
@@ -139,24 +99,11 @@ uint8_t ESC_GetRotateDir(const ESC_ctrlStruct esc)
 	return esc.rotate_dir;
 }
 
-uint8_t ESC_GetNumber(const ESC_ctrlStruct esc)
-{
-	return  esc.num;
-}
-
 uint16_t ESC_GetSpeed(const ESC_ctrlStruct esc)
 {
 	return esc.speed;
 }
 
-ret ESC_SetInitNum(ESC_initStruct *p_esc, uint8_t num)
-{
-	ret ret_val=ESC_OK;
-
-	p_esc->num=num;
-
-	return ret_val;
-}
 
 ret ESC_SetMaxSpeed(ESC_initStruct *p_esc, uint16_t speed)
 {
@@ -195,224 +142,60 @@ ret ESC_SetRotateDir(ESC_ctrlStruct *p_esc, uint8_t dir)
 	return ret_val;
 }
 
-ret ESC_SetCurNum(ESC_ctrlStruct *p_esc, uint8_t num)
-{
-	ret ret_val=ESC_OK;
-
-	p_esc->num=num;
-
-	return ret_val;
-}
-
-
-ret ESC_AddControlInfo(const ESC_ctrlStruct esc)
-{
-	/**ESC_AddControlInfo() sequence: */
-														printf("call ESC_AddControlInfo();\n");
-	/**declare and initalize value*/
-	ESC_ctrlStruct *buf;
-
-	/**node allocate*/
-	buf=(ESC_ctrlStruct*)calloc(1, sizeof(ESC_ctrlStruct) );
-	if(buf==NULL)
-	{
-													printf("calloc fail\n");
-		return ESC_MEMALLOC_FAIL;
-	}
-
-	/**node data set*/
-	memcpy(buf, &esc, sizeof(ESC_ctrlStruct));
-	
-
-	/**insert new node*/
-	ctrl_prev=ctrl_cur;
-	buf->next=ctrl_cur->next;
-	ctrl_cur->next=buf;
-	ctrl_cur=buf;
-													printf("exit ESC_AddControlInfo();\n");
-	return ESC_OK;
-}
-
-ret ESC_DeleteControlInfo(uint8_t esc_num)
-{
-	/**ESC_DeleteControlInfo() sequence: */
-													printf("call ESC_DeleteControlInfo();\n");
-	/**declare and initalize value*/
-	ret ret_val;
-	ESC_ctrlStruct *esc;
-
-	ret_val|=ESC_GetControlInfo(esc_num, &esc);
-
-	/**unlink node*/
-	ctrl_prev->next=ctrl_cur->next;
-	esc=ctrl_cur;
-	ctrl_cur=ctrl_cur->next;
-													
-	free(esc);/// node remove in memory
-													printf("exit ESC_DeleteControlInfo();\n");
-	return ret_val;
-}
 
 ret ESC_GetControlInfo(uint8_t esc_num, ESC_ctrlStruct **p_esc)
 {
 	/**ESC_GetControlInfo() sequence: */
 														printf("call ESC_GetControlInfo();\n");
 
-	/**reset position*/
-	ESC_ResetCtrlListPosition();
+	/**declare values */
+	uint8_t i;
 
 	/**search esc number*/
-	while(ctrl_cur!=NULL)
-	{
-		if(ctrl_cur->num==esc_num)
-		{
-			/**copy data */
-			*p_esc=ctrl_cur;
-			printf("esc data: num: %d, speed: %d, dir: %d\n", (*p_esc)->num, (*p_esc)->speed, (*p_esc)->rotate_dir);
-			break;
-		}
-		else
-		{
-			ctrl_prev=ctrl_cur;
-			ctrl_cur=ctrl_cur->next;
-		}
-	}
-														printf("exit ESC_GetControlInfo();\n");
-
-	if(ctrl_cur==NULL)
+	if(esc_num>= esc_info.count || esc_num<0)
 	{
 		return ESC_UNKNOWN_NUM;
 	}
 	else
 	{
-		return ESC_OK;
-	}
-}
-
-ret ESC_AddInitalizeInfo(const ESC_initStruct esc)
-{
-	/**ESC_AddInitalizeInfo() sequence: */
-																printf("call ESC_AddInitalizeInfo();\n");
-	/**declare and initalize value*/
-	ESC_initStruct *buf;
-
-	/**node allocate*/
-	buf=(ESC_initStruct*)calloc(1, sizeof(ESC_initStruct) );
-	if(buf==NULL)
-	{
-																printf("buf is NULL!\n");
-		return ESC_MEMALLOC_FAIL;
+		*p_esc=&(esc_info.ctrl_arr[esc_num]);
+		printf("esc data: speed: %d, dir: %d\n", (*p_esc)->speed, (*p_esc)->rotate_dir);
 	}
 
-	/**copy data */
-	memcpy(buf, &esc, sizeof(ESC_initStruct));
-	
-	/**insert new node*/
-	init_prev=init_cur;
-	buf->next=init_cur->next;
-	init_cur->next=buf;
-	init_cur=buf;
-
-	BSP_ESC_Initalize(init_cur->num, init_cur->speed_min, init_cur->speed_max);/// ESC initalize(bsp)
-
-	ESC_CountIncrement();/// increment esc count
-																	printf("exit ESC_AddInitalizeInfo();\n");
+													printf("exit ESC_GetControlInfo();\n");
 	return ESC_OK;
 }
 
-ret ESC_DeleteInitalizeInfo(uint8_t esc_num)
-{
-	/**ESC_DeleteInitalizeInfo() sequence: */
-																		printf("call ESC_DeleteInitalizeInfo();\n");
-	/**declare and initalize value*/
-	ret ret_val;
-	ESC_initStruct *esc;
 
-	ret_val=ESC_OK;
-
-	/**get esc initalize info*/
-	ret_val|=ESC_GetInitalizeInfo(esc_num, &esc);
-
-	if(ret_val!=ESC_OK)/// if can't get initalize info
-	{
-		return ESC_UNKNOWN_NUM;/// return ESC_UNKNOWN_NUM
-	}
-	else
-	{
-		/**unlink node*/
-		init_prev->next=init_cur->next;
-		esc=init_cur;
-		init_cur=init_cur->next;
-
-		BSP_ESC_Deinitalize(esc->num);/// esc de-initalize(bsp)
-
-		free(esc);/// node de-allocate
-
-		ESC_CountDecrement();/// decrement esc count
-	}
-																	printf("exit ESC_DeleteInitalizeInfo();\n");
-	return ESC_OK;
-}
 
 ret ESC_GetInitalizeInfo(uint8_t esc_num, ESC_initStruct **p_esc)
 {
 	/**ESC_GetInitalizeInfo() sequence: */
 																		printf("call ESC_GetInitalizeInfo();\n");
-	/**reset position*/
-	ESC_ResetInitListPosition();
+	/**declare values */
+	uint8_t i;
 																		printf("num: %d\n", esc_num);
 	/**search esc number*/
-	while(init_cur!=NULL)
-	{
-		if(init_cur->num==esc_num)
-		{
-			/**copy data */
-			*p_esc=init_cur;
-																printf("esc data: num: %d, speed_max: %d, speed_min: %d\n", (*p_esc)->num, (*p_esc)->speed_max, (*p_esc)->speed_min);
-			break;
-		}
-		else
-		{
-			init_prev=init_cur;
-			init_cur=init_cur->next;
-		}
-	}
-																		printf("exit ESC_GetInitalizeInfo();\n");
-
-	if(init_cur==NULL)
+	if(esc_num>= esc_info.count || esc_num<0)
 	{
 		return ESC_UNKNOWN_NUM;
 	}
 	else
 	{
-		return ESC_OK;
+		*p_esc=&(esc_info.init_arr[i]);
+		printf("esc data: speed_max: %d, speed_min: %d\n", (*p_esc)->speed_max, (*p_esc)->speed_min);
 	}
+																		printf("exit ESC_GetInitalizeInfo();\n");
+
+	return ESC_OK;
 }
 
-void ESC_CountIncrement(void)
-{
-													printf("call ESC_CountIncrement();\n");
-	esc_count+=1;
-													printf("exit ESC_CountIncrement();\n");
-}
 
-void ESC_CountDecrement(void)
+void ESC_Terminate(void)
 {
-													printf("call ESC_CountDecrement();\n");
-	esc_count-=1;
-													printf("exit ESC_CountDecrement();\n");
-}
-
-void ESC_ResetCtrlListPosition(void)
-{
-	/**reset position*/
-	ctrl_cur=ctrl_head->next;
-	ctrl_prev=ctrl_head;
-}
-
-void ESC_ResetInitListPosition(void)
-{
-	/**reset position*/
-	init_cur=init_head->next;
-	init_prev=init_head;
+								printf("call ESC_Rerminate();\n");
+	free(esc_info.ctrl_arr);
+	free(esc_info.init_arr);
+	esc_info.count=0;
+								printf("exit ESC_Terminate();\n ");
 }

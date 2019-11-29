@@ -10,16 +10,21 @@
  */
 #include "accel_lib.h"
 
-static Accel_dataStruct *data_prev=NULL, *data_cur=NULL, *data_head=NULL;
-static Accel_initStruct *init_prev=NULL, *init_cur=NULL, *init_head=NULL;
-static uint8_t accel_count=0;
 
-ret Accel_Init(void)
+Accel_infoStruct accel_info;
+
+ret Accel_Init(uint8_t count)
 {
     /**Accel_Init() sequence: */
 
     ret ret_val=ACCEL_OK;
                                 printf("\t\tSTART Accel_Init();\n ");
+    
+    /**initalize values */
+    accel_info.count=count;
+    accel_info.data_arr=NULL;
+    accel_info.init_arr=NULL;
+
     /**accel h/w initalize */
     ret_val|=BSP_Accel_HW_Initalize();
     if(ret_val!=ACCEL_OK)
@@ -29,33 +34,22 @@ ret Accel_Init(void)
 
     /**accel application initalize */
 
-    /*make initalize structure dummy node */
-    init_head=(Accel_initStruct*)calloc(1, sizeof(Accel_initStruct));
-    if(init_head==NULL)
+    /*initalize info memory initalize */
+    accel_info.init_arr=(Accel_initStruct*)calloc(count, sizeof(Accel_initStruct));
+    if(accel_info.init_arr==NULL)
     {
-                                        printf("Accel_Init(); fail1!!\n ");
-        ret_val|=ACCEL_AP_INIT_FAIL;
-        return ret_val;
+                                        printf("Accel_Init(); fail!!\n ");
+        ret_val|=ACCEL_MEMALLOC_FAIL;
     }
-    init_cur=init_head;
-    init_head->next=NULL;
 
-    /*make data structure dummy node */
-    data_head=(Accel_dataStruct*)calloc(1, sizeof(Accel_dataStruct));
-    if(data_head==NULL)
+    /*data info memory initalize */
+    accel_info.data_arr=(Accel_dataStruct*)calloc(count, sizeof(Accel_dataStruct));
+    if(accel_info.data_arr==NULL)
     {
                                         printf("Accel_Init(); fail2!!\n ");
-        ret_val|=ACCEL_AP_INIT_FAIL;
-        return ret_val;
+        ret_val|=ACCEL_MEMALLOC_FAIL;
     }
-    data_cur=data_head;
-    data_head->next=NULL;
-
-    /**accel count reset */
-    accel_count=0;
-
                                 printf("\t\tEXIT Accel_Init();\n ");
-    /**return result */
     return ret_val;
 }
 
@@ -70,198 +64,27 @@ uint8_t Accel_ChkConnect(uint8_t num)
 }
 
 
-ret Accel_AddAccel(Accel_initStruct accel)
-{
-    /**Accel_AddAccel() sequence: */
-                                printf("\t\tSTART Accel_AddAccel();\n ");
-    Accel_dataStruct accel_data;
-    ret ret_val=ACCEL_OK;
-    uint8_t num, resolution;
-    uint32_t capture_freq, com_freq;
-
-    num=Accel_GetInitNum(accel);
-    Accel_SetDataNum(&accel_data, num);
-
-    resolution=Accel_GetResolution(accel);
-    capture_freq=Accel_GetCaptureFreq(accel);
-    com_freq=Accel_GetCommunicateFreq(accel);
-                                printf("num: %d, res: %d, cap_freq: %d, com_freq: %d\n", num, resolution, capture_freq, com_freq);
-    /**accel H/W setting */
-    ret_val|=BSP_Accel_SetReolution(num, resolution);
-    ret_val|=BSP_Accel_SetCaptureFreq(num, capture_freq);
-    ret_val!=BSP_Accel_SetCommunicateFreq(num, com_freq);
-
-    /**accel add informaion in list */
-    ret_val|=Accel_AddInitalizeInfo(accel);
-    ret_val|=Accel_AddDataInfo(accel_data);
-
-    /**increment accel count */
-    Accel_CountIncrement();
-
-                                printf("\t\tEND Accel_AddAccel();\n ");
-    /**return result */
-    return ret_val;
-}
-
-ret Accel_DeleteAccel(uint8_t num)
-{
-    /**Accel_DeleteAccel() sequence: */
-                                printf("\t\tSTART Accel_DeleteAccel();\n ");
-    /**delcare and initalize values */
-    ret ret_val=ACCEL_OK;
-                                printf("delete num: %d\n", num);
-    ret_val|=Accel_DeleteDataInfo(num);
-    ret_val|=Accel_DeleteInitalizeInfo(num);
-    
-                                printf("\t\tEND Accel_DeleteAccel();\n ");
-    return ret_val;
-}
-
-
-ret Accel_AddInitalizeInfo(Accel_initStruct accel)
-{
-    /**Accel_AddInitalizeInfo() sequence: */
-
-                                printf("\t\tSTART Accel_AddInitalizeInfo();\n ");
-
-    /**declare and initalize values */
-    ret ret_val=ACCEL_OK;
-    Accel_initStruct *buf;
-
-    /**node allocate */
-    buf=(Accel_initStruct*)calloc(1, sizeof(Accel_initStruct));
-    if(buf==NULL)
-    {
-        ret_val=ACCEL_ADD_FAIL;
-        return ret_val;
-    }
-
-    /**structure data copy */
-    memcpy(buf, &accel, sizeof(Accel_initStruct));
-
-    /**add node in list */
-    init_prev=init_cur;
-    buf->next=init_cur->next;
-    init_cur->next=buf;
-    init_cur=buf;
-                                printf("num: %d, res: %d, cap_freq: %d, com_freq: %d\n", init_cur->num, init_cur->resolution, init_cur->capture_freq, init_cur->communication_freq);
-                                printf("\t\tEND Accel_AddInitalizeInfo();\n ");
-
-    /**return result */
-    return ret_val;
-}
-
 ret Accel_GetInitalizeInfo(uint8_t num, Accel_initStruct **accel)
 {
     /**Accel_GetInitalizeInfo() sequence: */
 
                                 printf("\t\tSTART Accel_GetInitalizeInfo();\n ");
 
-    /**declare and reset values */
-    ret ret_val=ACCEL_OK;
-
-    /**reset current, preview position */
-    Accel_ResetInitPos();
-
-    /**search number in list */
-    while(init_cur!=NULL)
+    /**search accel number */
+    if(num>=accel_info.count || num<0)
     {
-        if(Accel_GetInitNum(*init_cur)==num)
-        {
-            *accel=init_cur;
-
-                                    printf("search num: %d, res: %d, cap_freq: %d, com_freq: %d\n", (*accel)->num, (*accel)->resolution, (*accel)->capture_freq, (*accel)->communication_freq);
-
-            break;
-        }
-        else
-        {
-            init_prev=init_cur;
-            init_cur=init_cur->next;
-        }
-        
+        return ACCEL_UNKNOWN_DATA;
     }
-
-    if(init_cur==NULL)
+    else
     {
-                                printf("search fail!!\n");
-        ret_val|=ACCEL_UNKNOWN_DATA;
+        *accel=&(accel_info.init_arr[num]);
     }
 
                                 printf("\t\tEND Accel_GetInitalizeInfo();\n ");
 
-    return ret_val;
+    return ACCEL_OK;
 }
 
-
-ret Accel_DeleteInitalizeInfo(uint8_t num)
-{
-    /**Accel_DeleteInitalizeInfo() sequence: */
-
-                                printf("\t\tSTART Accel_DeleteInitalizeInfo();\n ");
-
-    /**declare and reset position */
-    Accel_initStruct *delete;
-    ret ret_val=ACCEL_OK;
-
-    /**get delete node in list */
-    ret_val|=Accel_GetInitalizeInfo(num, &delete);
-
-    /**unlink data */
-    init_prev->next=delete->next;
-    init_cur=delete->next;
-
-    printf("delete num: %d, res: %d, cap_freq: %d, com_freq: %d\n", delete->num, delete->resolution, delete->capture_freq, delete->communication_freq);
-
-    /**delete data in list */
-    free(delete);
-
-    /**decrement accel count */
-    Accel_CountDecrement();
-
-                                printf("\t\tEND Accel_DeleteInitalizeInfo();\n ");
-
-    /**return result */
-    return ret_val;
-}
-
-
-ret Accel_AddDataInfo(Accel_dataStruct accel)
-{
-    /**Accel_AddDataInfo() sequence: */
-
-                                printf("\t\tSTART Accel_AddDataInfo();\n ");
-
-    /**declare and initlize values */
-    Accel_dataStruct *buf;
-    ret ret_val=ACCEL_OK;
-
-    printf("PREV num: %d\n", accel.num);
-    /**node allocate */
-    buf=(Accel_dataStruct*)calloc(1, sizeof(Accel_dataStruct));
-    if(buf==NULL)
-    {
-                                printf("accel add fail!!\n");
-        ret_val=ACCEL_ADD_FAIL;
-        return ret_val;
-    }
-
-    /**data copy */
-    memcpy(buf, &accel, sizeof(Accel_dataStruct));
-
-    /**add node in list */
-    data_prev=data_cur;
-    buf->next=data_cur->next;
-    data_cur->next=buf;
-    data_cur=buf;
-
-    printf("CUR num: %d\n", data_cur->num);
-
-                                printf("\t\tEND Accel_AddDataInfo();\n ");
-
-    /**return result */
-    return ret_val;
-}
 
 ret Accel_GetDataInfo(uint8_t num, Accel_dataStruct **accel)
 {
@@ -269,93 +92,21 @@ ret Accel_GetDataInfo(uint8_t num, Accel_dataStruct **accel)
 
                                 printf("\t\tSTART Accel_GetDataInfo();\n");
 
-    /**declare and reset values */
-    ret ret_val=ACCEL_OK;
-
-    /**reset current, preview position */
-    Accel_ResetDataPos();
-
-    /**search number in list */
-    while(data_cur!=NULL)
+    /**search accel number */
+    if(num>=accel_info.count || num<0)
     {
-        if(Accel_GetDataNum(*data_cur)==num)
-        {
-            *accel=data_cur;
-
-            printf("search num: %d, accel_x: %d, accel_y: %d, accel_z: %d\n", (*accel)->num, (*accel)->accel_x, (*accel)->accel_y, (*accel)->accel_z);
-
-            break;
-        }
-        else
-        {
-            data_prev=data_cur;
-            data_cur=data_cur->next;
-        }
-        
+        return ACCEL_UNKNOWN_DATA;
     }
-
-    if(data_cur==NULL)
+    else
     {
-        printf("accel search fail!!\n");
-        ret_val|=ACCEL_UNKNOWN_DATA;
+        *accel=&(accel_info.data_arr[num]);
     }
 
                                 printf("\t\tEND Accel_GetDataInfo();\n ");
 
-    return ret_val;
+    return ACCEL_OK;
 }
 
-ret Accel_DeleteDataInfo(uint8_t num)
-{
-    /**Accel_DeleteDataInfo() sequence: */
-
-                                printf("\t\tSTART Accel_DeleteDataInfo();\n ");
-
-    /**declare and reset position */
-    Accel_dataStruct *delete;
-    ret ret_val=ACCEL_OK;
-
-    /**get delete node in list */
-    ret_val|=Accel_GetDataInfo(num, &delete);
-
-    /**unlink data */
-    data_prev->next=delete->next;
-    data_cur=delete->next;
-
-    printf("delete num: %d, accel_x: %d, accel_y: %d, accel_z: %d\n", delete->num, delete->accel_x, delete->accel_y, delete->accel_z);
-
-    /**delete data in list */
-    free(delete);
-
-                                printf("\t\tEND Accel_DeleteDataInfo();\n ");
-
-
-    /**return result */
-    return ret_val;
-}
-
-
-ret Accel_SetNum(Accel_initStruct *p_accel, uint8_t num)
-{
-    ret ret_val=ACCEL_OK;
-
-                                printf("\t\tSTART Accel_SetNum();\n ");
-
-    if(p_accel==NULL)
-    {
-        printf("accel set fail!!\n");
-
-        ret_val=ACCEL_SET_DATA_FAIL;
-        return ret_val;
-    }
-
-    p_accel->num=num;
-
-    printf("num: %d\n", p_accel->num);
-
-                                printf("\t\tEND Accel_SetNum();\n ");
-    return ret_val;
-}
 
 ret Accel_SetResolution(Accel_initStruct *p_accel, uint8_t resolution_bit)
 {
@@ -425,11 +176,6 @@ ret Accel_SetCommunicateFreq(Accel_initStruct *p_accel, uint32_t freq)
     return ret_val;
 }
 
-
-uint8_t Accel_GetInitNum(Accel_initStruct accel)
-{
-    return accel.num;
-}
 
 uint8_t Accel_GetResolution(Accel_initStruct accel)
 {
@@ -504,13 +250,11 @@ ret Accel_UpdateData(uint8_t num, Accel_dataStruct *p_accel)
     p_buf->pitch=pitch;
 
     /**move data */
-    p_accel->accel_x=p_buf->accel_x;
-    p_accel->accel_y=p_buf->accel_y;
-    p_accel->accel_z=p_buf->accel_z;
-    p_accel->roll=p_buf->roll;
-    p_accel->pitch=p_buf->pitch;;
-    p_accel->num=p_buf->num;
-    p_accel->next=p_buf->next;
+    memcpy( (void*)p_accel, (void*)p_buf, sizeof(Accel_dataStruct) );
+    
+    printf("================================Accel_UpdateData:\n");
+    printf("1. roll: %lf, pitch: %lf, x: %d, y: %d, z: %d\n", p_buf->roll, p_buf->pitch, p_buf->accel_x, p_buf->accel_y, p_buf->accel_z);
+    printf("2. roll: %lf, pitch: %lf, x: %d, y: %d, z: %d\n", p_accel->roll, p_accel->pitch, p_accel->accel_x, p_accel->accel_y, p_accel->accel_z);
 
     /**return result */
     if(ret_val!=ACCEL_OK)
@@ -550,44 +294,8 @@ accelType_t Accel_Get_Z(Accel_dataStruct accel)
     return accel.accel_z;
 }
 
-
-ret Accel_SetDataNum(Accel_dataStruct *p_accel, uint8_t num)
+void Accel_Terminate(void)
 {
-    p_accel->num=num;
-    return ACCEL_OK;
-}
-
-uint8_t Accel_GetDataNum(Accel_dataStruct accel)
-{
-    return accel.num;
-}
-
-
-void Accel_CountIncrement(void)
-{
-                                printf("\t\tSTART Accel_CountIncrement();\n ");
-    accel_count+=1;
-    printf("count: %d\n", accel_count);
-                                printf("\t\tEND Accel_CountIncrement();\n ");
-}
-
-void Accel_CountDecrement(void)
-{
-                            printf("\t\tSTART Accel_CountDecrement();\n ");
-    accel_count-=1;
-    printf("count: %d\n", accel_count);
-                                printf("\t\tEND Accel_CountDecrement();\n ");
-}
-
-
-void Accel_ResetDataPos(void)
-{
-    data_cur=data_head->next;
-    data_prev=data_head;
-}
-
-void Accel_ResetInitPos(void)
-{
-    init_cur=init_head->next;
-    init_prev=init_head;
+    free(accel_info.data_arr);
+    free(accel_info.init_arr);
 }

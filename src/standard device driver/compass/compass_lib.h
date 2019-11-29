@@ -2,8 +2,8 @@
  * @file compass_lib.h
  * @author isaiah IM || isaiahim0214@gmail.com
  * @brief compass HAL Library header file
- * @version 0.1
- * @date 2019-09-22
+ * @version 0.2.1
+ * @date 2019-11-30
  * 
  * @copyright Copyright (c) 2019 isaiah IM
  * 
@@ -29,29 +29,24 @@ typedef int32_t compassType_t;
 #define COMPASS_SET_DATA_FAIL 0X01
 #define COMPASS_GET_DATA_FAIL 0X01
 
-#define COMPASS_ADD_FAIL 0X01
-#define COMPASS_DELETE_FAIL 0X01
 
 #define COMPASS_UNKNOWN_DATA 0x01
 
 #define COMPASS_HW_INIT_FAIL 0x01
-#define COMPASS_AP_INIT_FAIL 0x02
+#define COMPASS_MEMALLOC_FAIL 0x02
 
 /**
  * @brief Compass data structure.
- * @detail This structure can working linked list
  * 
  */
 typedef struct Compass_DataStructure
 {
-    uint8_t num;///< compass number
     compassType_t compass_x;///< compass x
     compassType_t compass_y;///< compass y
     compassType_t compass_z;///< compass z
     double yaw;///< yaw
     double pitch;///< pitch
     double roll;///< roll
-    struct Compass_DataStructure *next;///< next link
 } Compass_dataStruct;
 
 /**
@@ -61,26 +56,33 @@ typedef struct Compass_DataStructure
  */
 typedef struct Compass_InitalizeStructure
 {
-    uint8_t num;///< compass number
     uint8_t resolution;///< compass resolution bit
     uint32_t capture_freq;///< compass data capture frequency[Hz]
     uint32_t communication_freq;///< compass communication frequency[Hz]
-    struct Compass_InitalizeStructure *next;///< next link
 } Compass_initStruct;
 
+/**
+ * @brief compass information structure.
+ * 
+ */
+typedef struct Compass_information_structure
+{
+    uint8_t count;///< compass count
+    Compass_dataStruct *data_arr;///< compass data information array
+    Compass_initStruct *init_arr;///< compass initalize information array
+} Compass_infoStruct;
 
-
-/*user functions*/
 
 /**
  * @brief compass H/W, system initalize
  * 
+ * @param count compass count
  * @return ret initalize result
  *  @arg COMPASS_OK compass initalize success
  *  @arg COMPASS_HW_INIT_FAIL hardware initalize fail
- *  @arg COMPASS_AP_INIT_FAIL application initalize fail
+ *  @arg COMPASS_MEMALLOC_FAIL memory initalize fail
  */
-ret Compass_Init(void);
+ret Compass_Init(uint8_t count);
 
 /**
  * @brief compass connect check
@@ -92,17 +94,6 @@ ret Compass_Init(void);
  */
 uint8_t Compass_ChkConnect(uint8_t num);
 
-
-/**
- * @brief compass number setting
- * 
- * @param p_compass compass initalize structure pointer
- * @param num compass number
- * @return ret number setting result
- *  @arg COMPASS_OK number setting success
- *  @arg COMPASS_SET_DATA_FAIL number setting fail
- */
-ret Compass_SetNum(Compass_initStruct *p_compass, uint8_t num);
 
 /**
  * @brief compass resolution setting
@@ -162,45 +153,6 @@ uint32_t Compass_GetCaptureFreq(Compass_initStruct compass);
  */
 uint32_t Compass_GetCommunicateFreq(Compass_initStruct compass);
 
-/**
- * @brief get get initalize number
- * 
- * @param compass compass initalize structure
- * @return uint8_t compass number
- */
-uint8_t Compass_GetInitNum(Compass_initStruct compass);
-
-
-/**
- * @brief add new compass
- * 
- * @param compass compass initalize structure
- * @return ret initalize result
- *  @arg COMPASS_OK compass add success
- *  @arg COMPASS_SET_DATA_FAIL compass add fail
- */
-ret Compass_AddCompass(Compass_initStruct compass);
-
-/**
- * @brief delete compass information
- * 
- * @param num compass number
- * @return ret delete result
- *  @arg COMPASS_OK delete success
- *  @arg COMPASS_DELETE_FAIL delete fail
- */
-ret Compass_DeleteCompass(uint8_t num);
-
-
-/**
- * @brief add compass initalize structure in list
- * 
- * @param compass initlaize structure
- * @return ret add result
- *  @arg COMPASS_OK add success
- *  @arg COMPASS_ADD_FAIL add fail
- */
-ret Compass_AddInitalizeInfo(Compass_initStruct compass);
 
 /**
  * @brief get number of compass initalize information
@@ -213,26 +165,6 @@ ret Compass_AddInitalizeInfo(Compass_initStruct compass);
  */
 ret Compass_GetInitalizeInfo(uint8_t num, Compass_initStruct **p_compass);
 
-/**
- * @brief delete initalize information in list
- * 
- * @param num delete number
- * @return ret delete result
- *  @arg COMPASS_OK delete success
- *  @arg COMPASS_DELETE_FAIL delete fail
- */
-ret Compass_DeleteInitalizeInfo(uint8_t num);
-
-
-/**
- * @brief add compass data structure in list
- * 
- * @param compass data structure
- * @return ret add result
- *  @arg COMPASS_OK add success
- *  @arg COMPASS_ADD_FAIL add fail
- */
-ret Compass_AddDataInfo(Compass_dataStruct compass);
 
 /**
  * @brief get number of compass data information
@@ -245,15 +177,6 @@ ret Compass_AddDataInfo(Compass_dataStruct compass);
  */
 ret Compass_GetDataInfo(uint8_t num, Compass_dataStruct **p_compass);
 
-/**
- * @brief delete data information in list
- * 
- * @param num delete number
- * @return ret delete result
- *  @arg COMPASS_OK delete success
- *  @arg COMPASS_DELETE_FAIL delete fail
- */
-ret Compass_DeleteDataInfo(uint8_t num);
 
 /**
  * @brief compass update sensor data.
@@ -316,49 +239,10 @@ compassType_t Compass_Get_Y(Compass_dataStruct compass);
  */
 compassType_t Compass_Get_Z(Compass_dataStruct compass);
 
-
 /**
- * @brief get data number
- * 
- * @param compass compass data structure pointer
- * @return uint8_t compass data number
- */
-uint8_t Compass_GetDataNum(Compass_dataStruct compass);
-
-/**
- * @brief set data number
- * 
- * @param p_compass compass data structure pointer
- * @param num number
- * @return ret setting result
- *  @arg COMPASS_OK setting success
- */
-ret Compass_SetDataNum(Compass_dataStruct *p_compass, uint8_t num);
-
-/**
- * @brief compass count encrement 1
+ * @brief terminate compass
  * 
  */
-void Compass_CountIncrement(void);
-
-/**
- * @brief compass count decrement 1
- * 
- */
-void Compass_CountDecrement(void);
-
-
-/**
- * @brief reset current data position
- * 
- */
-void Compass_ResetDataPos(void);
-
-/**
- * @brief reset current initalize position
- * 
- */
-void Compass_ResetInitPos(void);
-
+void Compass_Terminate(void);
 
 #endif

@@ -22,16 +22,14 @@ ret Drone_Init(void)
     }
 
     /**kalman filter system initalize */
-    ret_val|=Kalman_Init();
-
-    /**drone configuration */
+    // ret_val|=Kalman_Init();
 
     /**propeller configuration */
-    if(Propeller_Config(PROPELLER_1|PROPELLER_3, PROPELLER_SPEED_MAX, PROPELLER_STOP, PROPELLER_DIR_CW)!=DRONE_INIT_SUCCESS)
+    if(Propeller_Config(PROPELLER_1|PROPELLER_3, PROPELLER_SPEED_MAX, PROPELLER_STOP, PROPELLER_DIR_CW)!=DRONE_OK)
     {
         ret_val|=DRONE_FAIL;
     }
-    if(Propeller_Config(PROPELLER_2|PROPELLER_4, PROPELLER_SPEED_MAX, PROPELLER_STOP, PROPELLER_DIR_CCW)!=DRONE_INIT_SUCCESS)
+    if(Propeller_Config(PROPELLER_2|PROPELLER_4, PROPELLER_SPEED_MAX, PROPELLER_STOP, PROPELLER_DIR_CCW)!=DRONE_OK)
     {
         ret_val|=DRONE_FAIL;
     }

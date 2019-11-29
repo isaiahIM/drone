@@ -16,16 +16,7 @@
 #include "common_def.h"
 #include "esc_lib.h"
 #include "drone_types.h"
-
-
-/*user define*/
-#define PROPELLER_1 0X01
-#define PROPELLER_2 0X02
-#define PROPELLER_3 0X04
-#define PROPELLER_4 0X08
-#define PROPELLER_ALL 0x0f
-
-#define PROPELLER_CNT 4
+#include "config.h"
 
 #define PROPELLER_STOP 0
 #define PROPELLER_SPEED_MAX 100
@@ -66,15 +57,6 @@ ret Propeller_Init(void);
  */
 ret Propeller_Config(uint32_t propeller_num, uint16_t max_speed, uint16_t min_speed, uint8_t propeller_dir);
 
-/**
- * @brief propeller delete configuration
- * 
- * @param propeller_num delete configuration propeller number
- * @return ret result of delete configuration.
- *  @arg PROPELLER_OK propeller delete success
- *  @arg PROPELLER_FAIL propeller delete fail
- */
-ret Propeller_DeConfig(uint32_t propeller_num);
 
 /**
  * @brief propeller Counterclockwise direction rotate
@@ -118,4 +100,5 @@ ret Propeller_Start(uint32_t propeller_num);
  */
 ret Propeller_Stop(uint32_t propeller_num);
 
+void Propeller_Terminate(void);
 #endif

@@ -25,22 +25,17 @@ typedef int16_t gyroType_t;
 #define GYRO_SET_DATA_FAIL 0X01
 #define GYRO_GET_DATA_FAIL 0X01
 
-#define GYRO_ADD_FAIL 0X01
-#define GYRO_DELETE_FAIL 0X01
-
 #define GYRO_UNKNOWN_DATA 0x01
 
 #define GYRO_HW_INIT_FAIL 0x01
-#define GYRO_AP_INIT_FAIL 0x02
+#define GYRO_MEMALLOC_FAIL 0X02
 
 /**
  * @brief Gyroscope data structure.
- * @detail This structure can working linked list
  * 
  */
 typedef struct Gyro_DataStructure
 {
-    uint8_t num;///< gyro number
     gyroType_t gyro_x;///< Angular velocity x [degree/S]
     gyroType_t gyro_y;///< Angular velocity y [degree/S]
     gyroType_t gyro_z;///< Angular velocity z [degree/S]
@@ -48,36 +43,42 @@ typedef struct Gyro_DataStructure
     double pitch;///< pitch
     double roll;///< roll
     double cap_sec;///< data capture time[second]
-    struct Gyro_DataStructure *next;///< next link
 } Gyro_dataStruct;
 
 /**
  * @brief Gyroscope initalize structure.
- * @detail This structure can working linked list
  * 
  */
 typedef struct Gyro_InitalizeStructure
 {
-    uint8_t num;///< gyro number
     uint8_t resolution;///< gyro resolution bit
     uint32_t capture_freq;///< gyro data capture frequency[Hz]
     uint32_t communication_freq;///< gyro communication frequency[Hz]
-    struct Gyro_InitalizeStructure *next;///< next link
 } Gyro_initStruct;
 
-
+/**
+ * @brief gyro information structure
+ * 
+ */
+typedef struct Gyro_information_structure
+{
+    uint8_t count;///< gyro count
+    Gyro_dataStruct *data_arr;///< gyro data information array
+    Gyro_initStruct *init_arr;///< gyro initalize information array
+} Gyro_infoStruct;
 
 /*user functions*/
 
 /**
  * @brief gyroscope H/W, system initalize
  * 
+ * @param count gyroscope count
  * @return ret initalize result
  *  @arg GYRO_OK gyro initalize success
  *  @arg GYRO_HW_INIT_FAIL hardware initalize fail
- *  @arg GYRO_AP_INIT_FAIL application initalize fail
+ *  @arg GYRO_MEMALLOC_FAIL memory initalize fail
  */
-ret Gyro_Init(void);
+ret Gyro_Init(uint8_t count);
 
 /**
  * @brief gyroscope connect check
@@ -89,17 +90,6 @@ ret Gyro_Init(void);
  */
 uint8_t Gyro_ChkConnect(uint8_t num);
 
-
-/**
- * @brief gyroscope number setting
- * 
- * @param p_gyro gyro initalize structure pointer
- * @param num gyro number
- * @return ret number setting result
- *  @arg GYRO_OK number setting success
- *  @arg GYRO_SET_DATA_FAIL number setting fail
- */
-ret Gyro_SetNum(Gyro_initStruct *p_gyro, uint8_t num);
 
 /**
  * @brief gyroscope resolution setting
@@ -159,45 +149,6 @@ uint32_t Gyro_GetCaptureFreq(Gyro_initStruct gyro);
  */
 uint32_t Gyro_GetCommunicateFreq(Gyro_initStruct gyro);
 
-/**
- * @brief get get initalize number
- * 
- * @param gyro gyro initalize structure
- * @return uint8_t gyro number
- */
-uint8_t Gyro_GetInitNum(Gyro_initStruct gyro);
-
-
-/**
- * @brief add new gyroscope
- * 
- * @param gyro gyro initalize structure
- * @return ret initalize result
- *  @arg GYRO_OK gyroscope add success
- *  @arg GYRO_SET_DATA_FAIL gyroscope add fail
- */
-ret Gyro_AddGyro(Gyro_initStruct gyro);
-
-/**
- * @brief delete gyro information
- * 
- * @param num gyro number
- * @return ret delete result
- *  @arg GYRO_OK delete success
- *  @arg GYRO_DELETE_FAIL delete fail
- */
-ret Gyro_DeleteGyro(uint8_t num);
-
-
-/**
- * @brief add gyro initalize structure in list
- * 
- * @param gyro initlaize structure
- * @return ret add result
- *  @arg GYRO_OK add success
- *  @arg GYRO_ADD_FAIL add fail
- */
-ret Gyro_AddInitalizeInfo(Gyro_initStruct gyro);
 
 /**
  * @brief get number of gyro initalize information
@@ -210,26 +161,6 @@ ret Gyro_AddInitalizeInfo(Gyro_initStruct gyro);
  */
 ret Gyro_GetInitalizeInfo(uint8_t num, Gyro_initStruct **p_gyro);
 
-/**
- * @brief delete initalize information in list
- * 
- * @param num delete number
- * @return ret delete result
- *  @arg GYRO_OK delete success
- *  @arg GYRO_DELETE_FAIL delete fail
- */
-ret Gyro_DeleteInitalizeInfo(uint8_t num);
-
-
-/**
- * @brief add gyro data structure in list
- * 
- * @param gyro data structure
- * @return ret add result
- *  @arg GYRO_OK add success
- *  @arg GYRO_ADD_FAIL add fail
- */
-ret Gyro_AddDataInfo(Gyro_dataStruct gyro);
 
 /**
  * @brief get number of gyro data information
@@ -242,15 +173,6 @@ ret Gyro_AddDataInfo(Gyro_dataStruct gyro);
  */
 ret Gyro_GetDataInfo(uint8_t num, Gyro_dataStruct **p_gyro);
 
-/**
- * @brief delete data information in list
- * 
- * @param num delete number
- * @return ret delete result
- *  @arg GYRO_OK delete success
- *  @arg GYRO_DELETE_FAIL delete fail
- */
-ret Gyro_DeleteDataInfo(uint8_t num);
 
 /**
  * @brief gyroscope update sensor data.
@@ -313,47 +235,8 @@ gyroType_t Gyro_Get_Z(Gyro_dataStruct gyro);
 
 
 /**
- * @brief get data number
- * 
- * @param gyro gyro data structure pointer
- * @return uint8_t gyro data number
- */
-uint8_t Gyro_GetDataNum(Gyro_dataStruct gyro);
-
-/**
- * @brief set data number
- * 
- * @param gyro gyro data structure pointer
- * @param num number
- * @return ret setting result
- *  @arg GYRO_OK setting success
- */
-ret Gyro_SetDataNum(Gyro_dataStruct *p_gyro, uint8_t num);
-
-/**
- * @brief gyroscope count encrement 1
+ * @brief terminate gyroscope
  * 
  */
-void Gyro_CountIncrement(void);
-
-/**
- * @brief gyroscope count decrement 1
- * 
- */
-void Gyro_CountDecrement(void);
-
-
-/**
- * @brief reset current data position
- * 
- */
-void Gyro_ResetDataPos(void);
-
-/**
- * @brief reset current initalize position
- * 
- */
-void Gyro_ResetInitPos(void);
-
-
+void Gyro_Terminate(void);
 #endif

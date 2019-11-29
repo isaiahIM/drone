@@ -2,8 +2,8 @@
  * @file esc_lib.h
  * @author isaiah IM || isaiahim0214@gmail.com
  * @brief esc HAL Library header file
- * @version 0.1.1
- * @date 2019-09-26
+ * @version 0.2.1
+ * @date 2019-11-28
  * 
  * @copyright Copyright (c) 2019 isaiah IM
  * 
@@ -35,70 +35,44 @@
 
 /**
  * @brief ESC intialize information structure.
- * @detail This structure is including Self Referential Struct. so, it can using list.
  */
 typedef struct ESC_initalize_structure
 {
-	uint8_t num;///< esc number
 	uint16_t speed_max;///< esc maximum speed
 	uint16_t speed_min;///< esc munumum speed
-	struct ESC_initalize_structure *next;///< Self Referential Struct
 } ESC_initStruct;
 
 /**
  * @brief ESC control informaition structure.
- * @detail This structure is including Self Referential Struct. so, it can using list.
  */
 typedef struct ESC_control_structure
 {
-	uint8_t num;///< esc number
 	uint8_t rotate_dir;///< esc current direction
 	uint16_t speed;///< esc current speed
-	struct ESC_control_structure *next;///< Self Referential Struct
 } ESC_ctrlStruct;
 
-/*user functions*/
+/**
+ * @brief ESC information structure
+ */
+typedef struct ESC_information_structure
+{
+	uint8_t count;///< esc count
+	ESC_initStruct *init_arr;///< initalize info array
+	ESC_ctrlStruct *ctrl_arr;///< control info array
+} ESC_infoStruct;
+
 
 /**
  * @brief ESC H/W, application initalize
  * 
+ * @param count esc count
  * @return ret initalize result
  *  @arg ESC_OK ESC initalze success.
  *  @arg ESC_HW_INIT_FAIL ESC H/W initalize fail
- *  @arg ESC_AP_INIT_FAIL ESC application initalize fail
+ *  @arg ESC_MEMALLOC_FAIL ESC memory initalize fail
  */
-ret ESC_Init(void);
+ret ESC_Init(uint8_t count);
 
-/**
- * @brief Add ESC inforamtion.
- * @detail This function is add initalize and control data in list.
- * 			initalize data add is using ESC_AddInitalizeInfo().
- * 			control data add is using ESC_AddControlInfo().
- * @see ESC_AddInitalizeInfo(const ESC_initStruct esc)
- * @see ESC_AddControlInfo(const ESC_ctrlStruct esc)
- * 
- * @param esc_init initalize data 
- * @param esc_ctrl control data 
- * @return ret result of adding information in list.
- *  @arg ESC_OK Success to add information.
- * 	@arg ESC_MEMALLOC_FAIL ESC node memory allocate fail.
- */
-ret ESC_AddESC(ESC_initStruct esc_init, ESC_ctrlStruct esc_ctrl);
-
-/**
- * @brief Delete ESC information.
- * @detail This function is delete ESC initalize data, control data in list.
- * 			Delete initalize data is using ESC_DeleteInitalizeInfo().
- * 			Delete control data is using ESC_DeleteControlInfo().
- * @see ESC_DeleteInitalizeInfo(uint8_t esc_num)
- * @see ESC_DeleteControlInfo(uint8_t esc_num)
- * 
- * @param esc_num number of ESC
- * @return ret result of deleting information in list.
- * 	@arg ESC_OK Success to delete information in list.
- *  @arg ESC_UNKNOWN_NUM unknown ESC number 
- */
-ret ESC_DeleteESC(uint8_t esc_num);
 
 /**
  * @brief Rotate ESC.
@@ -107,12 +81,14 @@ ret ESC_DeleteESC(uint8_t esc_num);
  * @see BSP_ESC_RotateCW()
  * @see BSP_ESC_RotateCCW()
  * 
+ * @param num esc number
  * @param esc ESC control data satructure
  * @return ret result of ESC rotate
  *	@arg ESC_OK ESC success to rotate
  * 	@arg ESC_UNKNOWN_NUM unknown ESC number 
  */
-ret ESC_Rotate(ESC_ctrlStruct esc);
+ret ESC_Rotate(uint8_t num, ESC_ctrlStruct esc);
+
 
 /**
  * @brief Get ESC rotate direction.
@@ -125,14 +101,6 @@ ret ESC_Rotate(ESC_ctrlStruct esc);
 uint8_t ESC_GetRotateDir(const ESC_ctrlStruct esc);
 
 /**
- * @brief Get motor number.
- * 
- * @param esc ESC control data structure
- * @return uint8_t ESC number
- */
-uint8_t ESC_GetNumber(const ESC_ctrlStruct esc);
-
-/**
  * @brief Get ESC current speed.
  * 
  * @param esc ESC control data structure
@@ -140,15 +108,6 @@ uint8_t ESC_GetNumber(const ESC_ctrlStruct esc);
  */
 uint16_t ESC_GetSpeed(const ESC_ctrlStruct esc);
 
-
-/**
- * @brief Set initalize number in list.
- * 
- * @param p_esc Pointed ESC initalize data in list(pointer type). 
- * @param num ESC numnber
- * @return ret result of function state.
- */
-ret ESC_SetInitNum(ESC_initStruct *p_esc, uint8_t num);
 
 /**
  * @brief Set ESC maximum speed.
@@ -186,33 +145,6 @@ ret ESC_SetCurSpeed(ESC_ctrlStruct *p_esc, uint16_t speed);
  */
 ret ESC_SetRotateDir(ESC_ctrlStruct *p_esc, uint8_t dir);
 
-/**
- * @brief Set ESC control number
- * 
- * @param esc Pointed ESC control data in list(pointer type). 
- * @param num ESC control number
- * @return ret result of function state.
- */
-ret ESC_SetCurNum(ESC_ctrlStruct *p_esc, uint8_t num);
-
-/**
- * @brief Add control information in list.
- * 
- * @param esc add control information
- * @return ret result of function state.
- */
-ret ESC_AddControlInfo(const ESC_ctrlStruct esc);
-
-/**
- * @brief Delete Control information in list.
- * 
- * @param esc_num remove control number. 
- * @return ret result of function state.
- *  @arg ESC_OK success to delete control information in list
- *  @arg ESC_UNKNOWN_NUM unknown ESC control number
- */
-ret ESC_DeleteControlInfo(uint8_t esc_num);
-
 
 /**
  * @brief Get control information in list.
@@ -225,25 +157,6 @@ ret ESC_DeleteControlInfo(uint8_t esc_num);
  */
 ret ESC_GetControlInfo(uint8_t esc_num, ESC_ctrlStruct **p_esc);
 
-/**
- * @brief Set initalize information in list.
- * 
- * @param esc Input ESC initalize data
- * @return ret result of function state.
- *  @arg ESC_OK success to add initalize information in list
- *  @arg ESC_MEMALLOC_FAIL list memory allocate fail.
- */
-ret ESC_AddInitalizeInfo(const ESC_initStruct esc);
-
-/**
- * @brief Delete ESC initalize information in list
- * 
- * @param esc_num delete esc number
- * @return ret result of function state.
- *  @arg ESC_OK success to delete initalize information in list
- *  @arg ESC_UNKNOWN_NUM esc number is not exist.
- */
-ret ESC_DeleteInitalizeInfo(uint8_t esc_num);
 
 /**
  * @brief Get initalize information in list.
@@ -257,28 +170,8 @@ ret ESC_DeleteInitalizeInfo(uint8_t esc_num);
 ret ESC_GetInitalizeInfo(uint8_t esc_num, ESC_initStruct **p_esc);
 
 /**
- * @brief Increment ESC total count. 
+ * @brief terminate ESC
  * 
  */
-void ESC_CountIncrement(void);
-
-/**
- * @brief Decrement ESC total count.
- * 
- */
-void ESC_CountDecrement(void);
-
-/**
- * @brief Reset pointed control list position(current position, preview position).
- * 
- */
-void ESC_ResetCtrlListPosition(void);
-
-/**
- * @brief Reset pointed initalize list position(current position, preview position).
- * 
- */
-void ESC_ResetInitListPosition(void);
-
-
+void ESC_Terminate(void);
 #endif
