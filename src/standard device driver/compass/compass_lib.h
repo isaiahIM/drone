@@ -187,7 +187,7 @@ ret Compass_GetDataInfo(uint8_t num, Compass_dataStruct **p_compass);
  *  @arg COMPASS_OK 
  *  @arg COMPASS_GET_DATA_FAIL 
  */
-ret Compass_UpdateData(uint8_t num, Compass_dataStruct *p_compass);
+ret Compass_Update(uint8_t num, Compass_dataStruct *p_compass);
 
 
 /**

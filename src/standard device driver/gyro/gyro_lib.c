@@ -196,9 +196,9 @@ uint32_t Gyro_GetCommunicateFreq(Gyro_initStruct gyro)
 }
 
 
-ret Gyro_UpdateData(uint8_t num, Gyro_dataStruct *p_gyro)
+ret Gyro_Update(uint8_t num, Gyro_dataStruct *p_gyro)
 {
-    /**Gyro_UpdateData() sequence: */
+    /**Gyro_Update() sequence: */
 
     /**declare values */
     Gyro_dataStruct *p_buf;
@@ -245,7 +245,7 @@ ret Gyro_UpdateData(uint8_t num, Gyro_dataStruct *p_gyro)
     /**move data */
     memcpy( (void*)p_gyro, (void*)p_buf, sizeof(Gyro_dataStruct) );
 
-    printf("================================Gyro_UpdateData:\n");
+    printf("================================Gyro_Update:\n");
     printf("1. roll: %f, pitch: %f, yaw: %f, x: %d, y: %d, z: %d\n", p_buf->roll, p_buf->pitch, p_buf->yaw, p_buf->gyro_x, p_buf->gyro_y, p_buf->gyro_z);
     printf("2. roll: %f, pitch: %f, yaw: %f, x: %d, y: %d, z: %d\n", p_gyro->roll, p_gyro->pitch, p_gyro->yaw, p_gyro->gyro_x, p_gyro->gyro_y, p_gyro->gyro_z);
 

@@ -183,7 +183,7 @@ ret Gyro_GetDataInfo(uint8_t num, Gyro_dataStruct **p_gyro);
  *  @arg GYRO_OK 
  *  @arg GYRO_GET_DATA_FAIL 
  */
-ret Gyro_UpdateData(uint8_t num, Gyro_dataStruct *p_gyro);
+ret Gyro_Update(uint8_t num, Gyro_dataStruct *p_gyro);
 
 /**
  * @brief get euler angle roll

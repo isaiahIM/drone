@@ -192,9 +192,9 @@ uint32_t Compass_GetCommunicateFreq(Compass_initStruct compass)
     return compass.communication_freq;
 }
 
-ret Compass_UpdateData(uint8_t num, Compass_dataStruct *p_compass)
+ret Compass_Update(uint8_t num, Compass_dataStruct *p_compass)
 {
-    /**Compass_UpdateData() sequence: */
+    /**Compass_Update() sequence: */
 
     /**declare values */
     ret ret_val=COMPASS_OK;
@@ -259,7 +259,7 @@ ret Compass_UpdateData(uint8_t num, Compass_dataStruct *p_compass)
     /**move data */
     memcpy( (void*)p_compass, (void*)p_buf, sizeof(Compass_dataStruct) );
 
-    printf("================================Compass_UpdateData:\n");
+    printf("================================Compass_Update:\n");
     printf("1. roll: %lf, pitch: %lf, x: %d, y: %d, z: %d\n", p_buf->roll, p_buf->pitch, p_buf->compass_x, p_buf->compass_y, p_buf->compass_z);
     printf("2. roll: %lf, pitch: %lf, x: %d, y: %d, z: %d\n", p_compass->roll, p_compass->pitch, p_compass->compass_x, p_compass->compass_y, p_compass->compass_z);
 

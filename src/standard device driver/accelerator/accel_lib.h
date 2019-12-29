@@ -181,7 +181,7 @@ ret Accel_GetDataInfo(uint8_t num, Accel_dataStruct **p_accel);
  *  @arg ACCEL_OK 
  *  @arg ACCEL_GET_DATA_FAIL 
  */
-ret Accel_UpdateData(uint8_t num, Accel_dataStruct *p_accel);
+ret Accel_Update(uint8_t num, Accel_dataStruct *p_accel);
 
 /**
  * @brief get euler angle pitch

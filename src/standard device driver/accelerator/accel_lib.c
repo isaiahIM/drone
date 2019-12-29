@@ -192,9 +192,9 @@ uint32_t Accel_GetCommunicateFreq(Accel_initStruct accel)
     return accel.communication_freq;
 }
 
-ret Accel_UpdateData(uint8_t num, Accel_dataStruct *p_accel)
+ret Accel_Update(uint8_t num, Accel_dataStruct *p_accel)
 {
-    /**Accel_UpdateData() sequence: */
+    /**Accel_Update() sequence: */
 
     /**declare values */
     Accel_dataStruct *p_buf;
@@ -252,7 +252,7 @@ ret Accel_UpdateData(uint8_t num, Accel_dataStruct *p_accel)
     /**move data */
     memcpy( (void*)p_accel, (void*)p_buf, sizeof(Accel_dataStruct) );
     
-    printf("================================Accel_UpdateData:\n");
+    printf("================================Accel_Update:\n");
     printf("1. roll: %lf, pitch: %lf, x: %d, y: %d, z: %d\n", p_buf->roll, p_buf->pitch, p_buf->accel_x, p_buf->accel_y, p_buf->accel_z);
     printf("2. roll: %lf, pitch: %lf, x: %d, y: %d, z: %d\n", p_accel->roll, p_accel->pitch, p_accel->accel_x, p_accel->accel_y, p_accel->accel_z);
 
