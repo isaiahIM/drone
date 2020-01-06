@@ -36,33 +36,86 @@ uint8_t Matrix_AddMatrix(uint16_t col, uint16_t row, matrix *mat);
 void Matrix_Delete(matrix *mat);
 
 /**
- * @brief add two matrix
+ * @brief add matrix
  * 
  * @param mat1 matrix 1
  * @param mat2 matrix 2
- * @param result add matrix1 + matrix2 result
- * @return uint8_t calculate status
- *  @arg MATRIX_OK calculate success
- *  @arg MATRIX_FAIL calculate fail
+ * @return matirx matrix1+matrix2
+ *  @arg MATRIX_FAIL matrix calculate fail
  */
-uint8_t Matrix_Add(const matrix mat1, const matrix mat2, matrix *result);
+matrix Matrix_Add(const matrix mat1, const matrix mat2);
 
-uint8_t Matrix_Sub(const matrix mat1, const matrix mat2, matrix *result);
+/**
+ * @brief subtraction matrix
+ * 
+ * @param mat1 matrix1
+ * @param mat2 matrix2
+ * @return matrix matrix1-matrix2
+ *  @arg MATRIX_FAIL matrix calculate fail
+ */
+matrix Matrix_Sub(const matrix mat1, const matrix mat2);
 
-uint8_t Matrix_Multi(const matrix mat1, const matrix mat2, matrix *result);
+/**
+ * @brief multiply matrix
+ * 
+ * @param mat1 matrix1
+ * @param mat2 matrix2
+ * @return matrix matrix1*matrix2
+ *  @arg MATRIX_FAIL matrix calculate fail
+ */
+matrix Matrix_Multi(const matrix mat1, const matrix mat2);
 
-uint8_t Matrix_Div(const matrix mat1, const matrix mat2, matrix *result);
+/**
+ * @brief calculate inverse matrix
+ * 
+ * @param mat matrix
+ * @return matrix inverse matrix
+ *  @arg MATRIX_FAIL matrix calculate fail
+ */
+matrix Matrix_Inv(const matrix mat);
 
-uint8_t Matrix_Inv(const matrix origin, matrix *inv);
+/**
+ * @brief calculate transpose matrix
+ * 
+ * @param mat matrix
+ * @return matrix transpose matrix
+ *  @arg MATRIX_FAIL matrix calculate fail
+ */
+matrix Matrix_Transpose(const matrix mat);
 
-uint8_t Matrix_Transpos(const matrix origin, matrix *transpos);
+/**
+ * @brief calculate determinant matrix
+ * 
+ * @param mat matrix
+ * @return matrixData_t determinant matrix
+ */
+matrixData_t Matrix_Det(const matrix mat);
 
-uint8_t Matrix_Det(const matrix mat, matrixData_t result);
+/**
+ * @brief get matrix element in position
+ * 
+ * @param mat matrix
+ * @param col column position
+ * @param row row position
+ * @return matrixData_t position element data
+ */
+matrixData_t Matrix_GetData(matrix mat, uint16_t col, uint16_t row);
 
-uint8_t Matrix_GetData(matrix mat, uint16_t col, uint16_t row, matrixData_t data);
-
+/**
+ * @brief set matrix element in position
+ * 
+ * @param mat matrix position
+ * @param col column position
+ * @param row row position
+ * @param data setting data
+ * @return uint8_t setting result
+ *  @arg MATRIX_OK element add success
+ *  @arg MATRIX_FAIL element add fail
+ */
 uint8_t Matrix_SetData(matrix *mat, uint16_t col, uint16_t row, matrixData_t data);
 
-uint8_t Matrix_GetStatus(void);
+uint16_t Matrix_GetColumnSize(matrix mat);
+
+uint16_t Matrix_GetRowSize(matrix mat);
 
 #endif
