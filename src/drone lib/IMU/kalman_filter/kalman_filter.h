@@ -20,18 +20,18 @@ typedef struct kalmanfiltet_Structure
 } Kalman_struct;
 
 
-void Kalman_SetSystemMatrix(Kalman_struct *kalman, matrix sys);
+void Kalman_SetSystemMatrix(Kalman_struct *p_kalman, matrix sys);
 
-void Kalman_SetEstimateMatrix(Kalman_struct *kalman, matrix est);
+void Kalman_SetEstimateMatrix(Kalman_struct *p_kalman, matrix est);
 
-void Kalman_SetEstimateCovarianceMatrix(Kalman_struct *kalman, matrix covariance);
+void Kalman_SetEstimateCovarianceMatrix(Kalman_struct *p_kalman, matrix covariance);
 
-void Kalman_SetMeasureCovarianceMatrix(Kalman_struct *kalman, matrix covariance);
+void Kalman_SetMeasureCovarianceMatrix(Kalman_struct *p_kalman, matrix covariance);
 
-void Kalman_SetErrorCovarianceMatrix(Kalman_struct *kalman, matrix covariance);
+void Kalman_SetErrorCovarianceMatrix(Kalman_struct *p_kalman, matrix covariance);
 
-void Kalman_SetOutputMatrix(Kalman_struct *kalman, matrix output);
+void Kalman_SetOutputMatrix(Kalman_struct *p_kalman, matrix output);
 
-matrix Kalman_Calculate(Kalman_struct *kalman, matrix measure_data);
+matrix Kalman_Calculate(Kalman_struct *p_kalman, matrix measure_data);
 
 #endif

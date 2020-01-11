@@ -3,34 +3,34 @@
 // implement kalman filter library
 
 
-void Kalman_SetSystemMatrix(Kalman_struct *kalman, matrix sys)
+void Kalman_SetSystemMatrix(Kalman_struct *p_kalman, matrix sys)
 {
-    kalman->A=sys;
+    p_kalman->A=sys;
 }
 
-void Kalman_SetEstimateMatrix(Kalman_struct *kalman, matrix est)
+void Kalman_SetEstimateMatrix(Kalman_struct *p_kalman, matrix est)
 {
-    kalman->X=est;
+    p_kalman->X=est;
 }
 
-void Kalman_SetEstimateCovarianceMatrix(Kalman_struct *kalman, matrix covariance)
+void Kalman_SetEstimateCovarianceMatrix(Kalman_struct *p_kalman, matrix covariance)
 {
-    kalman->Q=covariance;
+    p_kalman->Q=covariance;
 }
 
-void Kalman_SetMeasureCovarianceMatrix(Kalman_struct *kalman, matrix covariance)
+void Kalman_SetMeasureCovarianceMatrix(Kalman_struct *p_kalman, matrix covariance)
 {
-    kalman->R=covariance;
+    p_kalman->R=covariance;
 }
 
-void Kalman_SetErrorCovarianceMatrix(Kalman_struct *kalman, matrix covariance)
+void Kalman_SetErrorCovarianceMatrix(Kalman_struct *p_kalman, matrix covariance)
 {
-    kalman->P=covariance;
+    p_kalman->P=covariance;
 }
 
-void Kalman_SetOutputMatrix(Kalman_struct *kalman, matrix output)
+void Kalman_SetOutputMatrix(Kalman_struct *p_kalman, matrix output)
 {
-    kalman->H=output;
+    p_kalman->H=output;
 }
 
 typedef struct kalmanfiltet_Structure
@@ -43,16 +43,16 @@ typedef struct kalmanfiltet_Structure
     matrix H;///< output matrix
 } Kalman_struct;
 
-matrix Kalman_Calculate(Kalman_struct *kalman, matrix measure_data)
+matrix Kalman_Calculate(Kalman_struct *p_kalman, matrix measure_data)
 {
     matrix buf, buf2;
 
     /**calculate estimate data matrix */
-    kalman->X=Matrix_Multi(kalman->A, kalman->X);
+    p_kalman->X=Matrix_Multi(p_kalman->A, p_kalman->X);
 
     /**calculate estimate covariance matrix */
-    buf=Matrix_Multi(Matrix_Multi(kalman->A, kalman->P), Matrix_Transpos(kalman->A) );
-    kalman->P=Matrix_Add(buf, kalman->Q);
+    buf=Matrix_Multi(Matrix_Multi(p_kalman->A, p_kalman->P), Matrix_Transpos(p_kalman->A) );
+    p_kalman->P=Matrix_Add(buf, p_kalman->Q);
 
     /**calculate kalman gain */
 }
